@@ -257,7 +257,11 @@ body{display:flex;flex-direction:column}
     <div class="form-group" id="fg-categorie">
       <div class="form-label">Catégorie</div>
       <select class="form-select" id="dep-cat">
-        <!-- Populated dynamically by renderCatSelect() -->
+        <option>Alimentation</option><option>Supermarché</option><option>Livraison</option>
+        <option>Transport</option><option>Hélène</option><option>Santé</option>
+        <option>Voiture</option><option>Loyer</option><option>Sortie</option>
+        <option>Shopping</option><option>Coiffeur</option><option>Carburant</option>
+        <option>Téléphone</option><option>Cadeaux</option><option>Autre</option>
       </select>
     </div>
     <div class="form-group">
@@ -357,27 +361,6 @@ body{display:flex;flex-direction:column}
 </nav>
 
 <!-- Settings modal -->
-
-<!-- Category Manager Modal -->
-<div class="modal-overlay" id="cat-modal">
-  <div class="modal">
-    <div class="modal-handle"></div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div class="modal-title" style="margin-bottom:0">🏷️ Catégories</div>
-      <button class="btn btn-primary" style="width:auto;padding:8px 16px;font-size:13px" onclick="addCat()">+ Ajouter</button>
-    </div>
-    <div id="cat-list"></div>
-    <!-- Emoji picker (hidden by default) -->
-    <div id="emoji-picker-wrap" style="display:none">
-      <div class="emoji-picker" id="emoji-picker"></div>
-    </div>
-    <div style="height:12px"></div>
-    <button class="btn btn-ghost" onclick="saveCats()">✅ Sauvegarder</button>
-    <div style="height:8px"></div>
-    <button class="btn btn-ghost" onclick="closeCatModal()">Fermer</button>
-  </div>
-</div>
-
 <div class="modal-overlay" id="settings-modal">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -396,8 +379,6 @@ body{display:flex;flex-direction:column}
     </div>
     <div style="height:16px"></div>
     <button class="btn btn-primary" onclick="saveSettings()">Sauvegarder</button>
-    <div style="height:8px"></div>
-    <button class="btn btn-ghost" style="color:var(--amber);border-color:var(--amber)" onclick="closeSettings();openCatModal()">🏷️ Gérer les catégories</button>
     <div style="height:8px"></div>
     <div class="setting-row">
       <div><div class="setting-label">Nouveau mot de passe</div><div class="setting-sub">Minimum 4 caractères</div></div>
@@ -422,25 +403,6 @@ const HIST_INV = [{"month": "2021-11", "santander": 0.0, "mm_dollar": 0.0, "etf_
 const HIST_EXP = [{"id": "hist_5", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 59.950549450549445, "montant_usd": 16.469931167733364}, {"id": "hist_6", "date": "2026-02-01", "type": "Depense", "categorie": "Autre", "montant_qar": 100.0, "montant_usd": 27.47252747252747}, {"id": "hist_7", "date": "2026-02-01", "type": "Salaire", "categorie": "Salaire", "montant_qar": 11945.0, "montant_usd": 3281.5934065934066}, {"id": "hist_8", "date": "2026-02-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 441.5302197802198, "montant_usd": 121.2995109286318}, {"id": "hist_9", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 38.0, "montant_usd": 10.43956043956044}, {"id": "hist_10", "date": "2026-02-01", "type": "Depense", "categorie": "Voiture", "montant_qar": 1680.0, "montant_usd": 461.53846153846155}, {"id": "hist_11", "date": "2026-02-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 75.79945054945055, "montant_usd": 20.82402487622268}, {"id": "hist_12", "date": "2026-02-01", "type": "Depense", "categorie": "Santé", "montant_qar": 109.4010989010989, "montant_usd": 30.05524695085135}, {"id": "hist_13", "date": "2026-02-01", "type": "Depense", "categorie": "Santé", "montant_qar": 103.0, "montant_usd": 28.296703296703296}, {"id": "hist_14", "date": "2026-02-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 2883.25, "montant_usd": 792.1016483516484}, {"id": "hist_15", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 19.0, "montant_usd": 5.21978021978022}, {"id": "hist_16", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 34.0, "montant_usd": 9.340659340659341}, {"id": "hist_17", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 36.0, "montant_usd": 9.89010989010989}, {"id": "hist_18", "date": "2026-02-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 88.0, "montant_usd": 24.175824175824175}, {"id": "hist_19", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 36.0, "montant_usd": 9.89010989010989}, {"id": "hist_20", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 34.0, "montant_usd": 9.340659340659341}, {"id": "hist_21", "date": "2026-02-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 247.49999999999997, "montant_usd": 67.99450549450549}, {"id": "hist_22", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 25.499999999999996, "montant_usd": 7.005494505494505}, {"id": "hist_23", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 49.5, "montant_usd": 13.598901098901099}, {"id": "hist_24", "date": "2026-02-01", "type": "Depense", "categorie": "Autre", "montant_qar": 350.0, "montant_usd": 96.15384615384615}, {"id": "hist_25", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 50.730769230769226, "montant_usd": 13.93702451394759}, {"id": "hist_26", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 25.499999999999996, "montant_usd": 7.005494505494505}, {"id": "hist_27", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 54.74999999999999, "montant_usd": 15.041208791208788}, {"id": "hist_28", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 65.51923076923077, "montant_usd": 17.999788672865595}, {"id": "hist_29", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 1.0, "montant_usd": 0.2747252747252747}, {"id": "hist_30", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 1.0, "montant_usd": 0.2747252747252747}, {"id": "hist_31", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 130.54945054945054, "montant_usd": 35.86523366743147}, {"id": "hist_32", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 88.99999999999999, "montant_usd": 24.450549450549445}, {"id": "hist_33", "date": "2026-03-01", "type": "Depense", "categorie": "Sortie", "montant_qar": 15.0, "montant_usd": 4.1208791208791204}, {"id": "hist_34", "date": "2026-03-01", "type": "Depense", "categorie": "Cadeaux", "montant_qar": 1000.0, "montant_usd": 274.72527472527474}, {"id": "hist_35", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 494.59065934065933, "montant_usd": 135.8765547639174}, {"id": "hist_36", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 174.49999999999997, "montant_usd": 47.93956043956043}, {"id": "hist_37", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 84.9010989010989, "montant_usd": 23.324477720082115}, {"id": "hist_38", "date": "2026-03-01", "type": "Depense", "categorie": "Cadeaux", "montant_qar": 200.0, "montant_usd": 54.94505494505494}, {"id": "hist_39", "date": "2026-03-01", "type": "Depense", "categorie": "Shopping", "montant_qar": 175.5, "montant_usd": 48.214285714285715}, {"id": "hist_40", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 119.0, "montant_usd": 32.69230769230769}, {"id": "hist_41", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 59.480769230769226, "montant_usd": 16.340870667793745}, {"id": "hist_42", "date": "2026-03-01", "type": "Depense", "categorie": "Sortie", "montant_qar": 199.0, "montant_usd": 54.67032967032967}, {"id": "hist_43", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 191.0, "montant_usd": 52.47252747252747}, {"id": "hist_44", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 2957.0, "montant_usd": 812.3626373626373}, {"id": "hist_45", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 182.0, "montant_usd": 50.0}, {"id": "hist_46", "date": "2026-03-01", "type": "Depense", "categorie": "Sortie", "montant_qar": 84.0, "montant_usd": 23.076923076923077}, {"id": "hist_47", "date": "2026-03-01", "type": "Depense", "categorie": "Sortie", "montant_qar": 68.0, "montant_usd": 18.681318681318682}, {"id": "hist_48", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 626.0, "montant_usd": 171.97802197802199}, {"id": "hist_49", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 503.0, "montant_usd": 138.18681318681317}, {"id": "hist_50", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 506.68131868131866, "montant_usd": 139.19816447288974}, {"id": "hist_51", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 626.0, "montant_usd": 171.97802197802199}, {"id": "hist_52", "date": "2026-03-01", "type": "Depense", "categorie": "Coiffeur", "montant_qar": 64.0, "montant_usd": 17.58241758241758}, {"id": "hist_53", "date": "2026-03-01", "type": "Depense", "categorie": "Autre", "montant_qar": 235.99999999999997, "montant_usd": 64.83516483516483}, {"id": "hist_54", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 226.8708791208791, "montant_usd": 62.3271645936481}, {"id": "hist_55", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 109.4010989010989, "montant_usd": 30.05524695085135}, {"id": "hist_56", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 136.0, "montant_usd": 37.362637362637365}, {"id": "hist_57", "date": "2026-03-01", "type": "Depense", "categorie": "Shopping", "montant_qar": 386.70054945054943, "montant_usd": 106.23641468421687}, {"id": "hist_58", "date": "2026-03-01", "type": "Depense", "categorie": "Carburant", "montant_qar": 70.0, "montant_usd": 19.23076923076923}, {"id": "hist_59", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 111.0, "montant_usd": 30.494505494505493}, {"id": "hist_60", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 783.1510989010989, "montant_usd": 215.15140079700518}, {"id": "hist_61", "date": "2026-03-01", "type": "Depense", "categorie": "Téléphone", "montant_qar": 50.0, "montant_usd": 13.736263736263735}, {"id": "hist_62", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 35.0, "montant_usd": 9.615384615384615}, {"id": "hist_63", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 109.4010989010989, "montant_usd": 30.05524695085135}, {"id": "hist_64", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 175.0, "montant_usd": 48.07692307692307}, {"id": "hist_65", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 71.0, "montant_usd": 19.505494505494504}, {"id": "hist_66", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 1312.1510989010987, "montant_usd": 360.4810711266755}, {"id": "hist_67", "date": "2026-03-01", "type": "Depense", "categorie": "Loyer", "montant_qar": 9500.0, "montant_usd": 2609.8901098901097}, {"id": "hist_68", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 182.0, "montant_usd": 50.0}, {"id": "hist_69", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 109.4, "montant_usd": 30.054945054945055}, {"id": "hist_70", "date": "2026-03-01", "type": "Depense", "categorie": "Voiture", "montant_qar": 3360.0, "montant_usd": 923.0769230769231}, {"id": "hist_71", "date": "2026-03-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 10.0, "montant_usd": 2.7472527472527473}, {"id": "hist_72", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 764.32, "montant_usd": 209.97802197802199}, {"id": "hist_73", "date": "2026-03-01", "type": "Depense", "categorie": "Shopping", "montant_qar": 111.85, "montant_usd": 30.728021978021975}, {"id": "hist_74", "date": "2026-03-01", "type": "Salaire", "categorie": "Salaire", "montant_qar": 28009.0, "montant_usd": 7694.780219780219}, {"id": "hist_75", "date": "2026-04-01", "type": "Salaire", "categorie": "Salaire", "montant_qar": 29410.0, "montant_usd": 8079.670329670329}];
 
 // ── DATA LAYER ─────────────────────────────────────────────
-// Default categories (used on first launch)
-const DEFAULT_CATS = [
-  {name:'Alimentation', icon:'🍽️', color:'#3b82f6'},
-  {name:'Supermarché',  icon:'🛒', color:'#06b6d4'},
-  {name:'Livraison',    icon:'📦', color:'#8b5cf6'},
-  {name:'Transport',    icon:'🚖', color:'#f59e0b'},
-  {name:'Hélène',       icon:'👩', color:'#ec4899'},
-  {name:'Santé',        icon:'🏥', color:'#ef4444'},
-  {name:'Voiture',      icon:'🚗', color:'#6b7280'},
-  {name:'Loyer',        icon:'🏠', color:'#10b981'},
-  {name:'Sortie',       icon:'🎉', color:'#f97316'},
-  {name:'Shopping',     icon:'🛍️', color:'#a855f7'},
-  {name:'Coiffeur',     icon:'✂️', color:'#14b8a6'},
-  {name:'Carburant',    icon:'⛽', color:'#84cc16'},
-  {name:'Téléphone',    icon:'📱', color:'#3b82f6'},
-  {name:'Cadeaux',      icon:'🎁', color:'#f59e0b'},
-  {name:'Autre',        icon:'💫', color:'#6b7280'},
-];
-
 const DB = {
   get expenses()    { return JSON.parse(localStorage.getItem('ft_exp')||'[]') },
   set expenses(v)   { localStorage.setItem('ft_exp',JSON.stringify(v)) },
@@ -449,18 +411,8 @@ const DB = {
   get settings()    { return JSON.parse(localStorage.getItem('ft_set')||'{"qar":3.64,"clp":920,"eur":1.08}') },
   set settings(v)   { localStorage.setItem('ft_set',JSON.stringify(v)) },
   get histLoaded()  { return localStorage.getItem('ft_hist_loaded')==='1' },
-  set histLoaded(v) { localStorage.setItem('ft_hist_loaded', v?'1':'0') },
-  get categories()  {
-    const saved = localStorage.getItem('ft_cats');
-    return saved ? JSON.parse(saved) : DEFAULT_CATS;
-  },
-  set categories(v) { localStorage.setItem('ft_cats', JSON.stringify(v)) }
+  set histLoaded(v) { localStorage.setItem('ft_hist_loaded', v?'1':'0') }
 };
-
-// Dynamic lookups (always use DB.categories, not hardcoded arrays)
-function getCatIcon(name)  { return (DB.categories.find(c=>c.name===name)||{icon:'💫'}).icon; }
-function getCatColor(name) { return (DB.categories.find(c=>c.name===name)||{color:'#6b7280'}).color; }
-function getCatNames()     { return DB.categories.map(c=>c.name); }
 
 // Merge historical data on first load
 function loadHistoricalData() {
@@ -495,9 +447,13 @@ const monthLabel = ym => {
   const [y,m] = ym.split('-');
   return new Date(y,m-1).toLocaleDateString('fr-FR',{month:'short',year:'numeric'});
 };
-// CAT_ICONS / CAT_COLORS now resolved dynamically via getCatIcon() / getCatColor()
-// Salaire is always special
-const SALAIRE_ICON = '💰'; const SALAIRE_COLOR = '#10b981';
+const CAT_ICONS  = {Alimentation:'🍽️',Supermarché:'🛒',Livraison:'📦',Transport:'🚖',
+  Hélène:'👩',Santé:'🏥',Voiture:'🚗',Loyer:'🏠',Sortie:'🎉',Shopping:'🛍️',
+  Coiffeur:'✂️',Carburant:'⛽',Téléphone:'📱',Cadeaux:'🎁',Autre:'💫',Salaire:'💰'};
+const CAT_COLORS = {Alimentation:'#3b82f6',Supermarché:'#06b6d4',Livraison:'#8b5cf6',
+  Transport:'#f59e0b',Hélène:'#ec4899',Santé:'#ef4444',Voiture:'#6b7280',Loyer:'#10b981',
+  Sortie:'#f97316',Shopping:'#a855f7',Coiffeur:'#14b8a6',Carburant:'#84cc16',
+  Téléphone:'#3b82f6',Cadeaux:'#f59e0b',Autre:'#6b7280',Salaire:'#10b981'};
 
 // ── INVESTMENT CALC ───────────────────────────────────────
 function calcTotal(inv) {
@@ -662,7 +618,8 @@ function renderBudget5() {
     months5.push(d.toISOString().slice(0,7));
   }
 
-  const CATS = getCatNames();
+  const CATS=['Alimentation','Supermarché','Livraison','Transport','Hélène','Santé',
+              'Voiture','Loyer','Sortie','Shopping','Coiffeur','Carburant','Téléphone','Cadeaux','Autre'];
 
   const tbl = document.getElementById('budget5-table');
   const hdr = '<thead><tr><th style="text-align:left;min-width:90px">Catégorie</th>'
@@ -680,7 +637,7 @@ function renderBudget5() {
   const activeCats = CATS.filter(cat => exps.some(e=>e.categorie===cat));
   const catRows = activeCats.map((cat,ci)=>{
     const bg = ci%2===0 ? '' : 'style="background:#0d1525"';
-    return `<tr ${bg}><td style="color:var(--muted)">${getCatIcon(cat)||'•'} ${cat}</td>`
+    return `<tr ${bg}><td style="color:var(--muted)">${CAT_ICONS[cat]||'•'} ${cat}</td>`
       + months5.map(m=>{
           const v=exps.filter(e=>monthOf(e.date)===m&&e.type==='Depense'&&e.categorie===cat).reduce((s,e)=>s+e.montant_qar,0);
           return `<td style="color:var(--text)">${v?fmt(v):'—'}</td>`;
@@ -709,7 +666,7 @@ function renderBudget5() {
 
 // ── EXP ITEM ─────────────────────────────────────────────
 function renderExpItem(e, showDelete=true) {
-  const icon=getCatIcon(e.categorie)||'💫', color=getCatColor(e.categorie)||'#6b7280';
+  const icon=CAT_ICONS[e.categorie]||'💫', color=CAT_COLORS[e.categorie]||'#6b7280';
   const isSal=e.type==='Salaire';
   const d = e.delete_btn!==false && showDelete
     ? `<button class="delete-btn" onclick="deleteExp('${e.id}')">✕</button>` : '';
@@ -760,7 +717,6 @@ function saveDep() {
   DB.expenses=[...DB.expenses,entry];
   document.getElementById('dep-amount').value='';
   document.getElementById('dep-date').value=today();
-renderCatSelect();
   showToast('✅ Enregistré !');
   if(currentScreen==='dashboard') renderDashboard();
 }
@@ -942,7 +898,8 @@ function buildAndDownloadXLSX(invs, exps, s) {
   const months5=[];
   for(let i=4;i>=0;i--){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);months5.push(d.toISOString().slice(0,7));}
   
-  const CATS = getCatNames();
+  const CATS=['Alimentation','Supermarché','Livraison','Transport','Hélène','Santé',
+    'Voiture','Loyer','Sortie','Shopping','Coiffeur','Carburant','Téléphone','Cadeaux','Autre'];
   
   const db_data = [
     ['PLANIFICACION FINANCIERA — TABLEAU DE BORD'],
@@ -988,128 +945,6 @@ function buildAndDownloadXLSX(invs, exps, s) {
   const date = new Date().toISOString().slice(0,10);
   XLSX.writeFile(WB, `FinTrack_Export_${date}.xlsx`);
   showToast('✅ Export Excel téléchargé !');
-}
-
-
-// ── CATEGORY MANAGER ─────────────────────────────────────
-const ALL_EMOJIS = ["🍽️", "🛒", "📦", "🚖", "👩", "🏥", "🚗", "🏠", "🎉", "🛍️", "✂️", "⛽", "📱", "🎁", "💫", "💊", "🏋️", "🎮", "🎵", "📚", "☕", "🍕", "🍺", "🐾", "🧴", "👔", "🏦", "💡", "🛠️", "✈️", "🎓", "🏖️", "🎭", "🍿", "💻", "🏥", "🧹", "🌿", "🎨", "🚿"];
-let editingCats = [];   // working copy while modal is open
-let pickerTarget = -1;  // index of cat being edited
-
-function renderCatSelect() {
-  const sel = document.getElementById('dep-cat');
-  if (!sel) return;
-  const cats = getCatNames();
-  sel.innerHTML = cats.map(c=>`<option value="${c}">${c}</option>`).join('');
-}
-
-function openCatModal() {
-  editingCats = DB.categories.map(c=>{...c});
-  renderCatList();
-  document.getElementById('cat-modal').classList.add('open');
-}
-
-function closeCatModal() {
-  document.getElementById('cat-modal').classList.remove('open');
-  document.getElementById('emoji-picker-wrap').style.display='none';
-  pickerTarget = -1;
-}
-
-function renderCatList() {
-  const el = document.getElementById('cat-list');
-  el.innerHTML = editingCats.map((cat, i) => `
-    <div class="cat-item" id="cat-row-${i}">
-      <div class="cat-icon-btn" onclick="toggleEmojiPicker(${i})"
-           style="background:${cat.color}22;border-color:${cat.color}"
-           title="Changer l'emoji">${cat.icon}</div>
-      <input class="cat-name-input" value="${cat.name}"
-             oninput="editingCats[${i}].name=this.value"
-             placeholder="Nom de la catégorie">
-      <button class="cat-del-btn" onclick="deleteCat(${i})" title="Supprimer">✕</button>
-    </div>`).join('');
-}
-
-function toggleEmojiPicker(idx) {
-  const wrap = document.getElementById('emoji-picker-wrap');
-  const picker = document.getElementById('emoji-picker');
-  if (pickerTarget === idx) {
-    wrap.style.display = 'none';
-    pickerTarget = -1;
-    return;
-  }
-  pickerTarget = idx;
-  // Render emoji grid
-  picker.innerHTML = ALL_EMOJIS.map(e =>
-    `<div class="emoji-opt${editingCats[idx].icon===e?' sel':''}" onclick="selectEmoji('${e}')">${e}</div>`
-  ).join('');
-  // Insert picker after the target row
-  const row = document.getElementById(`cat-row-${idx}`);
-  if (row && row.nextSibling) {
-    el_catlist.insertBefore(wrap, row.nextSibling);
-  } else {
-    document.getElementById('cat-list').appendChild(wrap);
-  }
-  wrap.style.display = 'block';
-  // Scroll to it
-  setTimeout(()=>wrap.scrollIntoView({behavior:'smooth',block:'nearest'}), 50);
-}
-
-const el_catlist = document.getElementById ? null : null; // resolved at runtime
-
-function selectEmoji(emoji) {
-  if (pickerTarget < 0) return;
-  editingCats[pickerTarget].icon = emoji;
-  renderCatList();
-  // Re-show picker at same position
-  const wrap = document.getElementById('emoji-picker-wrap');
-  const row = document.getElementById(`cat-row-${pickerTarget}`);
-  if (row) {
-    const saved = pickerTarget;
-    document.getElementById('cat-list').appendChild(wrap);
-    wrap.style.display = 'block';
-    pickerTarget = saved;
-  }
-}
-
-function deleteCat(idx) {
-  if (editingCats.length <= 1) { showToast('❌ Minimum 1 catégorie'); return; }
-  editingCats.splice(idx, 1);
-  if (pickerTarget === idx) {
-    document.getElementById('emoji-picker-wrap').style.display='none';
-    pickerTarget = -1;
-  } else if (pickerTarget > idx) {
-    pickerTarget--;
-  }
-  renderCatList();
-}
-
-function addCat() {
-  editingCats.push({name:'Nouvelle', icon:'💫', color:'#6b7280'});
-  renderCatList();
-  // Focus the new input
-  setTimeout(()=>{
-    const inputs = document.querySelectorAll('.cat-name-input');
-    if (inputs.length) {
-      const last = inputs[inputs.length-1];
-      last.focus(); last.select();
-      last.scrollIntoView({behavior:'smooth', block:'nearest'});
-    }
-  }, 50);
-}
-
-function saveCats() {
-  // Validate: no empty names
-  const names = editingCats.map(c=>c.name.trim());
-  if (names.some(n=>!n)) { showToast('❌ Nom vide non autorisé'); return; }
-  // Save names from inputs (in case user typed without triggering oninput)
-  document.querySelectorAll('.cat-name-input').forEach((inp,i)=>{
-    if (editingCats[i]) editingCats[i].name = inp.value.trim();
-  });
-  DB.categories = editingCats.map(c=>{...c, name:c.name.trim()});
-  closeCatModal();
-  renderCatSelect();
-  renderDashboard();
-  showToast('✅ Catégories sauvegardées !');
 }
 
 // ── SETTINGS ─────────────────────────────────────────────
@@ -1169,7 +1004,6 @@ async function tryUnlock() {
     document.getElementById('app-nav').style.display     = '';
     document.getElementById('app-body').style.display    = '';
     loadHistoricalData();
-    renderCatSelect();
     renderDashboard();
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
   } else {
@@ -1205,11 +1039,9 @@ function lockApp() {
 // ── INIT ─────────────────────────────────────────────────
 // Init UI elements (lock screen is shown first, data loads after unlock)
 document.getElementById('dep-date').value=today();
-renderCatSelect();
 document.getElementById('inv-month').value=today().slice(0,7);
 setDepType('Depense');
 document.getElementById('settings-modal').addEventListener('click',e=>{if(e.target===document.getElementById('settings-modal'))closeSettings()});
-document.getElementById('cat-modal').addEventListener('click',e=>{if(e.target===document.getElementById('cat-modal'))closeCatModal()});
 // Focus password field
 setTimeout(()=>document.getElementById('lock-pwd')?.focus(), 100);
 </script>
