@@ -243,13 +243,7 @@ body{display:flex;flex-direction:column}
     </div>
     <div class="form-group" id="fg-categorie">
       <div class="form-label">Catégorie</div>
-      <select class="form-select" id="dep-cat">
-        <option>Alimentation</option><option>Supermarché</option><option>Livraison</option>
-        <option>Transport</option><option>Hélène</option><option>Santé</option>
-        <option>Voiture</option><option>Loyer</option><option>Sortie</option>
-        <option>Shopping</option><option>Coiffeur</option><option>Carburant</option>
-        <option>Téléphone</option><option>Cadeaux</option><option>Autre</option>
-      </select>
+      <select class="form-select" id="dep-cat"></select>
     </div>
     <div class="form-group">
       <div class="form-label">Date</div>
@@ -366,7 +360,17 @@ body{display:flex;flex-direction:column}
     </div>
     <div style="height:16px"></div>
     <button class="btn btn-primary" onclick="saveSettings()">Sauvegarder</button>
-    <div style="height:8px"></div>
+    <div style="height:20px"></div>
+    <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px">🏷️ Catégories de dépenses</div>
+    <div id="cat-settings-list"></div>
+    <div style="display:flex;gap:8px;margin-top:8px;margin-bottom:4px">
+      <input id="new-cat-input" placeholder="Nouvelle catégorie…"
+        style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-family:'Syne',sans-serif;font-size:14px"
+        onkeydown="if(event.key==='Enter')addCategory()">
+      <button onclick="addCategory()"
+        style="background:var(--accent);border:none;border-radius:8px;padding:7px 18px;color:#fff;font-weight:700;cursor:pointer;font-size:18px;flex-shrink:0">+</button>
+    </div>
+    <div style="height:16px"></div>
     <button class="btn btn-danger" onclick="if(confirm('Effacer TOUTES les données ?'))clearAll()">Effacer toutes les données</button>
     <div style="height:8px"></div>
     <button class="btn btn-ghost" onclick="closeSettings()">Fermer</button>
@@ -389,7 +393,9 @@ const DB = {
   get settings()    { return JSON.parse(localStorage.getItem('ft_set')||'{"qar":3.64,"clp":920,"eur":1.08}') },
   set settings(v)   { localStorage.setItem('ft_set',JSON.stringify(v)) },
   get histLoaded()  { return localStorage.getItem('ft_hist_loaded')==='1' },
-  set histLoaded(v) { localStorage.setItem('ft_hist_loaded', v?'1':'0') }
+  set histLoaded(v) { localStorage.setItem('ft_hist_loaded', v?'1':'0') },
+  get categories()  { return JSON.parse(localStorage.getItem('ft_cats')||JSON.stringify(['Alimentation','Supermarché','Livraison','Transport','Hélène','Santé','Voiture','Loyer','Sortie','Shopping','Coiffeur','Carburant','Téléphone','Cadeaux','Autre'])) },
+  set categories(v) { localStorage.setItem('ft_cats',JSON.stringify(v)) }
 };
 
 // Merge historical data on first load
@@ -432,6 +438,65 @@ const CAT_COLORS = {Alimentation:'#3b82f6',Supermarché:'#06b6d4',Livraison:'#8b
   Transport:'#f59e0b',Hélène:'#ec4899',Santé:'#ef4444',Voiture:'#6b7280',Loyer:'#10b981',
   Sortie:'#f97316',Shopping:'#a855f7',Coiffeur:'#14b8a6',Carburant:'#84cc16',
   Téléphone:'#3b82f6',Cadeaux:'#f59e0b',Autre:'#6b7280',Salaire:'#10b981'};
+
+// ── CATEGORY MANAGEMENT ───────────────────────────────────
+function getCats() { return DB.categories; }
+
+function refreshCatSelect(keepVal) {
+  const sel = document.getElementById('dep-cat');
+  const prev = keepVal !== undefined ? keepVal : sel.value;
+  sel.innerHTML = getCats().map(c=>`<option${c===prev?' selected':''}>${c}</option>`).join('');
+}
+
+function renderCatSettings() {
+  const cats = getCats();
+  document.getElementById('cat-settings-list').innerHTML = cats.map((c,i) => `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <input value="${c.replace(/"/g,'&quot;')}"
+        style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 10px;color:var(--text);font-family:'Syne',sans-serif;font-size:14px"
+        onchange="renameCategory(${i},this.value)">
+      <button onclick="deleteCategory(${i})"
+        style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--red);cursor:pointer;font-size:15px;flex-shrink:0">🗑</button>
+    </div>`).join('');
+}
+
+function renameCategory(idx, newName) {
+  newName = newName.trim();
+  if (!newName) { renderCatSettings(); return; }
+  const cats = getCats();
+  const oldName = cats[idx];
+  if (oldName === newName) return;
+  cats[idx] = newName;
+  DB.categories = cats;
+  DB.expenses = DB.expenses.map(e => e.categorie===oldName ? {...e, categorie:newName} : e);
+  refreshCatSelect();
+  showToast('✅ Catégorie renommée');
+}
+
+function deleteCategory(idx) {
+  const cats = getCats();
+  if (cats.length <= 1) { showToast('❌ Au moins une catégorie requise'); return; }
+  if (!confirm(`Supprimer "${cats[idx]}" ?`)) return;
+  cats.splice(idx, 1);
+  DB.categories = cats;
+  renderCatSettings();
+  refreshCatSelect();
+  showToast('🗑️ Catégorie supprimée');
+}
+
+function addCategory() {
+  const inp = document.getElementById('new-cat-input');
+  const name = inp.value.trim();
+  if (!name) { showToast('❌ Nom vide'); return; }
+  const cats = getCats();
+  if (cats.includes(name)) { showToast('❌ Catégorie déjà existante'); return; }
+  cats.push(name);
+  DB.categories = cats;
+  inp.value = '';
+  renderCatSettings();
+  refreshCatSelect();
+  showToast('✅ Catégorie ajoutée');
+}
 
 // ── INVESTMENT CALC ───────────────────────────────────────
 function calcTotal(inv) {
@@ -594,8 +659,7 @@ function renderBudget5() {
     months5.push(d.toISOString().slice(0,7));
   }
 
-  const CATS=['Alimentation','Supermarché','Livraison','Transport','Hélène','Santé',
-              'Voiture','Loyer','Sortie','Shopping','Coiffeur','Carburant','Téléphone','Cadeaux','Autre'];
+  const CATS=getCats();
 
   const tbl = document.getElementById('budget5-table');
   const hdr = '<thead><tr><th style="text-align:left;min-width:90px">Catégorie</th>'
@@ -874,8 +938,7 @@ function buildAndDownloadXLSX(invs, exps, s) {
   const months5=[];
   for(let i=4;i>=0;i--){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);months5.push(d.toISOString().slice(0,7));}
   
-  const CATS=['Alimentation','Supermarché','Livraison','Transport','Hélène','Santé',
-    'Voiture','Loyer','Sortie','Shopping','Coiffeur','Carburant','Téléphone','Cadeaux','Autre'];
+  const CATS=getCats();
   
   const db_data = [
     ['PLANIFICACION FINANCIERA — TABLEAU DE BORD'],
@@ -929,6 +992,7 @@ function openSettings(){
   document.getElementById('s-qar').value=s.qar;
   document.getElementById('s-clp').value=s.clp;
   document.getElementById('s-eur').value=s.eur;
+  renderCatSettings();
   document.getElementById('settings-modal').classList.add('open');
 }
 function closeSettings(){document.getElementById('settings-modal').classList.remove('open')}
@@ -959,6 +1023,7 @@ setDepType('Depense');
 document.getElementById('settings-modal').addEventListener('click',e=>{if(e.target===document.getElementById('settings-modal'))closeSettings()});
 
 loadHistoricalData();
+refreshCatSelect();
 renderDashboard();
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
