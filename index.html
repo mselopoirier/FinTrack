@@ -104,18 +104,28 @@ body{display:flex;flex-direction:column}
 .month-chip.active{background:var(--accent);border-color:var(--accent);color:white}
 
 /* 5-month budget table */
-.budget5-wrap{overflow-x:auto;margin:-4px}
+.budget5-wrap{overflow-x:auto;margin:-4px;border-radius:12px}
 .budget5-table{border-collapse:collapse;font-size:12px;font-family:'DM Mono',monospace;min-width:100%}
 .budget5-table th{padding:8px 10px;color:var(--muted);font-size:10px;white-space:nowrap;
   border-bottom:1px solid var(--border);text-align:right;background:var(--bg3)}
-.budget5-table th:first-child{text-align:left;border-radius:8px 0 0 0}
-.budget5-table th:last-child{border-radius:0 8px 0 0}
-.budget5-table td{padding:9px 10px;text-align:right;border-bottom:1px solid #0d1525}
-.budget5-table td:first-child{text-align:left;color:var(--text);font-weight:600}
+.budget5-table th:first-child{text-align:left;position:sticky;left:0;z-index:2;background:var(--bg3);min-width:100px}
+.budget5-table td{padding:9px 10px;text-align:right;border-bottom:1px solid #0d1525;white-space:nowrap}
+.budget5-table td:first-child{text-align:left;color:var(--text);font-weight:600;
+  position:sticky;left:0;z-index:1;background:var(--bg2);min-width:100px}
+.budget5-table tr:nth-child(even) td:first-child{background:#0d1525}
 .budget5-table tr:last-child td{border-bottom:none}
 .budget5-table tr.dispo-row td{color:var(--amber);font-weight:700;font-size:13px}
+.budget5-table tr.dispo-row td:first-child{background:#1a1500}
 .budget5-table tr.sal-row td{color:var(--green)}
+.budget5-table tr.sal-row td:first-child{background:#0a1f14}
 .budget5-table tr.dep-row td{color:var(--red)}
+.budget5-table tr.dep-row td:first-child{background:#1a0a0a}
+/* Composition bar */
+.alloc-bar{height:8px;border-radius:4px;overflow:hidden;display:flex;margin:8px 0 4px;gap:2px}
+.alloc-seg{height:100%;border-radius:2px;transition:width .4s}
+.alloc-legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:8px}
+.alloc-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0}
+.alloc-item{display:flex;align-items:center;font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)}
 
 .inv-section-title{font-size:10px;color:var(--accent2);text-transform:uppercase;
   letter-spacing:1.5px;font-family:'DM Mono',monospace;margin:16px 0 8px;
@@ -168,7 +178,20 @@ body{display:flex;flex-direction:column}
 </head>
 <body>
 
-<div class="topbar">
+<div id="lock-screen">
+  <div class="lock-logo">🔒</div>
+  <div class="lock-title">FinTrack</div>
+  <div class="lock-sub">Planification Financière</div>
+  <input class="lock-input" id="lock-pwd" type="password"
+    placeholder="••••••" maxlength="20"
+    onkeydown="if(event.key==='Enter')tryUnlock()"
+    oninput="document.getElementById('lock-input').classList.remove('error')">
+  <button class="lock-btn" onclick="tryUnlock()">Déverrouiller</button>
+  <div class="lock-attempts" id="lock-msg"></div>
+  <div class="lock-hint">Votre mot de passe personnel</div>
+</div>
+
+<div class="topbar" id="app-topbar" style="display:none">
   <div>
     <div class="topbar-title">FinTrack</div>
     <div class="topbar-sub" id="topbar-date"></div>
@@ -179,7 +202,7 @@ body{display:flex;flex-direction:column}
   </div>
 </div>
 
-<!-- ══ DASHBOARD ══ -->
+<div id="app-body" style="display:none"><!-- ══ DASHBOARD ══ -->
 <div class="screen active" id="screen-dashboard">
   <div class="kpi-grid">
     <div class="kpi wide">
@@ -209,6 +232,9 @@ body{display:flex;flex-direction:column}
     <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace" id="inv-month-label"></span>
   </div>
   <div class="card" id="inv-detail-list"></div>
+
+  <div class="section-hdr"><h2>Composition du portefeuille</h2></div>
+  <div class="card" id="inv-alloc-card"></div>
 
   <div class="section-hdr"><h2>Dernières dépenses</h2></div>
   <div class="card" id="recent-exp-list"></div>
@@ -315,7 +341,7 @@ body{display:flex;flex-direction:column}
   </div>
 </div>
 
-<nav class="nav">
+<nav class="nav" id="app-nav" style="display:none">
   <button class="nav-btn active" id="nav-dashboard" onclick="navigate('dashboard')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
@@ -354,12 +380,21 @@ body{display:flex;flex-direction:column}
     <div style="height:16px"></div>
     <button class="btn btn-primary" onclick="saveSettings()">Sauvegarder</button>
     <div style="height:8px"></div>
+    <div class="setting-row">
+      <div><div class="setting-label">Nouveau mot de passe</div><div class="setting-sub">Minimum 4 caractères</div></div>
+      <input class="setting-input" id="s-newpwd" type="password" placeholder="••••" style="letter-spacing:3px">
+    </div>
+    <button class="btn btn-ghost" onclick="changePassword(document.getElementById('s-newpwd').value)">Changer le mot de passe</button>
+    <div style="height:8px"></div>
+    <button class="btn btn-ghost" style="color:var(--accent2);border-color:var(--accent2)" onclick="lockApp()">🔒 Verrouiller l'app</button>
+    <div style="height:8px"></div>
     <button class="btn btn-danger" onclick="if(confirm('Effacer TOUTES les données ?'))clearAll()">Effacer toutes les données</button>
     <div style="height:8px"></div>
     <button class="btn btn-ghost" onclick="closeSettings()">Fermer</button>
   </div>
 </div>
 
+</div><!-- /app-body -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -460,6 +495,8 @@ function navigate(s) {
 
 // ── DASHBOARD ─────────────────────────────────────────────
 function renderDashboard() {
+  const dateEl=document.getElementById('topbar-date');
+  if(dateEl) dateEl.textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
   const s    = DB.settings;
   const invs = DB.investments.sort((a,b)=>a.month.localeCompare(b.month));
   const exps = DB.expenses;
@@ -478,16 +515,18 @@ function renderDashboard() {
     const rtEl=document.getElementById('kpi-rett');
     rtEl.textContent=fmtP(retT); rtEl.className='kpi-value '+(retT>0?'green':retT<0?'red':'');
 
-    // Detail
+    // Detail + Allocation
     const clpU = (last.santander||0)/s.clp;
     const usdT = (last.mm_dollar||0)+(last.etf_usd||0)+(last.apple||0)+(last.msft||0)
                + (last.nvidia||0)+(last.amazon||0)+(last.alphabet||0)+(last.tesla||0)
                + (last.btc||0)+(last.eth||0);
     const eurU = ((last.livret_a||0)+(last.etf_eur||0)+(last.cash_eur||0))*s.eur;
+    const cryptoU = (last.btc||0)+(last.eth||0);
     document.getElementById('inv-detail-list').innerHTML =
-      [['🏦 CLP (Santander)',clpU],['📈 USD Actions',usdT],['🇫🇷 EUR',eurU],['₿ Crypto',(last.btc||0)+(last.eth||0)]]
+      [['🏦 CLP (Santander)',clpU],['📈 USD Actions',usdT],['🇫🇷 EUR',eurU],['₿ Crypto',cryptoU]]
       .map(([l,v])=>`<div class="table-row"><span class="row-label">${l}</span><span class="row-value">${fmtU(v)}</span></div>`)
       .join('');
+    renderAllocation(total, clpU, usdT, eurU, cryptoU, last, s);
   } else {
     document.getElementById('kpi-total').textContent='—';
     document.getElementById('inv-detail-list').innerHTML=
@@ -506,6 +545,67 @@ function renderDashboard() {
     : recent.map(e=>renderExpItem(e,false)).join('');
 }
 
+function renderAllocation(total, clpU, usdT, eurU, cryptoU, last, s) {
+  const el = document.getElementById('inv-alloc-card');
+  if (!el) return;
+  if (!total || total <= 0) { el.innerHTML = '<div class="empty"><div class="empty-icon">📊</div><div class="empty-text">Aucune donnée</div></div>'; return; }
+
+  // Asset classes
+  const classes = [
+    { label:'CLP', color:'#3b82f6', value: clpU },
+    { label:'USD Actions', color:'#10b981', value: usdT - cryptoU },
+    { label:'EUR', color:'#06b6d4', value: eurU },
+    { label:'Crypto', color:'#8b5cf6', value: cryptoU },
+  ].filter(c => c.value > 0);
+
+  // Individual assets
+  const assets = [
+    { label:'Santander', color:'#3b82f6', value:(last.santander||0)/s.clp },
+    { label:'MM Dollar', color:'#22c55e', value:last.mm_dollar||0 },
+    { label:'ETF S&P500', color:'#10b981', value:last.etf_usd||0 },
+    { label:'Apple', color:'#f97316', value:last.apple||0 },
+    { label:'Microsoft', color:'#06b6d4', value:last.msft||0 },
+    { label:'Nvidia', color:'#84cc16', value:last.nvidia||0 },
+    { label:'Amazon', color:'#f59e0b', value:last.amazon||0 },
+    { label:'Alphabet', color:'#ec4899', value:last.alphabet||0 },
+    { label:'Tesla', color:'#ef4444', value:last.tesla||0 },
+    { label:'Livret A', color:'#0891b2', value:(last.livret_a||0)*s.eur },
+    { label:'ETF EUR', color:'#22d3ee', value:(last.etf_eur||0)*s.eur },
+    { label:'Cash EUR', color:'#67e8f9', value:(last.cash_eur||0)*s.eur },
+    { label:'BTC', color:'#f59e0b', value:last.btc||0 },
+    { label:'ETH', color:'#8b5cf6', value:last.eth||0 },
+  ].filter(a => a.value > 0).sort((a,b)=>b.value-a.value);
+
+  // Bar by class
+  const barSegs = classes.map(c =>
+    `<div class="alloc-seg" style="width:${(c.value/total*100).toFixed(1)}%;background:${c.color};flex-shrink:0"></div>`
+  ).join('');
+
+  // Class legend
+  const classLegend = classes.map(c =>
+    `<div class="alloc-item"><span class="alloc-dot" style="background:${c.color}"></span>${c.label} <b style="color:var(--text);margin-left:4px">${(c.value/total*100).toFixed(1)}%</b></div>`
+  ).join('');
+
+  // Individual asset rows
+  const assetRows = assets.map(a => {
+    const pct = (a.value/total*100).toFixed(1);
+    return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #0d1525">
+      <div style="width:6px;height:6px;border-radius:50%;background:${a.color};flex-shrink:0"></div>
+      <span style="flex:1;font-size:12px;color:var(--muted)">${a.label}</span>
+      <div style="width:80px;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${a.color};border-radius:2px"></div>
+      </div>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text);width:40px;text-align:right">${pct}%</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);width:70px;text-align:right">${fmtU(a.value)}</span>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="alloc-bar">${barSegs}</div>
+    <div class="alloc-legend">${classLegend}</div>
+    <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">${assetRows}</div>`;
+}
+
 function renderBudget5() {
   const exps = DB.expenses;
   // Get last 5 months that have data, or last 5 calendar months
@@ -513,7 +613,7 @@ function renderBudget5() {
   const nowYM = today().slice(0,7);
   // Build 5 months ending at current month
   const months5 = [];
-  for (let i=4; i>=0; i--) {
+  for (let i=0; i<=4; i++) {
     const d = new Date(); d.setDate(1); d.setMonth(d.getMonth()-i);
     months5.push(d.toISOString().slice(0,7));
   }
@@ -874,18 +974,76 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 
+
+// ── PASSWORD LOCK ─────────────────────────────────────────
+// Password is stored as a SHA-256 hash in localStorage.
+// Default password: "fintrack" (user can change it in settings)
+// The actual data is NEVER sent anywhere — all local.
+
+const DEFAULT_PWD = 'fintrack';
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256',
+    new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+async function tryUnlock() {
+  const input = document.getElementById('lock-pwd').value;
+  if (!input) return;
+  const hash = await sha256(input);
+  const stored = localStorage.getItem('ft_pwd_hash') ||
+                 await sha256(DEFAULT_PWD);  // first launch: default
+  // On first launch, store the default hash
+  if (!localStorage.getItem('ft_pwd_hash')) {
+    localStorage.setItem('ft_pwd_hash', await sha256(DEFAULT_PWD));
+  }
+  if (hash === stored) {
+    document.getElementById('lock-screen').style.display = 'none';
+    document.getElementById('app-topbar').style.display  = '';
+    document.getElementById('app-nav').style.display     = '';
+    document.getElementById('app-body').style.display    = '';
+    loadHistoricalData();
+    renderDashboard();
+    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+  } else {
+    const inp = document.getElementById('lock-pwd');
+    inp.classList.add('error');
+    inp.value = '';
+    const attempts = parseInt(localStorage.getItem('ft_attempts')||'0') + 1;
+    localStorage.setItem('ft_attempts', attempts);
+    document.getElementById('lock-msg').textContent =
+      attempts >= 3 ? `Tentative ${attempts} — Mot de passe incorrect` : 'Mot de passe incorrect';
+    setTimeout(() => inp.classList.remove('error'), 400);
+  }
+}
+
+async function changePassword(newPwd) {
+  if (!newPwd || newPwd.length < 4) { showToast('❌ Minimum 4 caractères'); return; }
+  const hash = await sha256(newPwd);
+  localStorage.setItem('ft_pwd_hash', hash);
+  localStorage.removeItem('ft_attempts');
+  showToast('✅ Mot de passe mis à jour !');
+}
+
+function lockApp() {
+  document.getElementById('lock-screen').style.display = 'flex';
+  document.getElementById('app-topbar').style.display  = 'none';
+  document.getElementById('app-nav').style.display     = 'none';
+  document.getElementById('app-body').style.display    = 'none';
+  document.getElementById('lock-pwd').value = '';
+  document.getElementById('lock-msg').textContent = '';
+  closeSettings();
+}
+
 // ── INIT ─────────────────────────────────────────────────
-document.getElementById('topbar-date').textContent=
-  new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+// Init UI elements (lock screen is shown first, data loads after unlock)
 document.getElementById('dep-date').value=today();
 document.getElementById('inv-month').value=today().slice(0,7);
 setDepType('Depense');
 document.getElementById('settings-modal').addEventListener('click',e=>{if(e.target===document.getElementById('settings-modal'))closeSettings()});
-
-loadHistoricalData();
-renderDashboard();
-
-if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+// Focus password field
+setTimeout(()=>document.getElementById('lock-pwd')?.focus(), 100);
 </script>
 </body>
 </html>
