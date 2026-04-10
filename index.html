@@ -178,20 +178,7 @@ body{display:flex;flex-direction:column}
 </head>
 <body>
 
-<div id="lock-screen">
-  <div class="lock-logo">🔒</div>
-  <div class="lock-title">FinTrack</div>
-  <div class="lock-sub">Planification Financière</div>
-  <input class="lock-input" id="lock-pwd" type="password"
-    placeholder="••••••" maxlength="20"
-    onkeydown="if(event.key==='Enter')tryUnlock()"
-    oninput="document.getElementById('lock-input').classList.remove('error')">
-  <button class="lock-btn" onclick="tryUnlock()">Déverrouiller</button>
-  <div class="lock-attempts" id="lock-msg"></div>
-  <div class="lock-hint">Votre mot de passe personnel</div>
-</div>
-
-<div class="topbar" id="app-topbar" style="display:none">
+<div class="topbar">
   <div>
     <div class="topbar-title">FinTrack</div>
     <div class="topbar-sub" id="topbar-date"></div>
@@ -202,7 +189,7 @@ body{display:flex;flex-direction:column}
   </div>
 </div>
 
-<div id="app-body" style="display:none"><!-- ══ DASHBOARD ══ -->
+<!-- ══ DASHBOARD ══ -->
 <div class="screen active" id="screen-dashboard">
   <div class="kpi-grid">
     <div class="kpi wide">
@@ -341,7 +328,7 @@ body{display:flex;flex-direction:column}
   </div>
 </div>
 
-<nav class="nav" id="app-nav" style="display:none">
+<nav class="nav">
   <button class="nav-btn active" id="nav-dashboard" onclick="navigate('dashboard')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
@@ -380,21 +367,12 @@ body{display:flex;flex-direction:column}
     <div style="height:16px"></div>
     <button class="btn btn-primary" onclick="saveSettings()">Sauvegarder</button>
     <div style="height:8px"></div>
-    <div class="setting-row">
-      <div><div class="setting-label">Nouveau mot de passe</div><div class="setting-sub">Minimum 4 caractères</div></div>
-      <input class="setting-input" id="s-newpwd" type="password" placeholder="••••" style="letter-spacing:3px">
-    </div>
-    <button class="btn btn-ghost" onclick="changePassword(document.getElementById('s-newpwd').value)">Changer le mot de passe</button>
-    <div style="height:8px"></div>
-    <button class="btn btn-ghost" style="color:var(--accent2);border-color:var(--accent2)" onclick="lockApp()">🔒 Verrouiller l'app</button>
-    <div style="height:8px"></div>
     <button class="btn btn-danger" onclick="if(confirm('Effacer TOUTES les données ?'))clearAll()">Effacer toutes les données</button>
     <div style="height:8px"></div>
     <button class="btn btn-ghost" onclick="closeSettings()">Fermer</button>
   </div>
 </div>
 
-</div><!-- /app-body -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -495,8 +473,6 @@ function navigate(s) {
 
 // ── DASHBOARD ─────────────────────────────────────────────
 function renderDashboard() {
-  const dateEl=document.getElementById('topbar-date');
-  if(dateEl) dateEl.textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
   const s    = DB.settings;
   const invs = DB.investments.sort((a,b)=>a.month.localeCompare(b.month));
   const exps = DB.expenses;
@@ -974,76 +950,18 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-
-// ── PASSWORD LOCK ─────────────────────────────────────────
-// Password is stored as a SHA-256 hash in localStorage.
-// Default password: "fintrack" (user can change it in settings)
-// The actual data is NEVER sent anywhere — all local.
-
-const DEFAULT_PWD = 'fintrack';
-
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256',
-    new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
-async function tryUnlock() {
-  const input = document.getElementById('lock-pwd').value;
-  if (!input) return;
-  const hash = await sha256(input);
-  const stored = localStorage.getItem('ft_pwd_hash') ||
-                 await sha256(DEFAULT_PWD);  // first launch: default
-  // On first launch, store the default hash
-  if (!localStorage.getItem('ft_pwd_hash')) {
-    localStorage.setItem('ft_pwd_hash', await sha256(DEFAULT_PWD));
-  }
-  if (hash === stored) {
-    document.getElementById('lock-screen').style.display = 'none';
-    document.getElementById('app-topbar').style.display  = '';
-    document.getElementById('app-nav').style.display     = '';
-    document.getElementById('app-body').style.display    = '';
-    loadHistoricalData();
-    renderDashboard();
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
-  } else {
-    const inp = document.getElementById('lock-pwd');
-    inp.classList.add('error');
-    inp.value = '';
-    const attempts = parseInt(localStorage.getItem('ft_attempts')||'0') + 1;
-    localStorage.setItem('ft_attempts', attempts);
-    document.getElementById('lock-msg').textContent =
-      attempts >= 3 ? `Tentative ${attempts} — Mot de passe incorrect` : 'Mot de passe incorrect';
-    setTimeout(() => inp.classList.remove('error'), 400);
-  }
-}
-
-async function changePassword(newPwd) {
-  if (!newPwd || newPwd.length < 4) { showToast('❌ Minimum 4 caractères'); return; }
-  const hash = await sha256(newPwd);
-  localStorage.setItem('ft_pwd_hash', hash);
-  localStorage.removeItem('ft_attempts');
-  showToast('✅ Mot de passe mis à jour !');
-}
-
-function lockApp() {
-  document.getElementById('lock-screen').style.display = 'flex';
-  document.getElementById('app-topbar').style.display  = 'none';
-  document.getElementById('app-nav').style.display     = 'none';
-  document.getElementById('app-body').style.display    = 'none';
-  document.getElementById('lock-pwd').value = '';
-  document.getElementById('lock-msg').textContent = '';
-  closeSettings();
-}
-
 // ── INIT ─────────────────────────────────────────────────
-// Init UI elements (lock screen is shown first, data loads after unlock)
+document.getElementById('topbar-date').textContent=
+  new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
 document.getElementById('dep-date').value=today();
 document.getElementById('inv-month').value=today().slice(0,7);
 setDepType('Depense');
 document.getElementById('settings-modal').addEventListener('click',e=>{if(e.target===document.getElementById('settings-modal'))closeSettings()});
-// Focus password field
-setTimeout(()=>document.getElementById('lock-pwd')?.focus(), 100);
+
+loadHistoricalData();
+renderDashboard();
+
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
 </body>
 </html>
