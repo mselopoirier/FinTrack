@@ -4,173 +4,175 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0A0E1A">
-<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
 <title>FinTrack</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#0A0E1A; --bg2:#111827; --bg3:#1a2235; --border:#1e2d45;
-  --text:#e8edf5; --muted:#5a6a82; --accent:#3b82f6; --accent2:#06b6d4;
-  --green:#10b981; --red:#ef4444; --amber:#f59e0b; --purple:#8b5cf6;
-  --safe:env(safe-area-inset-bottom,0px);
+:root{
+  --bg:#0A0E1A;--bg2:#111827;--bg3:#1a2235;--border:#1e2d45;
+  --text:#e8edf5;--muted:#5a6a82;--accent:#3b82f6;--a2:#06b6d4;
+  --green:#10b981;--lgreen:#D5F5E3;--red:#ef4444;--lred:#FDECEA;
+  --amber:#f59e0b;--purple:#8b5cf6;--teal:#117A65;--lteal:#D1F2EB;
+  --org:#D35400;--lorg:#FDEBD0;--safe:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif}
 body{display:flex;flex-direction:column}
-
+/* topbar */
 .topbar{display:flex;align-items:center;justify-content:space-between;
   padding:14px 20px 10px;padding-top:calc(14px + env(safe-area-inset-top,0px));
   background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0}
 .topbar-title{font-size:18px;font-weight:700;letter-spacing:-.3px}
 .topbar-sub{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px}
-.topbar-right{display:flex;gap:8px}
 .icon-btn{width:36px;height:36px;border-radius:10px;background:var(--bg3);
   border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
   cursor:pointer;font-size:17px}
-
+/* screens */
 .screen{display:none;flex:1;overflow-y:auto;padding:16px 16px 100px}
 .screen.active{display:block}
-
+/* nav */
 .nav{display:flex;background:var(--bg2);border-top:1px solid var(--border);
   padding-bottom:var(--safe);flex-shrink:0}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
   padding:10px 4px;cursor:pointer;color:var(--muted);font-size:10px;
-  font-family:'DM Mono',monospace;transition:color .2s;border:none;background:none}
+  font-family:'DM Mono',monospace;border:none;background:none;transition:color .2s}
 .nav-btn.active{color:var(--accent)}
 .nav-btn svg{width:22px;height:22px}
-
+/* cards */
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px}
-
+/* kpis */
 .kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 .kpi{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px}
 .kpi.wide{grid-column:1/-1}
-.kpi-label{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;
-  text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.kpi-label{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
 .kpi-value{font-size:22px;font-weight:800;letter-spacing:-1px}
 .kpi-sub{font-size:10px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace}
-
-.section-hdr{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}
-.section-hdr h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
-
-.table-row{display:flex;align-items:center;justify-content:space-between;
-  padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
-.table-row:last-child{border-bottom:none}
-.row-label{color:var(--muted)}
-.row-value{font-family:'DM Mono',monospace;font-weight:500}
-
-.form-group{margin-bottom:14px}
-.form-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;
-  margin-bottom:6px;font-family:'DM Mono',monospace}
-.form-input,.form-select{width:100%;padding:12px 14px;background:var(--bg3);
-  border:1px solid var(--border);border-radius:10px;color:var(--text);
-  font-family:'DM Mono',monospace;font-size:15px;outline:none;transition:border .2s;
-  -webkit-appearance:none}
-.form-input:focus,.form-select:focus{border-color:var(--accent)}
-.form-select option{background:var(--bg2)}
-
-.segment{display:flex;background:var(--bg3);border-radius:10px;padding:3px;margin-bottom:16px}
-.seg-btn{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:600;
-  border-radius:8px;cursor:pointer;transition:all .2s;color:var(--muted);
-  background:none;border:none;font-family:'Syne',sans-serif}
+/* section header */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}
+.sec-hdr h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+/* table rows */
+.trow{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+.trow:last-child{border-bottom:none}
+.tlbl{color:var(--muted)}.tval{font-family:'DM Mono',monospace;font-weight:500}
+/* forms */
+.fg{margin-bottom:14px}
+.fl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;font-family:'DM Mono',monospace}
+.fi,.fs{width:100%;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:15px;
+  outline:none;transition:border .2s;-webkit-appearance:none}
+.fi:focus,.fs:focus{border-color:var(--accent)}
+.fs option{background:var(--bg2)}
+/* segment */
+.seg{display:flex;background:var(--bg3);border-radius:10px;padding:3px;margin-bottom:16px}
+.seg-btn{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:600;border-radius:8px;
+  cursor:pointer;color:var(--muted);background:none;border:none;font-family:'Syne',sans-serif;transition:all .2s}
 .seg-btn.active{background:var(--accent);color:white}
-
+/* buttons */
 .btn{width:100%;padding:14px;border-radius:12px;font-size:15px;font-weight:700;
-  font-family:'Syne',sans-serif;cursor:pointer;border:none;transition:all .15s;letter-spacing:.3px}
-.btn-primary{background:var(--accent);color:white}
-.btn-primary:active{transform:scale(.98);background:#2563eb}
-.btn-ghost{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
-.btn-danger{background:transparent;color:var(--red);border:1px solid var(--red)}
-.btn-green{background:var(--green);color:white}
-
+  font-family:'Syne',sans-serif;cursor:pointer;border:none;transition:all .15s}
+.btn-p{background:var(--accent);color:white}.btn-p:active{background:#2563eb}
+.btn-g{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
+.btn-d{background:transparent;color:var(--red);border:1px solid var(--red)}
+/* expense items */
 .exp-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
 .exp-item:last-child{border-bottom:none}
-.exp-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;
-  justify-content:center;font-size:18px;flex-shrink:0}
+.exp-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .exp-info{flex:1;min-width:0}
 .exp-cat{font-size:14px;font-weight:600}
 .exp-date{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px}
-.exp-amount{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;text-align:right}
-.exp-amount.salary{color:var(--green)}
-.delete-btn{background:none;border:none;color:var(--muted);padding:4px;cursor:pointer;font-size:16px;flex-shrink:0}
-.delete-btn:active{color:var(--red)}
-
-.month-chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px}
-.month-chips::-webkit-scrollbar{display:none}
-.month-chip{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;
+.exp-amt{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;text-align:right}
+.exp-amt.sal{color:var(--green)}
+.del-btn{background:none;border:none;color:var(--muted);padding:4px;cursor:pointer;font-size:16px;flex-shrink:0}
+.del-btn:active{color:var(--red)}
+/* month chips */
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;
   cursor:pointer;background:var(--bg3);border:1px solid var(--border);color:var(--muted);
   font-family:'DM Mono',monospace;transition:all .2s}
-.month-chip.active{background:var(--accent);border-color:var(--accent);color:white}
-
-/* 5-month budget table */
-.budget5-wrap{overflow-x:auto;margin:-4px;border-radius:12px}
-.budget5-table{border-collapse:collapse;font-size:12px;font-family:'DM Mono',monospace;min-width:100%}
-.budget5-table th{padding:8px 10px;color:var(--muted);font-size:10px;white-space:nowrap;
-  border-bottom:1px solid var(--border);text-align:right;background:var(--bg3)}
-.budget5-table th:first-child{text-align:left;position:sticky;left:0;z-index:2;background:var(--bg3);min-width:100px}
-.budget5-table td{padding:9px 10px;text-align:right;border-bottom:1px solid #0d1525;white-space:nowrap}
-.budget5-table td:first-child{text-align:left;color:var(--text);font-weight:600;
-  position:sticky;left:0;z-index:1;background:var(--bg2);min-width:100px}
-.budget5-table tr:nth-child(even) td:first-child{background:#0d1525}
-.budget5-table tr:last-child td{border-bottom:none}
-.budget5-table tr.dispo-row td{color:var(--amber);font-weight:700;font-size:13px}
-.budget5-table tr.dispo-row td:first-child{background:#1a1500}
-.budget5-table tr.sal-row td{color:var(--green)}
-.budget5-table tr.sal-row td:first-child{background:#0a1f14}
-.budget5-table tr.dep-row td{color:var(--red)}
-.budget5-table tr.dep-row td:first-child{background:#1a0a0a}
-/* Composition bar */
-.alloc-bar{height:8px;border-radius:4px;overflow:hidden;display:flex;margin:8px 0 4px;gap:2px}
-.alloc-seg{height:100%;border-radius:2px;transition:width .4s}
-.alloc-legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:8px}
-.alloc-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0}
-.alloc-item{display:flex;align-items:center;font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)}
-
-.inv-section-title{font-size:10px;color:var(--accent2);text-transform:uppercase;
-  letter-spacing:1.5px;font-family:'DM Mono',monospace;margin:16px 0 8px;
-  padding-bottom:6px;border-bottom:1px solid var(--border)}
+.chip.active{background:var(--accent);border-color:var(--accent);color:white}
+/* budget 5-month table */
+.b5wrap{overflow-x:auto;border-radius:12px}
+.b5{border-collapse:collapse;font-size:12px;font-family:'DM Mono',monospace;min-width:100%}
+.b5 th{padding:8px 10px;color:var(--muted);font-size:10px;white-space:nowrap;border-bottom:1px solid var(--border);text-align:right;background:var(--bg3)}
+.b5 th:first-child{text-align:left;position:sticky;left:0;z-index:2;background:var(--bg3);min-width:95px}
+.b5 td{padding:9px 10px;text-align:right;border-bottom:1px solid #0d1525;white-space:nowrap}
+.b5 td:first-child{text-align:left;position:sticky;left:0;z-index:1;background:var(--bg2);min-width:95px;font-weight:600}
+.b5 tr:nth-child(even) td:first-child{background:#0d1525}
+.b5 tr:last-child td{border-bottom:none}
+.b5 tr.sal-r td{color:var(--green)}.b5 tr.sal-r td:first-child{background:#0a1f14}
+.b5 tr.dep-r td{color:var(--red)}.b5 tr.dep-r td:first-child{background:#1a0a0a}
+.b5 tr.dis-r td{color:var(--amber);font-weight:700}.b5 tr.dis-r td:first-child{background:#1a1500}
+/* inv inputs */
+.inv-sec{font-size:10px;color:var(--a2);text-transform:uppercase;letter-spacing:1.5px;
+  font-family:'DM Mono',monospace;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .inv-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #0d1525}
 .inv-row:last-child{border-bottom:none}
-.inv-label{flex:1;font-size:13px;color:var(--text)}
-.inv-input{width:120px;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);
-  border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;
-  text-align:right;outline:none}
-.inv-input:focus{border-color:var(--accent)}
-.inv-input.eur{border-color:#2d4a6e}.inv-input.eur:focus{border-color:var(--accent2)}
-.inv-input.crypto{border-color:#3d2d6e}.inv-input.crypto:focus{border-color:var(--purple)}
-
-.hist-table{overflow-x:auto}
-.hist-table table{width:100%;border-collapse:collapse;font-size:12px;font-family:'DM Mono',monospace}
-.hist-table th{padding:8px 6px;text-align:right;color:var(--muted);font-size:10px;
-  white-space:nowrap;border-bottom:1px solid var(--border)}
-.hist-table th:first-child{text-align:left}
-.hist-table td{padding:10px 6px;text-align:right;border-bottom:1px solid #0d1525}
-.hist-table td:first-child{text-align:left;color:var(--text)}
-.hist-table tr:last-child td{border-bottom:none}
-
+.inv-lbl{flex:1;font-size:13px}
+.inv-inp{width:120px;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;text-align:right;outline:none}
+.inv-inp:focus{border-color:var(--accent)}
+.inv-inp.eur{border-color:#2d4a6e}.inv-inp.eur:focus{border-color:var(--a2)}
+.inv-inp.crypto{border-color:#3d2d6e}.inv-inp.crypto:focus{border-color:var(--purple)}
+/* hist table */
+.ht{overflow-x:auto}
+.ht table{width:100%;border-collapse:collapse;font-size:12px;font-family:'DM Mono',monospace}
+.ht th{padding:8px 6px;text-align:right;color:var(--muted);font-size:10px;white-space:nowrap;border-bottom:1px solid var(--border)}
+.ht th:first-child{text-align:left}
+.ht td{padding:10px 6px;text-align:right;border-bottom:1px solid #0d1525}
+.ht td:first-child{text-align:left;color:var(--text)}
+.ht tr:last-child td{border-bottom:none}
+/* alloc */
+.abar{height:8px;border-radius:4px;overflow:hidden;display:flex;margin:8px 0 4px;gap:2px}
+.aseg{height:100%;border-radius:2px}
+.aleg{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:8px}
+.aitem{display:flex;align-items:center;font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)}
+.adot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0}
+/* modals */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;
   align-items:flex-end;backdrop-filter:blur(4px)}
 .modal-overlay.open{display:flex}
 .modal{width:100%;background:var(--bg2);border-radius:20px 20px 0 0;
   padding:20px 20px calc(20px + var(--safe));border-top:1px solid var(--border);
   max-height:90vh;overflow-y:auto}
-.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
-.modal-title{font-size:17px;font-weight:700;margin-bottom:16px}
-.setting-row{display:flex;align-items:center;justify-content:space-between;
-  padding:12px 0;border-bottom:1px solid var(--border)}
-.setting-row:last-child{border-bottom:none}
-.setting-label{font-size:14px}.setting-sub{font-size:11px;color:var(--muted);margin-top:1px;font-family:'DM Mono',monospace}
-.setting-input{width:90px;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);
+.mhandle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
+.mtitle{font-size:17px;font-weight:700;margin-bottom:16px}
+/* settings rows */
+.srow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+.srow:last-child{border-bottom:none}
+.slbl{font-size:14px}.ssub{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
+.sinp{width:90px;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);
   border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;text-align:right;outline:none}
-.setting-input:focus{border-color:var(--accent)}
-
+.sinp:focus{border-color:var(--accent)}
+/* cat/asset manager */
+.mi{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border)}
+.mi:last-child{border-bottom:none}
+.mi.arch{opacity:.4}
+.mini{flex:1;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none}
+.mini:focus{border-color:var(--accent)}
+.mcur{width:70px;padding:7px 8px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;
+  outline:none;-webkit-appearance:none}
+.mtog{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+  background:none;cursor:pointer;font-size:15px;flex-shrink:0;transition:all .2s}
+.mghdr{font-size:10px;color:var(--a2);text-transform:uppercase;letter-spacing:1.5px;
+  font-family:'DM Mono',monospace;padding:12px 0 6px;border-bottom:1px solid var(--border);margin-bottom:4px}
+/* cat emoji picker */
+.epick{display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--bg3);border-radius:12px;margin-top:6px}
+.eopt{width:36px;height:36px;border-radius:8px;font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center}
+.eopt.sel,.eopt:active{background:var(--accent)}
+/* toast */
 .toast{position:fixed;bottom:calc(80px + var(--safe));left:50%;transform:translateX(-50%) translateY(20px);
   background:var(--green);color:white;padding:10px 20px;border-radius:20px;font-size:13px;
   font-weight:600;opacity:0;transition:all .3s;z-index:200;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* empty */
 .empty{text-align:center;padding:40px 20px;color:var(--muted)}
-.empty-icon{font-size:40px;margin-bottom:12px}.empty-text{font-size:14px}
+.empty-icon{font-size:40px;margin-bottom:12px}
+/* colors */
 .green{color:var(--green)}.red{color:var(--red)}.blue{color:var(--accent)}.amber{color:var(--amber)}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
@@ -183,7 +185,7 @@ body{display:flex;flex-direction:column}
     <div class="topbar-title">FinTrack</div>
     <div class="topbar-sub" id="topbar-date"></div>
   </div>
-  <div class="topbar-right">
+  <div style="display:flex;gap:8px">
     <div class="icon-btn" onclick="exportExcel()" title="Exporter Excel">📤</div>
     <div class="icon-btn" onclick="openSettings()">⚙️</div>
   </div>
@@ -195,7 +197,7 @@ body{display:flex;flex-direction:column}
     <div class="kpi wide">
       <div class="kpi-label">Portefeuille Total</div>
       <div class="kpi-value blue" id="kpi-total">—</div>
-      <div class="kpi-sub" id="kpi-total-sub">USD · dernier mois saisi</div>
+      <div class="kpi-sub" id="kpi-sub">USD · dernier mois saisi</div>
     </div>
     <div class="kpi">
       <div class="kpi-label">Ret. Mensuel</div>
@@ -209,118 +211,88 @@ body{display:flex;flex-direction:column}
     </div>
   </div>
 
-  <div class="section-hdr"><h2>Budget — 5 derniers mois</h2></div>
+  <div class="sec-hdr"><h2>Budget — 5 derniers mois</h2></div>
   <div class="card" style="padding:12px">
-    <div class="budget5-wrap"><table class="budget5-table" id="budget5-table"></table></div>
+    <div class="b5wrap"><table class="b5" id="b5-table"></table></div>
   </div>
 
-  <div class="section-hdr">
+  <div class="sec-hdr">
     <h2>Investissements</h2>
-    <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace" id="inv-month-label"></span>
+    <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace" id="inv-mo-lbl"></span>
   </div>
-  <div class="card" id="inv-detail-list"></div>
+  <div class="card" id="inv-detail"></div>
 
-  <div class="section-hdr"><h2>Composition du portefeuille</h2></div>
-  <div class="card" id="inv-alloc-card"></div>
+  <div class="sec-hdr"><h2>Composition du portefeuille</h2></div>
+  <div class="card" id="inv-alloc"></div>
 
-  <div class="section-hdr"><h2>Dernières dépenses</h2></div>
-  <div class="card" id="recent-exp-list"></div>
+  <div class="sec-hdr"><h2>Dernières dépenses</h2></div>
+  <div class="card" id="recent-exp"></div>
 </div>
 
 <!-- ══ DÉPENSES ══ -->
 <div class="screen" id="screen-dep">
-  <div class="segment">
-    <button class="seg-btn active" onclick="switchDepTab('saisie',this)">+ Saisir</button>
-    <button class="seg-btn" onclick="switchDepTab('liste',this)">Liste</button>
+  <div class="seg">
+    <button class="seg-btn active" onclick="switchDep('saisie',this)">+ Saisir</button>
+    <button class="seg-btn" onclick="switchDep('liste',this)">Liste</button>
   </div>
-  <div id="dep-tab-saisie">
-    <div class="form-group">
-      <div class="form-label">Type</div>
-      <div class="segment" style="margin-bottom:0">
-        <button class="seg-btn active" id="type-dep-btn" onclick="setDepType('Depense',this)">Dépense</button>
-        <button class="seg-btn" id="type-sal-btn" onclick="setDepType('Salaire',this)">Salaire</button>
+  <div id="dep-saisie">
+    <div class="fg">
+      <div class="fl">Type</div>
+      <div class="seg" style="margin-bottom:0">
+        <button class="seg-btn active" id="btn-dep" onclick="setDepType('Depense')">Dépense</button>
+        <button class="seg-btn" id="btn-sal" onclick="setDepType('Salaire')">Salaire</button>
       </div>
     </div>
-    <div class="form-group" id="fg-categorie">
-      <div class="form-label">Catégorie</div>
-      <select class="form-select" id="dep-cat">
-        <option>Alimentation</option><option>Supermarché</option><option>Livraison</option>
-        <option>Transport</option><option>Hélène</option><option>Santé</option>
-        <option>Voiture</option><option>Loyer</option><option>Sortie</option>
-        <option>Shopping</option><option>Coiffeur</option><option>Carburant</option>
-        <option>Téléphone</option><option>Cadeaux</option><option>Autre</option>
-      </select>
+    <div class="fg" id="fg-cat">
+      <div class="fl">Catégorie</div>
+      <select class="fs" id="dep-cat"></select>
     </div>
-    <div class="form-group">
-      <div class="form-label">Date</div>
-      <input type="date" class="form-input" id="dep-date">
+    <div class="fg">
+      <div class="fl">Date</div>
+      <input type="date" class="fi" id="dep-date">
     </div>
-    <div class="form-group">
-      <div class="form-label">Montant (QAR)</div>
-      <input type="number" class="form-input" id="dep-amount" placeholder="0.00" step="0.01" inputmode="decimal">
+    <div class="fg">
+      <div class="fl">Montant (QAR)</div>
+      <input type="number" class="fi" id="dep-amt" placeholder="0.00" step="0.01" inputmode="decimal">
     </div>
-    <div style="background:var(--bg3);border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+    <div style="background:var(--bg3);border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between">
       <span style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace">≈ USD</span>
-      <span style="font-family:'DM Mono',monospace;font-size:14px;color:var(--accent2)" id="dep-usd-preview">—</span>
+      <span style="font-family:'DM Mono',monospace;font-size:14px;color:var(--a2)" id="dep-usd-prev">—</span>
     </div>
-    <button class="btn btn-primary" onclick="saveDep()">Enregistrer</button>
+    <button class="btn btn-p" onclick="saveDep()">Enregistrer</button>
   </div>
-  <div id="dep-tab-liste" style="display:none">
-    <div class="month-chips" id="dep-month-chips"></div>
-    <div id="dep-list-summary" style="margin-bottom:12px;display:flex;gap:8px"></div>
-    <div class="card" id="dep-list-items"></div>
+  <div id="dep-liste" style="display:none">
+    <div class="chips" id="dep-chips"></div>
+    <div id="dep-summary" style="margin-bottom:12px;display:flex;gap:8px"></div>
+    <div class="card" id="dep-items"></div>
   </div>
 </div>
 
 <!-- ══ INVESTISSEMENTS ══ -->
 <div class="screen" id="screen-inv">
-  <div class="segment">
-    <button class="seg-btn active" onclick="switchInvTab('saisie',this)">+ Saisir</button>
-    <button class="seg-btn" onclick="switchInvTab('historique',this)">Historique</button>
+  <div class="seg">
+    <button class="seg-btn active" onclick="switchInv('saisie',this)">+ Saisir</button>
+    <button class="seg-btn" onclick="switchInv('historique',this)">Historique</button>
   </div>
-  <div id="inv-tab-saisie">
-    <div class="form-group">
-      <div class="form-label">Mois</div>
-      <input type="month" class="form-input" id="inv-month">
+  <div id="inv-saisie">
+    <div class="fg">
+      <div class="fl">Mois</div>
+      <input type="month" class="fi" id="inv-month">
     </div>
-    <div class="card" style="padding:12px 16px">
-      <div class="inv-section-title">🏦 CLP — Santander</div>
-      <div class="inv-row"><span class="inv-label">Santander MP</span><input class="inv-input" id="f-santander" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-section-title">📈 USD — Fonds & Actions</div>
-      <div class="inv-row"><span class="inv-label">MM Dollar</span><input class="inv-input" id="f-mm_dollar" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-row"><span class="inv-label">ETF S&P500 USD</span><input class="inv-input" id="f-etf_usd" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-row"><span class="inv-label">Apple</span><input class="inv-input" id="f-apple" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-row"><span class="inv-label">Microsoft</span><input class="inv-input" id="f-msft" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-row"><span class="inv-label">Nvidia</span><input class="inv-input" id="f-nvidia" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-row"><span class="inv-label">Amazon</span><input class="inv-input" id="f-amazon" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-row"><span class="inv-label">Alphabet</span><input class="inv-input" id="f-alphabet" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-row"><span class="inv-label">Tesla</span><input class="inv-input" id="f-tesla" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-section-title">🇫🇷 EUR</div>
-      <div class="inv-row"><span class="inv-label">Livret A</span><input class="inv-input eur" id="f-livret_a" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-row"><span class="inv-label">ETF S&P500 EUR</span><input class="inv-input eur" id="f-etf_eur" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-row"><span class="inv-label">Cash EUR</span><input class="inv-input eur" id="f-cash_eur" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-section-title">₿ Crypto</div>
-      <div class="inv-row"><span class="inv-label">BTC</span><input class="inv-input crypto" id="f-btc" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-row"><span class="inv-label">ETH</span><input class="inv-input crypto" id="f-eth" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-section-title" style="color:var(--amber)">+ Apports du mois</div>
-      <div class="inv-row"><span class="inv-label" style="color:var(--muted)">Apport CLP</span><input class="inv-input" id="f-ap_clp" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-row"><span class="inv-label" style="color:var(--muted)">Apport USD</span><input class="inv-input" id="f-ap_usd" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-row"><span class="inv-label" style="color:var(--muted)">Apport EUR</span><input class="inv-input eur" id="f-ap_eur" placeholder="0" inputmode="decimal"></div>
-      <div class="inv-row"><span class="inv-label" style="color:var(--muted)">Apport Crypto</span><input class="inv-input crypto" id="f-ap_crypto" placeholder="0" inputmode="decimal"></div>
-    </div>
+    <div class="card" style="padding:12px 16px" id="inv-fields"></div>
     <div class="card" style="background:var(--bg3);border-color:#1e3a5f;margin-top:-4px">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <span style="font-size:13px;color:var(--muted)">Total estimé</span>
-        <span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:800;color:var(--accent)" id="inv-total-preview">$0</span>
+        <span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:800;color:var(--accent)" id="inv-preview">$0</span>
       </div>
     </div>
     <div style="height:12px"></div>
-    <button class="btn btn-primary" onclick="saveInv()">Enregistrer ce mois</button>
+    <button class="btn btn-p" onclick="saveInv()">Enregistrer ce mois</button>
     <div style="height:8px"></div>
-    <button class="btn btn-ghost" onclick="loadLastInv()">Recopier mois précédent</button>
+    <button class="btn btn-g" onclick="loadLastInv()">Recopier mois précédent</button>
   </div>
-  <div id="inv-tab-historique" style="display:none">
-    <div class="hist-table card">
+  <div id="inv-historique" style="display:none">
+    <div class="ht card">
       <table><thead><tr>
         <th style="text-align:left">Mois</th><th>Total $</th><th>Ret.M</th><th>Ret.T</th>
       </tr></thead><tbody id="inv-hist-body"></tbody></table>
@@ -329,636 +301,621 @@ body{display:flex;flex-direction:column}
 </div>
 
 <nav class="nav">
-  <button class="nav-btn active" id="nav-dashboard" onclick="navigate('dashboard')">
+  <button class="nav-btn active" id="nav-dashboard" onclick="nav('dashboard')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
       <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
     </svg>Dashboard
   </button>
-  <button class="nav-btn" id="nav-dep" onclick="navigate('dep')">
+  <button class="nav-btn" id="nav-dep" onclick="nav('dep')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/>
     </svg>Dépenses
   </button>
-  <button class="nav-btn" id="nav-inv" onclick="navigate('inv')">
+  <button class="nav-btn" id="nav-inv" onclick="nav('inv')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
     </svg>Invest.
   </button>
 </nav>
 
-<!-- Settings modal -->
-<div class="modal-overlay" id="settings-modal">
+<!-- Settings -->
+<div class="modal-overlay" id="modal-settings">
   <div class="modal">
-    <div class="modal-handle"></div>
-    <div class="modal-title">⚙️ Paramètres</div>
-    <div class="setting-row">
-      <div><div class="setting-label">1 USD = ? QAR</div><div class="setting-sub">Taux QAR</div></div>
-      <input class="setting-input" id="s-qar" type="number" step="0.01">
-    </div>
-    <div class="setting-row">
-      <div><div class="setting-label">1 USD = ? CLP</div><div class="setting-sub">Taux CLP</div></div>
-      <input class="setting-input" id="s-clp" type="number" step="1">
-    </div>
-    <div class="setting-row">
-      <div><div class="setting-label">1 EUR = ? USD</div><div class="setting-sub">Taux EUR</div></div>
-      <input class="setting-input" id="s-eur" type="number" step="0.001">
-    </div>
-    <div style="height:16px"></div>
-    <button class="btn btn-primary" onclick="saveSettings()">Sauvegarder</button>
+    <div class="mhandle"></div>
+    <div class="mtitle">⚙️ Paramètres</div>
+    <div class="srow"><div><div class="slbl">1 USD = ? QAR</div><div class="ssub">Taux QAR</div></div><input class="sinp" id="s-qar" type="number" step="0.01"></div>
+    <div class="srow"><div><div class="slbl">1 USD = ? CLP</div><div class="ssub">Taux CLP</div></div><input class="sinp" id="s-clp" type="number" step="1"></div>
+    <div class="srow"><div><div class="slbl">1 EUR = ? USD</div><div class="ssub">Taux EUR</div></div><input class="sinp" id="s-eur" type="number" step="0.001"></div>
+    <div style="height:14px"></div>
+    <button class="btn btn-p" onclick="saveSettings()">Sauvegarder</button>
     <div style="height:8px"></div>
-    <button class="btn btn-danger" onclick="if(confirm('Effacer TOUTES les données ?'))clearAll()">Effacer toutes les données</button>
+    <button class="btn btn-g" style="color:var(--amber);border-color:var(--amber)" onclick="closeSettings();openCats()">🏷️ Gérer les catégories</button>
     <div style="height:8px"></div>
-    <button class="btn btn-ghost" onclick="closeSettings()">Fermer</button>
+    <button class="btn btn-g" style="color:var(--a2);border-color:var(--a2)" onclick="closeSettings();openAssets()">📊 Gérer les actifs</button>
+    <div style="height:8px"></div>
+    <button class="btn btn-d" onclick="if(confirm('Effacer toutes les données ?'))clearAll()">Effacer toutes les données</button>
+    <div style="height:8px"></div>
+    <button class="btn btn-g" onclick="closeSettings()">Fermer</button>
+  </div>
+</div>
+
+<!-- Cat manager -->
+<div class="modal-overlay" id="modal-cats">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div class="mtitle" style="margin-bottom:0">🏷️ Catégories</div>
+      <button class="btn btn-p" style="width:auto;padding:8px 16px;font-size:13px" onclick="addCat()">+ Ajouter</button>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;font-family:'DM Mono',monospace">L'historique est préservé lors du renommage</div>
+    <div id="cat-list"></div>
+    <div id="epick-wrap" style="display:none"><div class="epick" id="epick"></div></div>
+    <div style="height:12px"></div>
+    <button class="btn btn-p" onclick="saveCats()">✅ Sauvegarder</button>
+    <div style="height:8px"></div>
+    <button class="btn btn-g" onclick="closeCats()">Fermer</button>
+  </div>
+</div>
+
+<!-- Asset manager -->
+<div class="modal-overlay" id="modal-assets">
+  <div class="modal">
+    <div class="mhandle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div class="mtitle" style="margin-bottom:0">📊 Actifs</div>
+      <button class="btn btn-p" style="width:auto;padding:8px 16px;font-size:13px" onclick="addAsset()">+ Ajouter</button>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;font-family:'DM Mono',monospace">✓ actif · 👁 archivé (masqué, historique conservé)</div>
+    <div id="asset-list"></div>
+    <div style="height:12px"></div>
+    <button class="btn btn-p" onclick="saveAssets()">✅ Sauvegarder</button>
+    <div style="height:8px"></div>
+    <button class="btn btn-g" onclick="closeAssets()">Fermer</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ── HISTORICAL DATA (pré-chargé depuis Excel) ─────────────
+// ═══════════════════════════════════════════════════════════
+// HISTORICAL DATA
+// ═══════════════════════════════════════════════════════════
 const HIST_INV = [{"month": "2021-11", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 16856.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2021-11"}, {"month": "2021-12", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 19486.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2021-12"}, {"month": "2022-01", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 19045.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-01"}, {"month": "2022-02", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 22060.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-02"}, {"month": "2022-03", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 22075.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-03"}, {"month": "2022-04", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 22090.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-04"}, {"month": "2022-05", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21605.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-05"}, {"month": "2022-06", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21620.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-06"}, {"month": "2022-07", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21635.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-07"}, {"month": "2022-08", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21650.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-08"}, {"month": "2022-09", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21665.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-09"}, {"month": "2022-10", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18180.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-10"}, {"month": "2022-11", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18195.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-11"}, {"month": "2022-12", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18210.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-12"}, {"month": "2023-01", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 20999.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-01"}, {"month": "2023-02", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21014.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-02"}, {"month": "2023-03", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21029.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-03"}, {"month": "2023-04", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21044.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-04"}, {"month": "2023-05", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21059.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-05"}, {"month": "2023-06", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21074.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-06"}, {"month": "2023-07", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21089.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-07"}, {"month": "2023-08", "santander": 1000000.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 19104.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-08"}, {"month": "2023-09", "santander": 1002831.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 19119.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-09"}, {"month": "2023-10", "santander": 1009016.0, "mm_dollar": 500.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 19133.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-10"}, {"month": "2023-11", "santander": 1014367.0, "mm_dollar": 500.62, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18149.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-11"}, {"month": "2023-12", "santander": 1027058.0, "mm_dollar": 502.61, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18164.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-12"}, {"month": "2024-01", "santander": 1040430.0, "mm_dollar": 755.09, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18756.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-01"}, {"month": "2024-02", "santander": 1293137.0, "mm_dollar": 757.76, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18756.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-02"}, {"month": "2024-03", "santander": 1305692.0, "mm_dollar": 1056.36, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18756.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-03"}, {"month": "2024-04", "santander": 1415321.0, "mm_dollar": 2264.37, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18456.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-04"}, {"month": "2024-05", "santander": 1654312.0, "mm_dollar": 2793.56, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18456.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-05"}, {"month": "2024-06", "santander": 1668020.0, "mm_dollar": 4029.81, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 17956.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-06"}, {"month": "2024-07", "santander": 1679040.0, "mm_dollar": 5370.75, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 16556.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-07"}, {"month": "2024-08", "santander": 1690296.0, "mm_dollar": 6761.53, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 16556.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-08"}, {"month": "2024-09", "santander": 1701027.0, "mm_dollar": 7483.9, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 16556.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-09"}, {"month": "2024-10", "santander": 1701036.0, "mm_dollar": 9528.2, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 16056.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-10"}, {"month": "2024-11", "santander": 9311089.0, "mm_dollar": 11216.0, "etf_usd": 5072.39, "apple": 158.65, "msft": 158.34, "nvidia": 125.67, "amazon": 96.8, "alphabet": 63.7, "tesla": 30.79, "btc": 561.96, "eth": 144.18, "livret_a": 16056.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-11"}, {"month": "2024-12", "santander": 9352093.0, "mm_dollar": 11249.92, "etf_usd": 7176.01, "apple": 245.06, "msft": 229.78, "nvidia": 177.23, "amazon": 147.28, "alphabet": 102.87, "tesla": 55.78, "btc": 742.97, "eth": 183.01, "livret_a": 15556.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-12"}, {"month": "2025-01", "santander": 9415500.0, "mm_dollar": 11283.17, "etf_usd": 8508.93, "apple": 271.5, "msft": 259.51, "nvidia": 184.62, "amazon": 178.41, "alphabet": 122.72, "tesla": 59.17, "btc": 931.2, "eth": 201.04, "livret_a": 15780.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-01"}, {"month": "2025-02", "santander": 9455186.0, "mm_dollar": 11312.29, "etf_usd": 10666.64, "apple": 341.5, "msft": 317.47, "nvidia": 243.64, "amazon": 199.38, "alphabet": 129.02, "tesla": 52.46, "btc": 896.8399999999999, "eth": 166.55, "livret_a": 14880.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-02"}, {"month": "2025-03", "santander": 9504590.0, "mm_dollar": 11344.32, "etf_usd": 11039.08, "apple": 341.91, "msft": 334.93, "nvidia": 234.96, "amazon": 198.25, "alphabet": 129.0, "tesla": 52.33, "btc": 1019.15, "eth": 162.54, "livret_a": 10280.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-03"}, {"month": "2025-04", "santander": 9560511.0, "mm_dollar": 11374.92, "etf_usd": 12504.27, "apple": 374.83, "msft": 400.33, "nvidia": 273.94, "amazon": 220.15, "alphabet": 152.82, "tesla": 70.11, "btc": 1337.64, "eth": 196.4, "livret_a": 9280.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-04"}, {"month": "2025-05", "santander": 9577179.0, "mm_dollar": 11404.69, "etf_usd": 13473.6, "apple": 366.83, "msft": 470.11, "nvidia": 366.5, "amazon": 249.3, "alphabet": 167.77, "tesla": 89.54, "btc": 1528.9, "eth": 295.61, "livret_a": 10368.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-05"}, {"month": "2025-06", "santander": 9606852.0, "mm_dollar": 11437.56, "etf_usd": 14067.22, "apple": 362.11, "msft": 509.09, "nvidia": 409.33, "amazon": 268.17, "alphabet": 174.42, "tesla": 78.95, "btc": 1516.53, "eth": 268.64, "livret_a": 6868.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-06"}, {"month": "2025-07", "santander": 9612680.0, "mm_dollar": 11466.51, "etf_usd": 14816.27, "apple": 384.01, "msft": 525.94, "nvidia": 451.17, "amazon": 279.41, "alphabet": 186.95, "tesla": 79.08, "btc": 1674.22, "eth": 423.97, "livret_a": 6868.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-07"}, {"month": "2025-08", "santander": 9676320.0, "mm_dollar": 11499.71, "etf_usd": 18885.88, "apple": 544.96, "msft": 635.06, "nvidia": 556.24, "amazon": 348.97, "alphabet": 253.61, "tesla": 112.57, "btc": 1872.99, "eth": 595.64, "livret_a": 6868.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-08"}, {"month": "2025-09", "santander": 9709458.0, "mm_dollar": 11531.86, "etf_usd": 21423.93, "apple": 663.29, "msft": 701.97, "nvidia": 611.05, "amazon": 370.44, "alphabet": 329.52, "tesla": 160.51, "btc": 2090.22, "eth": 603.4, "livret_a": 6868.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-09"}, {"month": "2025-10", "santander": 9737678.0, "mm_dollar": 11563.68, "etf_usd": 28570.24, "apple": 916.96, "msft": 922.87, "nvidia": 875.78, "amazon": 505.05, "alphabet": 485.59, "tesla": 207.1, "btc": 2629.17, "eth": 672.3, "livret_a": 6868.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-10"}, {"month": "2025-11", "santander": 9746202.0, "mm_dollar": 11571.8, "etf_usd": 30233.86, "apple": 985.52, "msft": 938.5, "nvidia": 848.68, "amazon": 577.58, "alphabet": 496.26, "tesla": 217.84, "btc": 2615.3, "eth": 617.8, "livret_a": 6868.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-11"}, {"month": "2026-03", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21000.0, "etf_eur": 16000.0, "cash_eur": 9000.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2026-03"}];
 const HIST_EXP = [{"id": "hist_5", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 59.950549450549445, "montant_usd": 16.469931167733364}, {"id": "hist_6", "date": "2026-02-01", "type": "Depense", "categorie": "Autre", "montant_qar": 100.0, "montant_usd": 27.47252747252747}, {"id": "hist_7", "date": "2026-02-01", "type": "Salaire", "categorie": "Salaire", "montant_qar": 11945.0, "montant_usd": 3281.5934065934066}, {"id": "hist_8", "date": "2026-02-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 441.5302197802198, "montant_usd": 121.2995109286318}, {"id": "hist_9", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 38.0, "montant_usd": 10.43956043956044}, {"id": "hist_10", "date": "2026-02-01", "type": "Depense", "categorie": "Voiture", "montant_qar": 1680.0, "montant_usd": 461.53846153846155}, {"id": "hist_11", "date": "2026-02-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 75.79945054945055, "montant_usd": 20.82402487622268}, {"id": "hist_12", "date": "2026-02-01", "type": "Depense", "categorie": "Santé", "montant_qar": 109.4010989010989, "montant_usd": 30.05524695085135}, {"id": "hist_13", "date": "2026-02-01", "type": "Depense", "categorie": "Santé", "montant_qar": 103.0, "montant_usd": 28.296703296703296}, {"id": "hist_14", "date": "2026-02-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 2883.25, "montant_usd": 792.1016483516484}, {"id": "hist_15", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 19.0, "montant_usd": 5.21978021978022}, {"id": "hist_16", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 34.0, "montant_usd": 9.340659340659341}, {"id": "hist_17", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 36.0, "montant_usd": 9.89010989010989}, {"id": "hist_18", "date": "2026-02-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 88.0, "montant_usd": 24.175824175824175}, {"id": "hist_19", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 36.0, "montant_usd": 9.89010989010989}, {"id": "hist_20", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 34.0, "montant_usd": 9.340659340659341}, {"id": "hist_21", "date": "2026-02-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 247.49999999999997, "montant_usd": 67.99450549450549}, {"id": "hist_22", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 25.499999999999996, "montant_usd": 7.005494505494505}, {"id": "hist_23", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 49.5, "montant_usd": 13.598901098901099}, {"id": "hist_24", "date": "2026-02-01", "type": "Depense", "categorie": "Autre", "montant_qar": 350.0, "montant_usd": 96.15384615384615}, {"id": "hist_25", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 50.730769230769226, "montant_usd": 13.93702451394759}, {"id": "hist_26", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 25.499999999999996, "montant_usd": 7.005494505494505}, {"id": "hist_27", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 54.74999999999999, "montant_usd": 15.041208791208788}, {"id": "hist_28", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 65.51923076923077, "montant_usd": 17.999788672865595}, {"id": "hist_29", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 1.0, "montant_usd": 0.2747252747252747}, {"id": "hist_30", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 1.0, "montant_usd": 0.2747252747252747}, {"id": "hist_31", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 130.54945054945054, "montant_usd": 35.86523366743147}, {"id": "hist_32", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 88.99999999999999, "montant_usd": 24.450549450549445}, {"id": "hist_33", "date": "2026-03-01", "type": "Depense", "categorie": "Sortie", "montant_qar": 15.0, "montant_usd": 4.1208791208791204}, {"id": "hist_34", "date": "2026-03-01", "type": "Depense", "categorie": "Cadeaux", "montant_qar": 1000.0, "montant_usd": 274.72527472527474}, {"id": "hist_35", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 494.59065934065933, "montant_usd": 135.8765547639174}, {"id": "hist_36", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 174.49999999999997, "montant_usd": 47.93956043956043}, {"id": "hist_37", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 84.9010989010989, "montant_usd": 23.324477720082115}, {"id": "hist_38", "date": "2026-03-01", "type": "Depense", "categorie": "Cadeaux", "montant_qar": 200.0, "montant_usd": 54.94505494505494}, {"id": "hist_39", "date": "2026-03-01", "type": "Depense", "categorie": "Shopping", "montant_qar": 175.5, "montant_usd": 48.214285714285715}, {"id": "hist_40", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 119.0, "montant_usd": 32.69230769230769}, {"id": "hist_41", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 59.480769230769226, "montant_usd": 16.340870667793745}, {"id": "hist_42", "date": "2026-03-01", "type": "Depense", "categorie": "Sortie", "montant_qar": 199.0, "montant_usd": 54.67032967032967}, {"id": "hist_43", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 191.0, "montant_usd": 52.47252747252747}, {"id": "hist_44", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 2957.0, "montant_usd": 812.3626373626373}, {"id": "hist_45", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 182.0, "montant_usd": 50.0}, {"id": "hist_46", "date": "2026-03-01", "type": "Depense", "categorie": "Sortie", "montant_qar": 84.0, "montant_usd": 23.076923076923077}, {"id": "hist_47", "date": "2026-03-01", "type": "Depense", "categorie": "Sortie", "montant_qar": 68.0, "montant_usd": 18.681318681318682}, {"id": "hist_48", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 626.0, "montant_usd": 171.97802197802199}, {"id": "hist_49", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 503.0, "montant_usd": 138.18681318681317}, {"id": "hist_50", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 506.68131868131866, "montant_usd": 139.19816447288974}, {"id": "hist_51", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 626.0, "montant_usd": 171.97802197802199}, {"id": "hist_52", "date": "2026-03-01", "type": "Depense", "categorie": "Coiffeur", "montant_qar": 64.0, "montant_usd": 17.58241758241758}, {"id": "hist_53", "date": "2026-03-01", "type": "Depense", "categorie": "Autre", "montant_qar": 235.99999999999997, "montant_usd": 64.83516483516483}, {"id": "hist_54", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 226.8708791208791, "montant_usd": 62.3271645936481}, {"id": "hist_55", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 109.4010989010989, "montant_usd": 30.05524695085135}, {"id": "hist_56", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 136.0, "montant_usd": 37.362637362637365}, {"id": "hist_57", "date": "2026-03-01", "type": "Depense", "categorie": "Shopping", "montant_qar": 386.70054945054943, "montant_usd": 106.23641468421687}, {"id": "hist_58", "date": "2026-03-01", "type": "Depense", "categorie": "Carburant", "montant_qar": 70.0, "montant_usd": 19.23076923076923}, {"id": "hist_59", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 111.0, "montant_usd": 30.494505494505493}, {"id": "hist_60", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 783.1510989010989, "montant_usd": 215.15140079700518}, {"id": "hist_61", "date": "2026-03-01", "type": "Depense", "categorie": "Téléphone", "montant_qar": 50.0, "montant_usd": 13.736263736263735}, {"id": "hist_62", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 35.0, "montant_usd": 9.615384615384615}, {"id": "hist_63", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 109.4010989010989, "montant_usd": 30.05524695085135}, {"id": "hist_64", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 175.0, "montant_usd": 48.07692307692307}, {"id": "hist_65", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 71.0, "montant_usd": 19.505494505494504}, {"id": "hist_66", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 1312.1510989010987, "montant_usd": 360.4810711266755}, {"id": "hist_67", "date": "2026-03-01", "type": "Depense", "categorie": "Loyer", "montant_qar": 9500.0, "montant_usd": 2609.8901098901097}, {"id": "hist_68", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 182.0, "montant_usd": 50.0}, {"id": "hist_69", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 109.4, "montant_usd": 30.054945054945055}, {"id": "hist_70", "date": "2026-03-01", "type": "Depense", "categorie": "Voiture", "montant_qar": 3360.0, "montant_usd": 923.0769230769231}, {"id": "hist_71", "date": "2026-03-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 10.0, "montant_usd": 2.7472527472527473}, {"id": "hist_72", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 764.32, "montant_usd": 209.97802197802199}, {"id": "hist_73", "date": "2026-03-01", "type": "Depense", "categorie": "Shopping", "montant_qar": 111.85, "montant_usd": 30.728021978021975}, {"id": "hist_74", "date": "2026-03-01", "type": "Salaire", "categorie": "Salaire", "montant_qar": 28009.0, "montant_usd": 7694.780219780219}, {"id": "hist_75", "date": "2026-04-01", "type": "Salaire", "categorie": "Salaire", "montant_qar": 29410.0, "montant_usd": 8079.670329670329}];
 
-// ── DATA LAYER ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// DEFAULT CONFIG
+// ═══════════════════════════════════════════════════════════
+const DEF_ASSETS = [
+  {id:'santander', label:'Santander MP',   cur:'CLP',    grp:'CLP',    arch:false},
+  {id:'mm_dollar', label:'MM Dollar',      cur:'USD',    grp:'USD',    arch:false},
+  {id:'etf_usd',   label:'ETF S&P500 USD', cur:'USD',    grp:'USD',    arch:false},
+  {id:'apple',     label:'Apple',          cur:'USD',    grp:'USD',    arch:false},
+  {id:'msft',      label:'Microsoft',      cur:'USD',    grp:'USD',    arch:false},
+  {id:'nvidia',    label:'Nvidia',         cur:'USD',    grp:'USD',    arch:false},
+  {id:'amazon',    label:'Amazon',         cur:'USD',    grp:'USD',    arch:false},
+  {id:'alphabet',  label:'Alphabet',       cur:'USD',    grp:'USD',    arch:false},
+  {id:'tesla',     label:'Tesla',          cur:'USD',    grp:'USD',    arch:false},
+  {id:'livret_a',  label:'Livret A',       cur:'EUR',    grp:'EUR',    arch:false},
+  {id:'etf_eur',   label:'ETF S&P500 EUR', cur:'EUR',    grp:'EUR',    arch:false},
+  {id:'cash_eur',  label:'Cash EUR',       cur:'EUR',    grp:'EUR',    arch:false},
+  {id:'btc',       label:'BTC',            cur:'CRYPTO', grp:'Crypto', arch:false},
+  {id:'eth',       label:'ETH',            cur:'CRYPTO', grp:'Crypto', arch:false},
+];
+
+const DEF_CATS = [
+  {name:'Alimentation',icon:'🍽️',color:'#3b82f6'},{name:'Supermarché',icon:'🛒',color:'#06b6d4'},
+  {name:'Livraison',icon:'📦',color:'#8b5cf6'},{name:'Transport',icon:'🚖',color:'#f59e0b'},
+  {name:'Hélène',icon:'👩',color:'#ec4899'},{name:'Santé',icon:'🏥',color:'#ef4444'},
+  {name:'Voiture',icon:'🚗',color:'#6b7280'},{name:'Loyer',icon:'🏠',color:'#10b981'},
+  {name:'Sortie',icon:'🎉',color:'#f97316'},{name:'Shopping',icon:'🛍️',color:'#a855f7'},
+  {name:'Coiffeur',icon:'✂️',color:'#14b8a6'},{name:'Carburant',icon:'⛽',color:'#84cc16'},
+  {name:'Téléphone',icon:'📱',color:'#3b82f6'},{name:'Cadeaux',icon:'🎁',color:'#f59e0b'},
+  {name:'Autre',icon:'💫',color:'#6b7280'},
+];
+
+// ═══════════════════════════════════════════════════════════
+// DATABASE
+// ═══════════════════════════════════════════════════════════
 const DB = {
-  get expenses()    { return JSON.parse(localStorage.getItem('ft_exp')||'[]') },
-  set expenses(v)   { localStorage.setItem('ft_exp',JSON.stringify(v)) },
-  get investments() { return JSON.parse(localStorage.getItem('ft_inv')||'[]') },
-  set investments(v){ localStorage.setItem('ft_inv',JSON.stringify(v)) },
-  get settings()    { return JSON.parse(localStorage.getItem('ft_set')||'{"qar":3.64,"clp":920,"eur":1.08}') },
-  set settings(v)   { localStorage.setItem('ft_set',JSON.stringify(v)) },
-  get histLoaded()  { return localStorage.getItem('ft_hist_loaded')==='1' },
-  set histLoaded(v) { localStorage.setItem('ft_hist_loaded', v?'1':'0') }
+  get exp()    { return JSON.parse(localStorage.getItem('ft_exp')  ||'[]') },
+  set exp(v)   { localStorage.setItem('ft_exp',  JSON.stringify(v)) },
+  get inv()    { return JSON.parse(localStorage.getItem('ft_inv')  ||'[]') },
+  set inv(v)   { localStorage.setItem('ft_inv',  JSON.stringify(v)) },
+  get set()    { return JSON.parse(localStorage.getItem('ft_set')  ||'{"qar":3.64,"clp":920,"eur":1.08}') },
+  set set(v)   { localStorage.setItem('ft_set',  JSON.stringify(v)) },
+  get assets() { return JSON.parse(localStorage.getItem('ft_ast')  ||'null') || DEF_ASSETS },
+  set assets(v){ localStorage.setItem('ft_ast',  JSON.stringify(v)) },
+  get cats()   { return JSON.parse(localStorage.getItem('ft_cats') ||'null') || DEF_CATS },
+  set cats(v)  { localStorage.setItem('ft_cats', JSON.stringify(v)) },
+  get loaded() { return localStorage.getItem('ft_loaded')==='1' },
+  set loaded(v){ localStorage.setItem('ft_loaded', v?'1':'0') },
 };
 
-// Merge historical data on first load
-function loadHistoricalData() {
-  if (DB.histLoaded) return;
-  // Investments: add only if not already present
-  const existing_inv = new Set(DB.investments.map(i=>i.month));
-  const merged_inv = [...DB.investments];
-  for (const inv of HIST_INV) {
-    if (!existing_inv.has(inv.month)) merged_inv.push(inv);
-  }
-  DB.investments = merged_inv;
-
-  // Expenses: add historical ones (prefixed id)
-  const existing_exp = new Set(DB.expenses.map(e=>e.id));
-  const merged_exp = [...DB.expenses];
-  for (const exp of HIST_EXP) {
-    if (!existing_exp.has(exp.id)) merged_exp.push(exp);
-  }
-  DB.expenses = merged_exp;
-  DB.histLoaded = true;
-  console.log(`Loaded ${merged_inv.length} inv months, ${merged_exp.length} expense entries`);
+function loadHist() {
+  if (DB.loaded) return;
+  const ei = new Set(DB.inv.map(i=>i.month));
+  const mi = [...DB.inv];
+  HIST_INV.forEach(i=>{ if(!ei.has(i.month)) mi.push(i); });
+  DB.inv = mi;
+  const ee = new Set(DB.exp.map(e=>e.id));
+  const me = [...DB.exp];
+  HIST_EXP.forEach(e=>{ if(!ee.has(e.id)) me.push(e); });
+  DB.exp = me;
+  DB.loaded = true;
 }
 
-// ── HELPERS ───────────────────────────────────────────────
-const fmt   = (n,d=0) => isFinite(n)?n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
-const fmtP  = (n) => isFinite(n)?(n>=0?'+':'')+fmt(n*100,2)+'%':'—';
-const fmtU  = (n) => isFinite(n)?'$'+fmt(n):'—';
-const today = () => new Date().toISOString().slice(0,10);
-const monthOf = d => d?d.slice(0,7):'';
-const monthLabel = ym => {
-  if(!ym) return '';
-  const [y,m] = ym.split('-');
-  return new Date(y,m-1).toLocaleDateString('fr-FR',{month:'short',year:'numeric'});
-};
-const CAT_ICONS  = {Alimentation:'🍽️',Supermarché:'🛒',Livraison:'📦',Transport:'🚖',
-  Hélène:'👩',Santé:'🏥',Voiture:'🚗',Loyer:'🏠',Sortie:'🎉',Shopping:'🛍️',
-  Coiffeur:'✂️',Carburant:'⛽',Téléphone:'📱',Cadeaux:'🎁',Autre:'💫',Salaire:'💰'};
-const CAT_COLORS = {Alimentation:'#3b82f6',Supermarché:'#06b6d4',Livraison:'#8b5cf6',
-  Transport:'#f59e0b',Hélène:'#ec4899',Santé:'#ef4444',Voiture:'#6b7280',Loyer:'#10b981',
-  Sortie:'#f97316',Shopping:'#a855f7',Coiffeur:'#14b8a6',Carburant:'#84cc16',
-  Téléphone:'#3b82f6',Cadeaux:'#f59e0b',Autre:'#6b7280',Salaire:'#10b981'};
+// ═══════════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════════
+const fmt   = (n,d=0)=>isFinite(n)?n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
+const fmtP  = n=>isFinite(n)?(n>=0?'+':'')+fmt(n*100,2)+'%':'—';
+const fmtU  = n=>isFinite(n)?'$'+fmt(n):'—';
+const today = ()=>new Date().toISOString().slice(0,10);
+const moOf  = d=>d?d.slice(0,7):'';
+const moLbl = ym=>{ if(!ym)return''; const[y,m]=ym.split('-'); return new Date(y,m-1).toLocaleDateString('fr-FR',{month:'short',year:'numeric'}); };
+const catIcon  = n=>(DB.cats.find(c=>c.name===n)||{icon:'💫'}).icon;
+const catColor = n=>(DB.cats.find(c=>c.name===n)||{color:'#6b7280'}).color;
 
-// ── INVESTMENT CALC ───────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// INVESTMENT CALC
+// ═══════════════════════════════════════════════════════════
+function toUSD(assetId, value) {
+  if (!value) return 0;
+  const s = DB.set;
+  const a = DB.assets.find(x=>x.id===assetId);
+  if (!a) return value; // unknown = assume USD
+  if (a.cur==='CLP')    return value / s.clp;
+  if (a.cur==='EUR')    return value * s.eur;
+  return value; // USD + CRYPTO
+}
+
 function calcTotal(inv) {
-  const s = DB.settings;
-  return (inv.santander||0)/s.clp
-    + (inv.mm_dollar||0)+(inv.etf_usd||0)+(inv.apple||0)+(inv.msft||0)
-    + (inv.nvidia||0)+(inv.amazon||0)+(inv.alphabet||0)+(inv.tesla||0)
-    + (inv.btc||0)+(inv.eth||0)
-    + ((inv.livret_a||0)+(inv.etf_eur||0)+(inv.cash_eur||0))*s.eur;
+  return DB.assets.reduce((sum,a)=>sum + toUSD(a.id, inv[a.id]||0), 0);
 }
 
-function calcReturns(invs_sorted) {
-  if (invs_sorted.length < 2) return {retM:null,retT:null};
-  const s   = DB.settings;
-  const last = invs_sorted[invs_sorted.length-1];
-  const prev = invs_sorted[invs_sorted.length-2];
-  const first= invs_sorted[0];
-  const ap   = i => (i.ap_clp||0)/s.clp+(i.ap_usd||0)+(i.ap_eur||0)*s.eur+(i.ap_crypto||0);
-  const totalAp = invs_sorted.slice(1).reduce((s,i)=>s+ap(i),0);
-  const tNow=calcTotal(last), tPrev=calcTotal(prev), tFirst=calcTotal(first);
+function calcApport(inv) {
+  const s = DB.set;
+  return (inv.ap_clp||0)/s.clp + (inv.ap_usd||0) + (inv.ap_eur||0)*s.eur + (inv.ap_crypto||0);
+}
+
+function calcReturns(sorted) {
+  if (sorted.length < 2) return {retM:null, retT:null};
+  const last  = sorted[sorted.length-1];
+  const prev  = sorted[sorted.length-2];
+  const first = sorted[0];
+  const tNow  = calcTotal(last), tPrev = calcTotal(prev), tFirst = calcTotal(first);
+  const totalAp = sorted.slice(1).reduce((s,i)=>s+calcApport(i), 0);
   return {
-    retM: tPrev>0?(tNow-tPrev-ap(last))/tPrev:null,
-    retT: (tFirst+totalAp)>0?(tNow-tFirst-totalAp)/(tFirst+totalAp):null
+    retM: tPrev > 0 ? (tNow - tPrev - calcApport(last)) / tPrev : null,
+    retT: (tFirst + totalAp) > 0 ? (tNow - tFirst - totalAp) / (tFirst + totalAp) : null,
   };
 }
 
-// ── NAVIGATION ────────────────────────────────────────────
-let currentScreen='dashboard';
-function navigate(s) {
+// ═══════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════
+let curScreen = 'dashboard';
+function nav(s) {
   document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('screen-'+s).classList.add('active');
   document.getElementById('nav-'+s).classList.add('active');
-  currentScreen=s;
-  if(s==='dashboard') renderDashboard();
-  if(s==='dep') renderDepList();
-  if(s==='inv') renderInvHistory();
+  curScreen = s;
+  if (s==='dashboard') renderDashboard();
+  if (s==='dep')       { renderDepList(); }
+  if (s==='inv')       { renderInvForm(); renderInvHist(); }
 }
 
-// ── DASHBOARD ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════════
 function renderDashboard() {
-  const s    = DB.settings;
-  const invs = DB.investments.sort((a,b)=>a.month.localeCompare(b.month));
-  const exps = DB.expenses;
+  document.getElementById('topbar-date').textContent =
+    new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+  const s    = DB.set;
+  const invs = [...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));
+  const exps = DB.exp;
   const nowYM= today().slice(0,7);
 
-  // KPIs investissements
+  // KPIs
   if (invs.length > 0) {
     const last  = invs[invs.length-1];
     const total = calcTotal(last);
     document.getElementById('kpi-total').textContent = fmtU(total);
-    document.getElementById('kpi-total-sub').textContent = 'USD · '+monthLabel(last.month);
-    document.getElementById('inv-month-label').textContent = monthLabel(last.month);
+    document.getElementById('kpi-sub').textContent   = 'USD · '+moLbl(last.month);
+    document.getElementById('inv-mo-lbl').textContent = moLbl(last.month);
     const {retM,retT} = calcReturns(invs);
-    const rmEl=document.getElementById('kpi-retm');
-    rmEl.textContent=fmtP(retM); rmEl.className='kpi-value '+(retM>0?'green':retM<0?'red':'');
-    const rtEl=document.getElementById('kpi-rett');
-    rtEl.textContent=fmtP(retT); rtEl.className='kpi-value '+(retT>0?'green':retT<0?'red':'');
+    const rm = document.getElementById('kpi-retm');
+    rm.textContent = fmtP(retM); rm.className='kpi-value '+(retM>0?'green':retM<0?'red':'');
+    const rt = document.getElementById('kpi-rett');
+    rt.textContent = fmtP(retT); rt.className='kpi-value '+(retT>0?'green':retT<0?'red':'');
 
-    // Detail + Allocation
-    const clpU = (last.santander||0)/s.clp;
-    const usdT = (last.mm_dollar||0)+(last.etf_usd||0)+(last.apple||0)+(last.msft||0)
-               + (last.nvidia||0)+(last.amazon||0)+(last.alphabet||0)+(last.tesla||0)
-               + (last.btc||0)+(last.eth||0);
-    const eurU = ((last.livret_a||0)+(last.etf_eur||0)+(last.cash_eur||0))*s.eur;
-    const cryptoU = (last.btc||0)+(last.eth||0);
-    document.getElementById('inv-detail-list').innerHTML =
-      [['🏦 CLP (Santander)',clpU],['📈 USD Actions',usdT],['🇫🇷 EUR',eurU],['₿ Crypto',cryptoU]]
-      .map(([l,v])=>`<div class="table-row"><span class="row-label">${l}</span><span class="row-value">${fmtU(v)}</span></div>`)
-      .join('');
-    renderAllocation(total, clpU, usdT, eurU, cryptoU, last, s);
+    // Detail by group
+    const byGroup = {};
+    DB.assets.forEach(a => {
+      if (!byGroup[a.grp]) byGroup[a.grp] = 0;
+      byGroup[a.grp] += toUSD(a.id, last[a.id]||0);
+    });
+    const GRP_ICONS = {CLP:'🏦',USD:'📈',EUR:'🇫🇷',Crypto:'₿'};
+    document.getElementById('inv-detail').innerHTML = Object.entries(byGroup)
+      .filter(([,v])=>v>0)
+      .map(([g,v])=>`<div class="trow"><span class="tlbl">${GRP_ICONS[g]||'•'} ${g}</span><span class="tval">${fmtU(v)}</span></div>`)
+      .join('') || '<div class="empty"><div class="empty-icon">📊</div><div>Aucun investissement</div></div>';
+
+    // Allocation
+    renderAlloc(total, last);
   } else {
-    document.getElementById('kpi-total').textContent='—';
-    document.getElementById('inv-detail-list').innerHTML=
-      '<div class="empty"><div class="empty-icon">📊</div><div class="empty-text">Aucun investissement</div></div>';
+    ['kpi-total','kpi-retm','kpi-rett'].forEach(id=>document.getElementById(id).textContent='—');
+    document.getElementById('inv-detail').innerHTML='<div class="empty"><div class="empty-icon">📊</div><div>Aucun investissement saisi</div></div>';
+    document.getElementById('inv-alloc').innerHTML='';
   }
 
-  // Budget 5 derniers mois
+  // Budget 5 months
   renderBudget5();
 
-  // Dépenses récentes (mois courant)
-  const recent = exps.filter(e=>monthOf(e.date)===nowYM&&e.type==='Depense')
+  // Recent expenses
+  const recent = exps.filter(e=>moOf(e.date)===nowYM&&e.type==='Depense')
     .sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
-  const recEl=document.getElementById('recent-exp-list');
-  recEl.innerHTML = recent.length===0
-    ? '<div class="empty"><div class="empty-icon">🧾</div><div class="empty-text">Aucune dépense ce mois</div></div>'
-    : recent.map(e=>renderExpItem(e,false)).join('');
-}
-
-function renderAllocation(total, clpU, usdT, eurU, cryptoU, last, s) {
-  const el = document.getElementById('inv-alloc-card');
-  if (!el) return;
-  if (!total || total <= 0) { el.innerHTML = '<div class="empty"><div class="empty-icon">📊</div><div class="empty-text">Aucune donnée</div></div>'; return; }
-
-  // Asset classes
-  const classes = [
-    { label:'CLP', color:'#3b82f6', value: clpU },
-    { label:'USD Actions', color:'#10b981', value: usdT - cryptoU },
-    { label:'EUR', color:'#06b6d4', value: eurU },
-    { label:'Crypto', color:'#8b5cf6', value: cryptoU },
-  ].filter(c => c.value > 0);
-
-  // Individual assets
-  const assets = [
-    { label:'Santander', color:'#3b82f6', value:(last.santander||0)/s.clp },
-    { label:'MM Dollar', color:'#22c55e', value:last.mm_dollar||0 },
-    { label:'ETF S&P500', color:'#10b981', value:last.etf_usd||0 },
-    { label:'Apple', color:'#f97316', value:last.apple||0 },
-    { label:'Microsoft', color:'#06b6d4', value:last.msft||0 },
-    { label:'Nvidia', color:'#84cc16', value:last.nvidia||0 },
-    { label:'Amazon', color:'#f59e0b', value:last.amazon||0 },
-    { label:'Alphabet', color:'#ec4899', value:last.alphabet||0 },
-    { label:'Tesla', color:'#ef4444', value:last.tesla||0 },
-    { label:'Livret A', color:'#0891b2', value:(last.livret_a||0)*s.eur },
-    { label:'ETF EUR', color:'#22d3ee', value:(last.etf_eur||0)*s.eur },
-    { label:'Cash EUR', color:'#67e8f9', value:(last.cash_eur||0)*s.eur },
-    { label:'BTC', color:'#f59e0b', value:last.btc||0 },
-    { label:'ETH', color:'#8b5cf6', value:last.eth||0 },
-  ].filter(a => a.value > 0).sort((a,b)=>b.value-a.value);
-
-  // Bar by class
-  const barSegs = classes.map(c =>
-    `<div class="alloc-seg" style="width:${(c.value/total*100).toFixed(1)}%;background:${c.color};flex-shrink:0"></div>`
-  ).join('');
-
-  // Class legend
-  const classLegend = classes.map(c =>
-    `<div class="alloc-item"><span class="alloc-dot" style="background:${c.color}"></span>${c.label} <b style="color:var(--text);margin-left:4px">${(c.value/total*100).toFixed(1)}%</b></div>`
-  ).join('');
-
-  // Individual asset rows
-  const assetRows = assets.map(a => {
-    const pct = (a.value/total*100).toFixed(1);
-    return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #0d1525">
-      <div style="width:6px;height:6px;border-radius:50%;background:${a.color};flex-shrink:0"></div>
-      <span style="flex:1;font-size:12px;color:var(--muted)">${a.label}</span>
-      <div style="width:80px;height:4px;background:var(--border);border-radius:2px;overflow:hidden">
-        <div style="height:100%;width:${pct}%;background:${a.color};border-radius:2px"></div>
-      </div>
-      <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text);width:40px;text-align:right">${pct}%</span>
-      <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);width:70px;text-align:right">${fmtU(a.value)}</span>
-    </div>`;
-  }).join('');
-
-  el.innerHTML = `
-    <div class="alloc-bar">${barSegs}</div>
-    <div class="alloc-legend">${classLegend}</div>
-    <div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">${assetRows}</div>`;
+  document.getElementById('recent-exp').innerHTML = recent.length
+    ? recent.map(e=>expItem(e,false)).join('')
+    : '<div class="empty"><div class="empty-icon">🧾</div><div>Aucune dépense ce mois</div></div>';
 }
 
 function renderBudget5() {
-  const exps = DB.expenses;
-  // Get last 5 months that have data, or last 5 calendar months
-  const allMonths = [...new Set(exps.map(e=>monthOf(e.date)))].sort();
-  const nowYM = today().slice(0,7);
-  // Build 5 months ending at current month
+  const exps = DB.exp;
   const months5 = [];
   for (let i=0; i<=4; i++) {
-    const d = new Date(); d.setDate(1); d.setMonth(d.getMonth()-i);
+    const d=new Date(); d.setDate(1); d.setMonth(d.getMonth()-i);
     months5.push(d.toISOString().slice(0,7));
   }
-
-  const CATS=['Alimentation','Supermarché','Livraison','Transport','Hélène','Santé',
-              'Voiture','Loyer','Sortie','Shopping','Coiffeur','Carburant','Téléphone','Cadeaux','Autre'];
-
-  const tbl = document.getElementById('budget5-table');
-  const hdr = '<thead><tr><th style="text-align:left;min-width:90px">Catégorie</th>'
-    + months5.map(m=>`<th style="min-width:70px">${monthLabel(m)}</th>`).join('')
-    + '</tr></thead>';
-
-  // Salaire row
-  const salRow = '<tr class="sal-row"><td>💰 Salaire</td>'
-    + months5.map(m=>{
-        const v=exps.filter(e=>monthOf(e.date)===m&&e.type==='Salaire').reduce((s,e)=>s+e.montant_qar,0);
-        return `<td>${v?fmt(v)+' QAR':'—'}</td>`;
-      }).join('') + '</tr>';
-
-  // Category rows (only show categories that have any data)
-  const activeCats = CATS.filter(cat => exps.some(e=>e.categorie===cat));
-  const catRows = activeCats.map((cat,ci)=>{
-    const bg = ci%2===0 ? '' : 'style="background:#0d1525"';
-    return `<tr ${bg}><td style="color:var(--muted)">${CAT_ICONS[cat]||'•'} ${cat}</td>`
-      + months5.map(m=>{
-          const v=exps.filter(e=>monthOf(e.date)===m&&e.type==='Depense'&&e.categorie===cat).reduce((s,e)=>s+e.montant_qar,0);
-          return `<td style="color:var(--text)">${v?fmt(v):'—'}</td>`;
-        }).join('') + '</tr>';
-  }).join('');
-
-  // Total row
-  const totRow = '<tr class="dep-row"><td>💸 Total dép.</td>'
-    + months5.map(m=>{
-        const v=exps.filter(e=>monthOf(e.date)===m&&e.type==='Depense').reduce((s,e)=>s+e.montant_qar,0);
-        return `<td><b>${v?fmt(v)+' QAR':'—'}</b></td>`;
-      }).join('') + '</tr>';
-
-  // Disponible row
-  const dispoRow = '<tr class="dispo-row"><td>✨ Disponible</td>'
-    + months5.map(m=>{
-        const sal=exps.filter(e=>monthOf(e.date)===m&&e.type==='Salaire').reduce((s,e)=>s+e.montant_qar,0);
-        const dep=exps.filter(e=>monthOf(e.date)===m&&e.type==='Depense').reduce((s,e)=>s+e.montant_qar,0);
-        if(!sal&&!dep) return '<td>—</td>';
-        const d=sal-dep;
-        return `<td style="color:${d>=0?'var(--amber)':'var(--red)'}">${fmt(d)} QAR</td>`;
-      }).join('') + '</tr>';
-
-  tbl.innerHTML = hdr + '<tbody>' + salRow + catRows + totRow + dispoRow + '</tbody>';
+  const CATS = DB.cats.map(c=>c.name);
+  const tbl  = document.getElementById('b5-table');
+  const hdr  = '<thead><tr><th style="text-align:left;min-width:90px">Catégorie</th>'
+    +months5.map(m=>`<th style="min-width:68px">${moLbl(m)}</th>`).join('')+'</tr></thead>';
+  const salRow = '<tr class="sal-r"><td>💰 Salaire</td>'
+    +months5.map(m=>{ const v=exps.filter(e=>moOf(e.date)===m&&e.type==='Salaire').reduce((s,e)=>s+e.montant_qar,0); return `<td>${v?fmt(v):'-'}</td>`; }).join('')+'</tr>';
+  const catRows = CATS.filter(c=>exps.some(e=>e.categorie===c))
+    .map((c,i)=>`<tr ${i%2?'style="background:#0d1525"':''}><td style="color:var(--muted)">${catIcon(c)} ${c}</td>`
+      +months5.map(m=>{ const v=exps.filter(e=>moOf(e.date)===m&&e.type==='Depense'&&e.categorie===c).reduce((s,e)=>s+e.montant_qar,0); return `<td>${v?fmt(v):'-'}</td>`; }).join('')+'</tr>').join('');
+  const depRow = '<tr class="dep-r"><td>💸 Total</td>'
+    +months5.map(m=>{ const v=exps.filter(e=>moOf(e.date)===m&&e.type==='Depense').reduce((s,e)=>s+e.montant_qar,0); return `<td><b>${v?fmt(v)+' QAR':'-'}</b></td>`; }).join('')+'</tr>';
+  const disRow = '<tr class="dis-r"><td>✨ Dispo</td>'
+    +months5.map(m=>{ const sal=exps.filter(e=>moOf(e.date)===m&&e.type==='Salaire').reduce((s,e)=>s+e.montant_qar,0); const dep=exps.filter(e=>moOf(e.date)===m&&e.type==='Depense').reduce((s,e)=>s+e.montant_qar,0); return sal||dep?`<td style="color:${sal-dep>=0?'var(--amber)':'var(--red)'}">${fmt(sal-dep)} QAR</td>`:'<td>-</td>'; }).join('')+'</tr>';
+  tbl.innerHTML = hdr+'<tbody>'+salRow+catRows+depRow+disRow+'</tbody>';
 }
 
-// ── EXP ITEM ─────────────────────────────────────────────
-function renderExpItem(e, showDelete=true) {
-  const icon=CAT_ICONS[e.categorie]||'💫', color=CAT_COLORS[e.categorie]||'#6b7280';
-  const isSal=e.type==='Salaire';
-  const d = e.delete_btn!==false && showDelete
-    ? `<button class="delete-btn" onclick="deleteExp('${e.id}')">✕</button>` : '';
+function renderAlloc(total, last) {
+  const el = document.getElementById('inv-alloc');
+  if (!total) { el.innerHTML=''; return; }
+  const COLORS=['#3b82f6','#22c55e','#10b981','#f97316','#06b6d4','#84cc16','#f59e0b','#ec4899','#ef4444','#0891b2','#22d3ee','#8b5cf6','#a855f7','#14b8a6'];
+  // By group
+  const grps={};
+  DB.assets.forEach((a,i)=>{ const v=toUSD(a.id,last[a.id]||0); if(v>0){ if(!grps[a.grp])grps[a.grp]=0; grps[a.grp]+=v; } });
+  const GRP_C={CLP:'#3b82f6',USD:'#10b981',EUR:'#06b6d4',Crypto:'#8b5cf6'};
+  const classes=Object.entries(grps).filter(([,v])=>v>0).map(([g,v])=>({label:g,color:GRP_C[g]||'#6b7280',value:v}));
+  const bar=classes.map(c=>`<div class="aseg" style="width:${(c.value/total*100).toFixed(1)}%;background:${c.color};flex-shrink:0"></div>`).join('');
+  const leg=classes.map(c=>`<div class="aitem"><span class="adot" style="background:${c.color}"></span>${c.label} <b style="color:var(--text);margin-left:4px">${(c.value/total*100).toFixed(1)}%</b></div>`).join('');
+  // Individual assets
+  const assets=DB.assets.map((a,i)=>({label:a.label,color:COLORS[i%COLORS.length],value:toUSD(a.id,last[a.id]||0)})).filter(a=>a.value>0).sort((a,b)=>b.value-a.value);
+  const rows=assets.map(a=>{ const p=(a.value/total*100).toFixed(1); return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #0d1525"><div style="width:6px;height:6px;border-radius:50%;background:${a.color};flex-shrink:0"></div><span style="flex:1;font-size:12px;color:var(--muted)">${a.label}</span><div style="width:80px;height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;width:${p}%;background:${a.color}"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;width:40px;text-align:right">${p}%</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);width:68px;text-align:right">${fmtU(a.value)}</span></div>`; }).join('');
+  el.innerHTML=`<div class="abar">${bar}</div><div class="aleg">${leg}</div><div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">${rows}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// DÉPENSES
+// ═══════════════════════════════════════════════════════════
+let depType='Depense', depMo=today().slice(0,7);
+
+function setDepType(t) {
+  depType=t;
+  document.getElementById('btn-dep').classList.toggle('active',t==='Depense');
+  document.getElementById('btn-sal').classList.toggle('active',t==='Salaire');
+  document.getElementById('fg-cat').style.display=t==='Depense'?'block':'none';
+}
+
+function renderCatSelect() {
+  const sel=document.getElementById('dep-cat');
+  if(!sel) return;
+  sel.innerHTML=DB.cats.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
+}
+
+function switchDep(tab,btn) {
+  document.querySelectorAll('#screen-dep .seg-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('dep-saisie').style.display=tab==='saisie'?'block':'none';
+  document.getElementById('dep-liste').style.display=tab==='liste'?'block':'none';
+  if(tab==='liste') renderDepList();
+}
+
+document.getElementById('dep-amt').addEventListener('input',function(){
+  const v=parseFloat(this.value);
+  document.getElementById('dep-usd-prev').textContent=isNaN(v)?'—':'$'+fmt(v/DB.set.qar,2);
+});
+
+function saveDep() {
+  const amt=parseFloat(document.getElementById('dep-amt').value);
+  const dt =document.getElementById('dep-date').value;
+  if(!amt||amt<=0){showToast('❌ Montant invalide');return;}
+  if(!dt){showToast('❌ Date manquante');return;}
+  const cat=depType==='Salaire'?'Salaire':document.getElementById('dep-cat').value;
+  DB.exp=[...DB.exp,{id:Date.now().toString(),date:dt,type:depType,categorie:cat,montant_qar:amt,montant_usd:amt/DB.set.qar}];
+  document.getElementById('dep-amt').value='';
+  document.getElementById('dep-date').value=today();
+  showToast('✅ Enregistré !');
+  if(curScreen==='dashboard') renderDashboard();
+}
+
+function expItem(e,canDel=true) {
+  const ic=e.type==='Salaire'?'💰':catIcon(e.categorie);
+  const co=e.type==='Salaire'?'#10b981':catColor(e.categorie);
+  const d=canDel?`<button class="del-btn" onclick="delExp('${e.id}')">✕</button>`:'';
   return `<div class="exp-item">
-    <div class="exp-icon" style="background:${color}22">${icon}</div>
+    <div class="exp-icon" style="background:${co}22">${ic}</div>
     <div class="exp-info">
-      <div class="exp-cat">${isSal?'Salaire':e.categorie}</div>
+      <div class="exp-cat">${e.type==='Salaire'?'Salaire':e.categorie}</div>
       <div class="exp-date">${new Date(e.date+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'})}</div>
     </div>
     <div>
-      <div class="exp-amount ${isSal?'salary':''}">${isSal?'+':''}${fmt(e.montant_qar)} QAR</div>
-      <div style="font-size:10px;color:var(--muted);text-align:right;font-family:'DM Mono',monospace">≈ $${fmt(e.montant_qar/DB.settings.qar,1)}</div>
+      <div class="exp-amt ${e.type==='Salaire'?'sal':''}">${e.type==='Salaire'?'+':''}${fmt(e.montant_qar)} QAR</div>
+      <div style="font-size:10px;color:var(--muted);text-align:right;font-family:'DM Mono',monospace">≈ $${fmt(e.montant_qar/DB.set.qar,1)}</div>
     </div>${d}
   </div>`;
 }
 
-// ── DÉPENSES ──────────────────────────────────────────────
-let depType='Depense', depSelectedMonth=today().slice(0,7);
-
-function setDepType(type) {
-  depType=type;
-  document.getElementById('type-dep-btn').classList.toggle('active',type==='Depense');
-  document.getElementById('type-sal-btn').classList.toggle('active',type==='Salaire');
-  document.getElementById('fg-categorie').style.display=type==='Depense'?'block':'none';
-}
-
-function switchDepTab(tab,btn) {
-  document.querySelectorAll('#screen-dep .seg-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('dep-tab-saisie').style.display=tab==='saisie'?'block':'none';
-  document.getElementById('dep-tab-liste').style.display=tab==='liste'?'block':'none';
-  if(tab==='liste') renderDepList();
-}
-
-document.getElementById('dep-amount').addEventListener('input',function(){
-  const v=parseFloat(this.value);
-  document.getElementById('dep-usd-preview').textContent=isNaN(v)?'—':'$'+fmt(v/DB.settings.qar,2);
-});
-
-function saveDep() {
-  const amount=parseFloat(document.getElementById('dep-amount').value);
-  const date=document.getElementById('dep-date').value;
-  if(!amount||amount<=0){showToast('❌ Montant invalide');return}
-  if(!date){showToast('❌ Date manquante');return}
-  const cat=depType==='Salaire'?'Salaire':document.getElementById('dep-cat').value;
-  const entry={id:Date.now().toString(),date,type:depType,categorie:cat,
-    montant_qar:amount,montant_usd:amount/DB.settings.qar};
-  DB.expenses=[...DB.expenses,entry];
-  document.getElementById('dep-amount').value='';
-  document.getElementById('dep-date').value=today();
-  showToast('✅ Enregistré !');
-  if(currentScreen==='dashboard') renderDashboard();
-}
-
-function deleteExp(id) {
-  DB.expenses=DB.expenses.filter(e=>e.id!==id);
+function delExp(id) {
+  DB.exp=DB.exp.filter(e=>e.id!==id);
   renderDepList();
-  if(currentScreen==='dashboard') renderDashboard();
+  if(curScreen==='dashboard') renderDashboard();
 }
 
 function renderDepList() {
-  const exps=DB.expenses;
-  const months=[...new Set(exps.map(e=>monthOf(e.date)))].sort().reverse();
-  if(!months.includes(depSelectedMonth)) depSelectedMonth=months[0]||today().slice(0,7);
-  document.getElementById('dep-month-chips').innerHTML=
-    months.slice(0,12).map(m=>`<div class="month-chip ${m===depSelectedMonth?'active':''}" onclick="selectDepMonth('${m}')">${monthLabel(m)}</div>`).join('');
-  const filtered=exps.filter(e=>monthOf(e.date)===depSelectedMonth).sort((a,b)=>b.date.localeCompare(a.date));
-  const sal=filtered.filter(e=>e.type==='Salaire').reduce((s,e)=>s+e.montant_qar,0);
-  const dep=filtered.filter(e=>e.type==='Depense').reduce((s,e)=>s+e.montant_qar,0);
-  document.getElementById('dep-list-summary').innerHTML=
-    ['💰 Salaire|'+fmt(sal)+'|var(--green)','💸 Dépenses|'+fmt(dep)+'|var(--red)',
-     '✨ Dispo|'+fmt(sal-dep)+'|var(--amber)'].map(x=>{
-      const [l,v,c]=x.split('|');
-      return `<div style="flex:1;background:var(--bg3);border-radius:10px;padding:10px;text-align:center">
-        <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">${l}</div>
-        <div style="font-family:'DM Mono',monospace;color:${c};font-weight:700;font-size:13px">${v} QAR</div></div>`;
-    }).join('');
-  const listEl=document.getElementById('dep-list-items');
-  listEl.innerHTML=filtered.length===0
-    ?'<div class="empty"><div class="empty-icon">🧾</div><div class="empty-text">Aucune entrée</div></div>'
-    :filtered.map(e=>renderExpItem(e,true)).join('');
+  const exps=DB.exp;
+  const months=[...new Set(exps.map(e=>moOf(e.date)))].sort().reverse();
+  if(!months.includes(depMo)) depMo=months[0]||today().slice(0,7);
+  document.getElementById('dep-chips').innerHTML=months.slice(0,18).map(m=>`<div class="chip ${m===depMo?'active':''}" onclick="selDepMo('${m}')">${moLbl(m)}</div>`).join('');
+  const fil=exps.filter(e=>moOf(e.date)===depMo).sort((a,b)=>b.date.localeCompare(a.date));
+  const sal=fil.filter(e=>e.type==='Salaire').reduce((s,e)=>s+e.montant_qar,0);
+  const dep=fil.filter(e=>e.type==='Depense').reduce((s,e)=>s+e.montant_qar,0);
+  document.getElementById('dep-summary').innerHTML=[['💰 Salaire',fmt(sal),'var(--green)'],['💸 Dépenses',fmt(dep),'var(--red)'],['✨ Dispo',fmt(sal-dep),'var(--amber)']].map(([l,v,c])=>`<div style="flex:1;background:var(--bg3);border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">${l}</div><div style="font-family:'DM Mono',monospace;color:${c};font-weight:700;font-size:13px">${v} QAR</div></div>`).join('');
+  document.getElementById('dep-items').innerHTML=fil.length?fil.map(e=>expItem(e,true)).join(''):'<div class="empty"><div class="empty-icon">🧾</div><div>Aucune entrée</div></div>';
 }
 
-function selectDepMonth(m){depSelectedMonth=m;renderDepList()}
+function selDepMo(m){depMo=m;renderDepList();}
 
-// ── INVESTISSEMENTS ───────────────────────────────────────
-function switchInvTab(tab,btn){
+// ═══════════════════════════════════════════════════════════
+// INVESTISSEMENTS
+// ═══════════════════════════════════════════════════════════
+function switchInv(tab,btn) {
   document.querySelectorAll('#screen-inv .seg-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('inv-tab-saisie').style.display=tab==='saisie'?'block':'none';
-  document.getElementById('inv-tab-historique').style.display=tab==='historique'?'block':'none';
-  if(tab==='historique') renderInvHistory();
+  document.getElementById('inv-saisie').style.display=tab==='saisie'?'block':'none';
+  document.getElementById('inv-historique').style.display=tab==='historique'?'block':'none';
+  if(tab==='saisie') renderInvForm();
+  if(tab==='historique') renderInvHist();
 }
 
-const INV_FIELDS=['santander','mm_dollar','etf_usd','apple','msft','nvidia','amazon',
-  'alphabet','tesla','livret_a','etf_eur','cash_eur','btc','eth','ap_clp','ap_usd','ap_eur','ap_crypto'];
+function curCls(cur){ return cur==='EUR'?'eur':cur==='CRYPTO'?'crypto':''; }
+function curIco(cur){ return cur==='EUR'?'🇫🇷':cur==='CRYPTO'?'₿':cur==='CLP'?'🏦':'📈'; }
 
-document.querySelectorAll('.inv-input').forEach(inp=>inp.addEventListener('input',updateInvPreview));
+function renderInvForm(prefill) {
+  const active=DB.assets.filter(a=>!a.arch);
+  const groups={};
+  active.forEach(a=>{ if(!groups[a.grp]) groups[a.grp]=[]; groups[a.grp].push(a); });
+  let h='';
+  for(const[grp,items] of Object.entries(groups)){
+    h+=`<div class="inv-sec">${curIco(items[0].cur)} ${grp}</div>`;
+    items.forEach(a=>{
+      const v=prefill&&prefill[a.id]?prefill[a.id]:'';
+      h+=`<div class="inv-row"><span class="inv-lbl">${a.label}</span><input class="inv-inp ${curCls(a.cur)}" id="f-${a.id}" placeholder="0" inputmode="decimal" value="${v}" oninput="updPrev()"></div>`;
+    });
+  }
+  // Apports
+  const curs=[...new Set(active.map(a=>a.cur))];
+  h+=`<div class="inv-sec" style="color:var(--amber)">+ Apports du mois</div>`;
+  [{c:'CLP',id:'ap_clp',lbl:'Apport CLP'},{c:'USD',id:'ap_usd',lbl:'Apport USD'},
+   {c:'EUR',id:'ap_eur',lbl:'Apport EUR'},{c:'CRYPTO',id:'ap_crypto',lbl:'Apport Crypto'}]
+  .filter(x=>curs.includes(x.c)).forEach(x=>{
+    const v=prefill&&prefill[x.id]?prefill[x.id]:'';
+    h+=`<div class="inv-row"><span class="inv-lbl" style="color:var(--muted)">${x.lbl}</span><input class="inv-inp ${curCls(x.c)}" id="f-${x.id}" placeholder="0" inputmode="decimal" value="${v}" oninput="updPrev()"></div>`;
+  });
+  document.getElementById('inv-fields').innerHTML=h;
+  updPrev();
+}
 
-function updateInvPreview(){
-  const s=DB.settings,g=id=>parseFloat(document.getElementById('f-'+id)?.value)||0;
-  const t=g('santander')/s.clp+g('mm_dollar')+g('etf_usd')+g('apple')+g('msft')
-    +g('nvidia')+g('amazon')+g('alphabet')+g('tesla')+g('btc')+g('eth')
-    +(g('livret_a')+g('etf_eur')+g('cash_eur'))*s.eur;
-  document.getElementById('inv-total-preview').textContent=fmtU(t);
+function updPrev(){
+  const g=id=>parseFloat(document.getElementById('f-'+id)?.value)||0;
+  const t=DB.assets.reduce((sum,a)=>sum+toUSD(a.id,g(a.id)),0);
+  document.getElementById('inv-preview').textContent=fmtU(t);
 }
 
 function saveInv(){
-  const month=document.getElementById('inv-month').value;
-  if(!month){showToast('❌ Mois manquant');return}
+  const mo=document.getElementById('inv-month').value;
+  if(!mo){showToast('❌ Mois manquant');return;}
   const g=id=>parseFloat(document.getElementById('f-'+id)?.value)||0;
-  const entry={id:month,month};
-  INV_FIELDS.forEach(f=>entry[f]=g(f));
-  DB.investments=[...DB.investments.filter(i=>i.month!==month),entry];
+  const entry={id:mo,month:mo};
+  DB.assets.forEach(a=>{entry[a.id]=g(a.id);});
+  ['ap_clp','ap_usd','ap_eur','ap_crypto'].forEach(f=>{entry[f]=g(f);});
+  DB.inv=[...DB.inv.filter(i=>i.month!==mo),entry];
   showToast('✅ Mois enregistré !');
-  renderInvHistory();
-  if(currentScreen==='dashboard') renderDashboard();
+  renderInvHist();
+  if(curScreen==='dashboard') renderDashboard();
 }
 
 function loadLastInv(){
-  const invs=DB.investments.sort((a,b)=>a.month.localeCompare(b.month));
-  if(!invs.length){showToast('Aucun mois précédent');return}
-  const last=invs[invs.length-1];
-  INV_FIELDS.forEach(f=>{const el=document.getElementById('f-'+f);if(el)el.value=last[f]||''});
-  updateInvPreview();
+  const sorted=[...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));
+  if(!sorted.length){showToast('Aucun mois précédent');return;}
+  renderInvForm(sorted[sorted.length-1]);
   showToast('✅ Données recopiées');
 }
 
-function renderInvHistory(){
-  const invs=DB.investments.sort((a,b)=>b.month.localeCompare(a.month));
-  const allSorted=[...invs].sort((a,b)=>a.month.localeCompare(b.month));
-  const s=DB.settings;
-  const tbody=document.getElementById('inv-hist-body');
-  if(!invs.length){tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">Aucun mois saisi</td></tr>';return}
-  const firstT=calcTotal(allSorted[0]);
+function renderInvHist(){
+  const invs=[...DB.inv].sort((a,b)=>b.month.localeCompare(a.month));
+  const sorted=[...invs].sort((a,b)=>a.month.localeCompare(b.month));
+  const tb=document.getElementById('inv-hist-body');
+  if(!invs.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">Aucun mois saisi</td></tr>';return;}
+  const fT=calcTotal(sorted[0]);
   let cumAp=0;
-  tbody.innerHTML=invs.map(inv=>{
+  tb.innerHTML=invs.map(inv=>{
     const total=calcTotal(inv);
-    const idx=allSorted.indexOf(inv);
-    const prev=idx>0?allSorted[idx-1]:null;
-    const ap=(i)=>(i.ap_clp||0)/s.clp+(i.ap_usd||0)+(i.ap_eur||0)*s.eur+(i.ap_crypto||0);
-    if(idx>0)cumAp+=ap(inv);
+    const idx=sorted.indexOf(inv);
+    const prev=idx>0?sorted[idx-1]:null;
+    if(idx>0) cumAp+=calcApport(inv);
     const prevT=prev?calcTotal(prev):null;
-    const retM=prevT?(total-prevT-ap(inv))/prevT:null;
-    const retT=(firstT+cumAp)>0?(total-firstT-cumAp)/(firstT+cumAp):null;
+    const retM=prevT?(total-prevT-calcApport(inv))/prevT:null;
+    const retT=(fT+cumAp)>0?(total-fT-cumAp)/(fT+cumAp):null;
     const mc=v=>v>0?'var(--green)':v<0?'var(--red)':'';
-    return `<tr><td>${monthLabel(inv.month)}</td><td>${fmtU(total)}</td>
-      <td style="color:${mc(retM)}">${fmtP(retM)}</td>
-      <td style="color:${mc(retT)}">${fmtP(retT)}</td></tr>`;
+    return `<tr><td>${moLbl(inv.month)}</td><td>${fmtU(total)}</td><td style="color:${mc(retM)}">${fmtP(retM)}</td><td style="color:${mc(retT)}">${fmtP(retT)}</td></tr>`;
   }).join('');
 }
 
-// ── EXPORT EXCEL ──────────────────────────────────────────
-async function exportExcel() {
-  showToast('⏳ Génération Excel...');
-  // Build CSV-style data, then create a proper xlsx using a minimal implementation
-  const invs  = DB.investments.sort((a,b)=>a.month.localeCompare(b.month));
-  const exps  = DB.expenses.sort((a,b)=>a.date.localeCompare(b.date));
-  const s     = DB.settings;
-
-  // We'll build an xlsx file using the SheetJS CDN
-  const script = document.createElement('script');
-  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
-  script.onload = () => buildAndDownloadXLSX(invs, exps, s);
-  script.onerror = () => showToast('❌ Erreur chargement SheetJS');
-  document.head.appendChild(script);
-}
-
-function buildAndDownloadXLSX(invs, exps, s) {
-  const WB = XLSX.utils.book_new();
-
-  // ── Feuille 1: Inv - Saisie ───────────────────────────
-  const inv_headers = [
-    ['SAISIE MENSUELLE DES INVESTISSEMENTS'],
-    [],
-    ['Date','CLP','USD','','','','','','','','EUR','','','Crypto','',
-     'Apport CLP','Apport USD','Apport EUR','Apport Crypto',
-     'CLP→USD','Total USD','EUR→USD','Grand Total USD','Ret. Mensuel','Ret. Total'],
-    ['','Santander MP','MM Dollar','ETF S&P500','Apple','Microsoft','Nvidia',
-     'Amazon','Alphabet','Tesla','Livret A','ETF EUR','Cash EUR','BTC','ETH',
-     '','','','','','','','','',''],
-  ];
-  const inv_rows = invs.map(inv => {
-    const clpUsd  = (inv.santander||0)/s.clp;
-    const totalUsd= (inv.mm_dollar||0)+(inv.etf_usd||0)+(inv.apple||0)+(inv.msft||0)
-                  + (inv.nvidia||0)+(inv.amazon||0)+(inv.alphabet||0)+(inv.tesla||0)
-                  + (inv.btc||0)+(inv.eth||0);
-    const eurUsd  = ((inv.livret_a||0)+(inv.etf_eur||0)+(inv.cash_eur||0))*s.eur;
-    const grand   = clpUsd+totalUsd+eurUsd;
-    return [
-      inv.month+'-01',
-      inv.santander||'', inv.mm_dollar||'', inv.etf_usd||'', inv.apple||'',
-      inv.msft||'', inv.nvidia||'', inv.amazon||'', inv.alphabet||'', inv.tesla||'',
-      inv.livret_a||'', inv.etf_eur||'', inv.cash_eur||'',
-      inv.btc||'', inv.eth||'',
-      inv.ap_clp||'', inv.ap_usd||'', inv.ap_eur||'', inv.ap_crypto||'',
-      clpUsd||'', totalUsd||'', eurUsd||'', grand||'', '', ''
-    ];
-  });
-  const ws_inv = XLSX.utils.aoa_to_sheet([...inv_headers, ...inv_rows]);
-  ws_inv['!cols'] = [{wch:12},{wch:14},{wch:11},{wch:11},{wch:9},{wch:10},{wch:9},
-    {wch:9},{wch:10},{wch:9},{wch:10},{wch:12},{wch:11},{wch:9},{wch:9},
-    {wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:13},{wch:14},{wch:12},{wch:11}];
-  XLSX.utils.book_append_sheet(WB, ws_inv, 'Inv - Saisie');
-
-  // ── Feuille 2: Dep - Saisie ───────────────────────────
-  const dep_headers = [
-    ['SAISIE DES DÉPENSES & SALAIRE — QAR'],
-    [],
-    ['Date','Mois','Type','Catégorie','Montant (QAR)','Montant USD'],
-  ];
-  const dep_rows = exps.map(e => [
-    e.date, monthOf(e.date)+'-01',
-    e.type, e.categorie,
-    e.montant_qar,
-    +(e.montant_qar/s.qar).toFixed(2)
-  ]);
-  const ws_dep = XLSX.utils.aoa_to_sheet([...dep_headers, ...dep_rows]);
-  ws_dep['!cols'] = [{wch:14},{wch:12},{wch:10},{wch:22},{wch:14},{wch:13}];
-  XLSX.utils.book_append_sheet(WB, ws_dep, 'Dep - Saisie');
-
-  // ── Feuille 3: Tableau de Bord ────────────────────────
-  const invSorted = [...invs].sort((a,b)=>a.month.localeCompare(b.month));
-  const lastInv   = invSorted[invSorted.length-1];
-  const {retM,retT} = invs.length>=2 ? calcReturns(invSorted) : {retM:null,retT:null};
-  const grandT    = lastInv ? calcTotal(lastInv) : 0;
-  
-  // 5 months
-  const months5=[];
-  for(let i=4;i>=0;i--){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);months5.push(d.toISOString().slice(0,7));}
-  
-  const CATS=['Alimentation','Supermarché','Livraison','Transport','Hélène','Santé',
-    'Voiture','Loyer','Sortie','Shopping','Coiffeur','Carburant','Téléphone','Cadeaux','Autre'];
-  
-  const db_data = [
-    ['PLANIFICACION FINANCIERA — TABLEAU DE BORD'],
-    [],
-    ['PORTEFEUILLE TOTAL','RETORNO MENSUEL','RETORNO TOTAL','PORTEF. EN EUR'],
-    [grandT, retM||'', retT||'', grandT/s.eur],
-    ['USD · dernier mois','Vs mois précédent','Depuis le début','Équivalent EUR'],
-    [],
-    ['BUDGET MENSUEL — 5 DERNIERS MOIS'],
-    ['Catégorie',...months5.map(m=>monthLabel(m))],
-    ['Salaire',...months5.map(m=>exps.filter(e=>monthOf(e.date)===m&&e.type==='Salaire').reduce((s,e)=>s+e.montant_qar,0)||'')],
-    ...CATS.map(cat=>[cat,...months5.map(m=>exps.filter(e=>monthOf(e.date)===m&&e.type==='Depense'&&e.categorie===cat).reduce((s,e)=>s+e.montant_qar,0)||'')]),
-    ['TOTAL DÉPENSES',...months5.map(m=>exps.filter(e=>monthOf(e.date)===m&&e.type==='Depense').reduce((s,e)=>s+e.montant_qar,0)||'')],
-    ['DISPONIBLE',...months5.map(m=>{
-      const sal=exps.filter(e=>monthOf(e.date)===m&&e.type==='Salaire').reduce((s,e)=>s+e.montant_qar,0);
-      const dep=exps.filter(e=>monthOf(e.date)===m&&e.type==='Depense').reduce((s,e)=>s+e.montant_qar,0);
-      return sal||dep?sal-dep:'';
-    })],
-    [],
-    ['INVESTISSEMENTS — DERNIER MOIS ('+monthLabel(lastInv?.month||'')+')'],
-    ['Actif','Solde USD','% Portef.'],
-    ...lastInv?[
-      ['FFMM CLP (Santander)', (lastInv.santander||0)/s.clp, ((lastInv.santander||0)/s.clp)/grandT],
-      ['USD — Actions', (lastInv.mm_dollar||0)+(lastInv.etf_usd||0)+(lastInv.apple||0)+(lastInv.msft||0)+(lastInv.nvidia||0)+(lastInv.amazon||0)+(lastInv.alphabet||0)+(lastInv.tesla||0)+(lastInv.btc||0)+(lastInv.eth||0), ''],
-      ['EUR', ((lastInv.livret_a||0)+(lastInv.etf_eur||0)+(lastInv.cash_eur||0))*s.eur, ''],
-      ['GRAND TOTAL', grandT, 1],
-    ]:[],
-  ];
-  const ws_db = XLSX.utils.aoa_to_sheet(db_data);
-  ws_db['!cols'] = [{wch:28},{wch:15},{wch:15},{wch:15},{wch:15},{wch:15}];
-  XLSX.utils.book_append_sheet(WB, ws_db, 'Tableau de Bord');
-
-  // ── Feuille 4: Parametres ─────────────────────────────
-  const ws_p = XLSX.utils.aoa_to_sheet([
-    ['PARAMETRE','VALEUR','DESCRIPTION'],
-    ['TC_QAR_USD', s.qar, '1 USD = ? QAR'],
-    ['TC_USD_CLP', s.clp, '1 USD = ? CLP'],
-    ['TC_EUR_USD', s.eur, '1 EUR = ? USD'],
-  ]);
-  XLSX.utils.book_append_sheet(WB, ws_p, 'Parametres');
-
-  // Download
-  const date = new Date().toISOString().slice(0,10);
-  XLSX.writeFile(WB, `FinTrack_Export_${date}.xlsx`);
-  showToast('✅ Export Excel téléchargé !');
-}
-
-// ── SETTINGS ─────────────────────────────────────────────
-function openSettings(){
-  const s=DB.settings;
-  document.getElementById('s-qar').value=s.qar;
-  document.getElementById('s-clp').value=s.clp;
-  document.getElementById('s-eur').value=s.eur;
-  document.getElementById('settings-modal').classList.add('open');
-}
-function closeSettings(){document.getElementById('settings-modal').classList.remove('open')}
+// ═══════════════════════════════════════════════════════════
+// SETTINGS
+// ═══════════════════════════════════════════════════════════
+function openSettings(){const s=DB.set;document.getElementById('s-qar').value=s.qar;document.getElementById('s-clp').value=s.clp;document.getElementById('s-eur').value=s.eur;document.getElementById('modal-settings').classList.add('open');}
+function closeSettings(){document.getElementById('modal-settings').classList.remove('open');}
 function saveSettings(){
-  DB.settings={qar:parseFloat(document.getElementById('s-qar').value)||3.64,
-    clp:parseFloat(document.getElementById('s-clp').value)||920,
-    eur:parseFloat(document.getElementById('s-eur').value)||1.08};
+  DB.set={qar:parseFloat(document.getElementById('s-qar').value)||3.64,clp:parseFloat(document.getElementById('s-clp').value)||920,eur:parseFloat(document.getElementById('s-eur').value)||1.08};
   closeSettings();showToast('✅ Taux mis à jour');renderDashboard();
 }
 function clearAll(){
-  ['ft_exp','ft_inv','ft_hist_loaded'].forEach(k=>localStorage.removeItem(k));
-  closeSettings();showToast('🗑️ Données effacées');loadHistoricalData();renderDashboard();
+  ['ft_exp','ft_inv','ft_ast','ft_cats','ft_loaded'].forEach(k=>localStorage.removeItem(k));
+  closeSettings();loadHist();renderDashboard();showToast('🗑️ Données effacées');
 }
 
-// ── TOAST ─────────────────────────────────────────────────
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
+// ═══════════════════════════════════════════════════════════
+// CATEGORY MANAGER
+// ═══════════════════════════════════════════════════════════
+const EMOJIS=['🍽️','🛒','📦','🚖','👩','🏥','🚗','🏠','🎉','🛍️','✂️','⛽','📱','🎁','💫','💊','🏋️','🎮','🎵','📚','☕','🍕','🍺','🐾','🧴','👔','🏦','💡','🛠️','✈️','🎓','🏖️','🎭','🍿','💻','🧹','🌿','🎨','🚿','💈'];
+let eCats=[], ePick=-1;
+
+function openCats(){eCats=DB.cats.map(c=>({...c}));renderCatList();document.getElementById('modal-cats').classList.add('open');}
+function closeCats(){document.getElementById('modal-cats').classList.remove('open');document.getElementById('epick-wrap').style.display='none';ePick=-1;}
+
+function renderCatList(){
+  document.getElementById('cat-list').innerHTML=eCats.map((c,i)=>`
+    <div class="mi" id="cr-${i}">
+      <div class="mtog" onclick="toggleEP(${i})" style="background:${c.color}22;border-color:${c.color}">${c.icon}</div>
+      <input class="mini" value="${c.name}" oninput="eCats[${i}].name=this.value" placeholder="Nom">
+      <button class="del-btn" onclick="delCat(${i})" style="border:1px solid var(--border);border-radius:8px;width:32px;height:32px">✕</button>
+    </div>`).join('');
 }
 
-// ── INIT ─────────────────────────────────────────────────
-document.getElementById('topbar-date').textContent=
-  new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+function toggleEP(i){
+  const wrap=document.getElementById('epick-wrap');
+  if(ePick===i){wrap.style.display='none';ePick=-1;return;}
+  ePick=i;
+  document.getElementById('epick').innerHTML=EMOJIS.map(e=>`<div class="eopt ${eCats[i].icon===e?'sel':''}" onclick="selEmoji('${e}')">${e}</div>`).join('');
+  const row=document.getElementById(`cr-${i}`);
+  row.insertAdjacentElement('afterend',wrap);
+  wrap.style.display='block';
+  setTimeout(()=>wrap.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+}
+
+function selEmoji(e){if(ePick<0)return;eCats[ePick].icon=e;renderCatList();const w=document.getElementById('epick-wrap');const r=document.getElementById(`cr-${ePick}`);r.insertAdjacentElement('afterend',w);w.style.display='block';}
+function delCat(i){if(eCats.length<=1){showToast('❌ Minimum 1 catégorie');return;}eCats.splice(i,1);if(ePick===i){document.getElementById('epick-wrap').style.display='none';ePick=-1;}else if(ePick>i)ePick--;renderCatList();}
+function addCat(){eCats.push({name:'Nouvelle',icon:'💫',color:'#6b7280'});renderCatList();setTimeout(()=>{const ins=document.querySelectorAll('.mini');if(ins.length){const l=ins[ins.length-1];l.focus();l.select();l.scrollIntoView({behavior:'smooth',block:'nearest'});}},50);}
+function saveCats(){
+  document.querySelectorAll('.mini').forEach((inp,i)=>{if(eCats[i])eCats[i].name=inp.value.trim()||eCats[i].name;});
+  if(eCats.some(c=>!c.name.trim())){showToast('❌ Nom vide non autorisé');return;}
+  DB.cats=eCats;closeCats();renderCatSelect();renderDashboard();showToast('✅ Catégories sauvegardées !');
+}
+
+// ═══════════════════════════════════════════════════════════
+// ASSET MANAGER
+// ═══════════════════════════════════════════════════════════
+let eAssets=[];
+
+function openAssets(){eAssets=DB.assets.map(a=>({...a}));renderAssetList();document.getElementById('modal-assets').classList.add('open');}
+function closeAssets(){document.getElementById('modal-assets').classList.remove('open');}
+
+function renderAssetList(){
+  const GRP_L={CLP:'🏦 CLP',USD:'📈 USD',EUR:'🇫🇷 EUR',CRYPTO:'₿ Crypto'};
+  const groups={};
+  eAssets.forEach((a,i)=>{const g=a.cur;if(!groups[g])groups[g]=[];groups[g].push({...a,_i:i});});
+  let h='';
+  for(const cur of ['CLP','USD','EUR','CRYPTO']){
+    if(!groups[cur]) continue;
+    h+=`<div class="mghdr">${GRP_L[cur]||cur}</div>`;
+    groups[cur].forEach(a=>{
+      h+=`<div class="mi ${a.arch?'arch':''}" id="ar-${a._i}">
+        <button class="mtog" onclick="togArch(${a._i})" style="${a.arch?'':'border-color:var(--green);color:var(--green)'}" title="${a.arch?'Réactiver':'Masquer'}">${a.arch?'👁':'✓'}</button>
+        <input class="mini" value="${a.label}" oninput="eAssets[${a._i}].label=this.value" placeholder="Nom">
+        <select class="mcur" onchange="eAssets[${a._i}].cur=this.value;eAssets[${a._i}].grp=grpOf(this.value)">
+          ${['CLP','USD','EUR','CRYPTO'].map(c=>`<option value="${c}" ${a.cur===c?'selected':''}>${c}</option>`).join('')}
+        </select>
+      </div>`;
+    });
+  }
+  document.getElementById('asset-list').innerHTML=h;
+}
+
+function grpOf(cur){return{CLP:'CLP',USD:'USD',EUR:'EUR',CRYPTO:'Crypto'}[cur]||cur;}
+function togArch(i){eAssets[i].arch=!eAssets[i].arch;renderAssetList();}
+function addAsset(){eAssets.push({id:'a_'+Date.now(),label:'Nouvel actif',cur:'USD',grp:'USD',arch:false});renderAssetList();setTimeout(()=>{const ins=document.querySelectorAll('#asset-list .mini');if(ins.length){const l=ins[ins.length-1];l.focus();l.select();l.scrollIntoView({behavior:'smooth',block:'nearest'});}},50);}
+function saveAssets(){
+  document.querySelectorAll('#asset-list .mini').forEach((inp,i)=>{const a=Object.values(eAssets)[i];if(a)a.label=inp.value.trim()||a.label;});
+  // Sync from DOM order
+  const rows=document.querySelectorAll('#asset-list .mi');
+  rows.forEach((row,i)=>{const id=row.id.replace('ar-','');if(eAssets[id])eAssets[id].label=row.querySelector('.mini').value.trim()||eAssets[id].label;});
+  if(eAssets.some(a=>!a.label.trim())){showToast('❌ Nom vide');return;}
+  DB.assets=eAssets;closeAssets();renderInvForm();renderDashboard();showToast('✅ Actifs sauvegardés !');
+}
+
+// ═══════════════════════════════════════════════════════════
+// EXPORT EXCEL
+// ═══════════════════════════════════════════════════════════
+function exportExcel(){
+  showToast('⏳ Génération...');
+  const script=document.createElement('script');
+  script.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+  script.onload=()=>doExport();
+  script.onerror=()=>showToast('❌ Erreur (besoin internet)');
+  document.head.appendChild(script);
+}
+
+function doExport(){
+  const WB=XLSX.utils.book_new(), s=DB.set;
+  const invs=[...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));
+  const exps=[...DB.exp].sort((a,b)=>a.date.localeCompare(b.date));
+  // Inv sheet
+  const invH=[['SAISIE INVESTISSEMENTS'],[],['Date',...DB.assets.map(a=>a.label),'Apport CLP','Apport USD','Apport EUR','Apport Crypto','Total USD']];
+  const invR=invs.map(inv=>[inv.month+'-01',...DB.assets.map(a=>inv[a.id]||0),inv.ap_clp||0,inv.ap_usd||0,inv.ap_eur||0,inv.ap_crypto||0,calcTotal(inv)]);
+  const ws1=XLSX.utils.aoa_to_sheet([...invH,...invR]);
+  XLSX.utils.book_append_sheet(WB,ws1,'Inv - Saisie');
+  // Exp sheet
+  const expH=[['SAISIE DEPENSES'],[],['Date','Type','Catégorie','QAR','USD']];
+  const expR=exps.map(e=>[e.date,e.type,e.categorie,e.montant_qar,+(e.montant_qar/s.qar).toFixed(2)]);
+  const ws2=XLSX.utils.aoa_to_sheet([...expH,...expR]);
+  XLSX.utils.book_append_sheet(WB,ws2,'Dep - Saisie');
+  // Params
+  const ws3=XLSX.utils.aoa_to_sheet([['Paramètre','Valeur'],['TC_QAR_USD',s.qar],['TC_USD_CLP',s.clp],['TC_EUR_USD',s.eur]]);
+  XLSX.utils.book_append_sheet(WB,ws3,'Parametres');
+  XLSX.writeFile(WB,`FinTrack_Export_${today()}.xlsx`);
+  showToast('✅ Export téléchargé !');
+}
+
+// ═══════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+// Close modals on outside click
+['modal-settings','modal-cats','modal-assets'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{if(e.target===document.getElementById(id)) document.getElementById(id).classList.remove('open');});
+});
+
 document.getElementById('dep-date').value=today();
 document.getElementById('inv-month').value=today().slice(0,7);
 setDepType('Depense');
-document.getElementById('settings-modal').addEventListener('click',e=>{if(e.target===document.getElementById('settings-modal'))closeSettings()});
+renderCatSelect();
 
-loadHistoricalData();
+loadHist();
+renderInvForm();
 renderDashboard();
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
