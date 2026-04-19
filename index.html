@@ -19,6 +19,55 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif}
 body{display:flex;flex-direction:column}
+
+/* ── CHARTS ── */
+/* chart asset selector + mom pickers */
+.chart-controls{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.ctrl-sel{flex:1;min-width:120px;padding:7px 10px;background:var(--bg3);
+  border:1px solid var(--border);border-radius:10px;color:var(--text);
+  font-family:'DM Mono',monospace;font-size:12px;outline:none;-webkit-appearance:none;
+  cursor:pointer;transition:border .2s}
+.ctrl-sel:focus{border-color:var(--accent)}
+.ctrl-sel option{background:var(--bg2)}
+.mom-pickers{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.mom-pickers label{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px}
+.mom-picker{padding:6px 10px;background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;
+  outline:none;-webkit-appearance:none;cursor:pointer;flex:1;min-width:100px}
+.mom-picker:focus{border-color:var(--accent)}
+.mom-vs{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace}
+.chart-wrap{position:relative;width:100%;touch-action:pan-y}
+.chart-canvas{width:100%;display:block;border-radius:8px}
+.chart-tabs{display:flex;gap:6px;margin-bottom:12px}
+.ctab{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;
+  background:var(--bg3);border:1px solid var(--border);color:var(--muted);
+  font-family:'DM Mono',monospace;transition:all .2s}
+.ctab.active{background:var(--accent);border-color:var(--accent);color:white}
+.tooltip-box{position:absolute;background:var(--bg2);border:1px solid var(--border);
+  border-radius:8px;padding:8px 10px;font-family:'DM Mono',monospace;font-size:11px;
+  pointer-events:none;display:none;white-space:nowrap;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+/* ── MOM COMPARISON ── */
+.mom-grid{display:grid;align-items:center;gap:0;
+  grid-template-columns:1fr 72px 72px 46px}
+.mom-hdr{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;
+  padding:6px 0 8px;border-bottom:2px solid var(--border);text-transform:uppercase;letter-spacing:.5px}
+.mom-hdr:nth-child(n+2){text-align:right}
+.mom-hdr:last-child{text-align:center}
+.mom-row{display:contents}
+.mom-row .mcell{padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.mom-row:last-of-type .mcell{border-bottom:none}
+.mcell-lbl{display:flex;align-items:center;gap:6px;color:var(--muted)}
+.mcell-lbl b{color:var(--text)}
+.mcell-num{font-family:'DM Mono',monospace;text-align:right;font-weight:500}
+.mcell-delta{text-align:center}
+.mom-delta{font-family:'DM Mono',monospace;font-size:10px;padding:2px 6px;border-radius:8px;font-weight:700;white-space:nowrap}
+.mom-delta.pos{background:#0a2518;color:var(--green)}
+.mom-delta.neg{background:#2a0a0a;color:var(--red)}
+.mom-delta.neu{background:var(--bg3);color:var(--muted)}
+.mom-bar-wrap{width:100%;height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:3px}
+.mom-bar{height:100%;border-radius:2px}
+.mom-sep{grid-column:1/-1;border:none;border-top:2px solid var(--border);margin:4px 0}
+
 /* topbar */
 .topbar{display:flex;align-items:center;justify-content:space-between;
   padding:14px 20px 10px;padding-top:calc(14px + env(safe-area-inset-top,0px));
@@ -224,6 +273,43 @@ body{display:flex;flex-direction:column}
 
   <div class="sec-hdr"><h2>Composition du portefeuille</h2></div>
   <div class="card" id="inv-alloc"></div>
+
+  <div class="sec-hdr">
+    <h2>Évolution du portefeuille</h2>
+  </div>
+  <div class="card" style="padding:14px">
+    <div class="chart-controls">
+      <div class="chart-tabs" id="chart-tabs" style="margin-bottom:0;flex-shrink:0">
+        <div class="ctab active" onclick="setChartRange(6,this)">6M</div>
+        <div class="ctab" onclick="setChartRange(12,this)">1A</div>
+        <div class="ctab" onclick="setChartRange(24,this)">2A</div>
+        <div class="ctab" onclick="setChartRange(999,this)">Tout</div>
+      </div>
+      <select class="ctrl-sel" id="asset-sel" onchange="setChartAsset(this.value)">
+        <!-- Populated by buildAssetSelector() -->
+      </select>
+    </div>
+    <div class="chart-wrap" id="chart-wrap">
+      <canvas class="chart-canvas" id="chart-portfolio" height="180"></canvas>
+      <div class="tooltip-box" id="chart-tooltip"></div>
+    </div>
+  </div>
+
+  <div class="sec-hdr"><h2>Comparaison mois sur mois</h2></div>
+  <div class="card">
+    <div class="mom-pickers">
+      <div style="display:flex;flex-direction:column;gap:4px;flex:1">
+        <label>Mois A</label>
+        <select class="mom-picker" id="mom-prev-sel" onchange="renderMoM()"><!-- populated --></select>
+      </div>
+      <span class="mom-vs">vs</span>
+      <div style="display:flex;flex-direction:column;gap:4px;flex:1">
+        <label>Mois B</label>
+        <select class="mom-picker" id="mom-cur-sel" onchange="renderMoM()"><!-- populated --></select>
+      </div>
+    </div>
+    <div id="mom-card"></div>
+  </div>
 
   <div class="sec-hdr"><h2>Dernières dépenses</h2></div>
   <div class="card" id="recent-exp"></div>
@@ -554,6 +640,9 @@ function renderDashboard() {
 
   // Budget 5 months
   renderBudget5();
+
+  // Chart + MoM (deferred so DOM is ready)
+  setTimeout(()=>{ buildAssetSelector(); buildMomPickers(); renderChart(); renderMoM(); }, 50);
 
   // Recent expenses
   const recent = exps.filter(e=>moOf(e.date)===nowYM&&e.type==='Depense')
@@ -896,6 +985,355 @@ function doExport(){
   showToast('✅ Export téléchargé !');
 }
 
+
+// ═══════════════════════════════════════════════════════════
+// CHART — Évolution du portefeuille
+// ═══════════════════════════════════════════════════════════
+let chartRange = 6;
+let chartAsset = '__total__'; // '__total__' or asset id
+
+function setChartRange(n, btn) {
+  chartRange = n;
+  document.querySelectorAll('.ctab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderChart();
+}
+
+function buildAssetSelector() {
+  const sel = document.getElementById('asset-sel');
+  if (!sel) return;
+  const assets  = DB.assets.filter(a => !a.arch);
+  const options = [{id:'__total__', label:'📊 Total portefeuille'}, ...assets.map(a => ({id:a.id, label:a.label}))];
+  sel.innerHTML = options.map(o => `<option value="${o.id}" ${chartAsset===o.id?'selected':''}>${o.label}</option>`).join('');
+}
+
+function setChartAsset(id) {
+  chartAsset = id;
+  renderChart();
+}
+
+function buildMomPickers() {
+  // Build list of months from expenses data
+  const exps    = DB.exp;
+  const months  = [...new Set(exps.map(e => moOf(e.date)))].filter(Boolean).sort().reverse();
+  if (months.length === 0) return;
+
+  const prevSel = document.getElementById('mom-prev-sel');
+  const curSel  = document.getElementById('mom-cur-sel');
+  if (!prevSel || !curSel) return;
+
+  const opts = months.map(m => `<option value="${m}">${moLbl(m)}</option>`).join('');
+  prevSel.innerHTML = opts;
+  curSel.innerHTML  = opts;
+
+  // Default: prev = last month, cur = current month
+  const nowYM  = new Date().toISOString().slice(0,7);
+  const prevYM = new Date(new Date().getFullYear(), new Date().getMonth()-1, 1).toISOString().slice(0,7);
+  if (months.includes(prevYM)) prevSel.value = prevYM; else prevSel.value = months[1] || months[0];
+  if (months.includes(nowYM))  curSel.value  = nowYM;  else curSel.value  = months[0];
+}
+
+function renderChart() {
+  const canvas = document.getElementById('chart-portfolio');
+  if (!canvas) return;
+  const ctx    = canvas.getContext('2d');
+  const wrap   = document.getElementById('chart-wrap');
+
+  // Get data
+  const allInvs = [...DB.inv].sort((a,b) => a.month.localeCompare(b.month));
+  if (allInvs.length < 2) {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    return;
+  }
+  const data = chartRange >= 999 ? allInvs : allInvs.slice(-chartRange);
+
+  // Determine what to plot
+  const totals = data.map(inv => {
+    let val;
+    if (chartAsset === '__total__') {
+      val = calcTotal(inv);
+    } else {
+      val = toUSD(chartAsset, inv[chartAsset] || 0);
+    }
+    return { month: inv.month, total: val };
+  });
+
+  // Y label formatter — use EUR for EUR assets, CLP for CLP, else USD
+  const asset = DB.assets.find(a => a.id === chartAsset);
+  const fmtY = (v) => {
+    if (chartAsset !== '__total__' && asset) {
+      if (asset.cur === 'CLP')   return (v/1000).toFixed(0)+'k CLP';
+      if (asset.cur === 'EUR')   return '€'+fmt(v);
+    }
+    return v >= 1000 ? '$'+(v/1000).toFixed(0)+'k' : '$'+Math.round(v);
+  };
+  const accentColor = chartAsset === '__total__' ? '#3b82f6'
+    : asset?.cur === 'EUR' ? '#06b6d4'
+    : asset?.cur === 'CLP' ? '#10b981'
+    : asset?.cur === 'CRYPTO' ? '#8b5cf6'
+    : '#3b82f6';
+
+  // Canvas sizing
+  const dpr  = window.devicePixelRatio || 1;
+  const W    = wrap.clientWidth || 340;
+  const H    = 180;
+  canvas.width  = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+
+  const PAD = { top: 20, right: 16, bottom: 36, left: 52 };
+  const cW   = W - PAD.left - PAD.right;
+  const cH   = H - PAD.top  - PAD.bottom;
+  const n    = totals.length;
+
+  const minV = Math.min(...totals.map(d => d.total));
+  const maxV = Math.max(...totals.map(d => d.total));
+  const range = maxV - minV || 1;
+
+  // Helpers
+  const xPos = i => PAD.left + (i / (n - 1)) * cW;
+  const yPos = v => PAD.top  + (1 - (v - minV) / range) * cH;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Y grid lines + labels
+  ctx.font = '9px "DM Mono", monospace';
+  ctx.fillStyle = '#5a6a82';
+  ctx.textAlign = 'right';
+  const yTicks = 4;
+  for (let i = 0; i <= yTicks; i++) {
+    const v = minV + (range * i / yTicks);
+    const y = yPos(v);
+    ctx.strokeStyle = 'rgba(30,45,69,0.8)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(PAD.left, y);
+    ctx.lineTo(PAD.left + cW, y);
+    ctx.stroke();
+    // Label
+    ctx.fillText(fmtY(v), PAD.left - 4, y + 3);
+  }
+
+  // Area fill
+  const grad = ctx.createLinearGradient(0, PAD.top, 0, PAD.top + cH);
+  const r=parseInt(accentColor.slice(1,3),16),g2=parseInt(accentColor.slice(3,5),16),b2=parseInt(accentColor.slice(5,7),16);
+  grad.addColorStop(0,   `rgba(${r},${g2},${b2},0.35)`);
+  grad.addColorStop(0.6, `rgba(${r},${g2},${b2},0.08)`);
+  grad.addColorStop(1,   `rgba(${r},${g2},${b2},0)`);
+  ctx.beginPath();
+  totals.forEach((d, i) => {
+    const x = xPos(i), y = yPos(d.total);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.lineTo(xPos(n-1), PAD.top + cH);
+  ctx.lineTo(xPos(0),   PAD.top + cH);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  totals.forEach((d, i) => {
+    const x = xPos(i), y = yPos(d.total);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = accentColor;
+  ctx.lineWidth   = 2.5;
+  ctx.lineJoin    = 'round';
+  ctx.stroke();
+
+  // Dots (only last and highlighted)
+  totals.forEach((d, i) => {
+    if (i === n-1 || i === 0) {
+      const x = xPos(i), y = yPos(d.total);
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, Math.PI*2);
+      ctx.fillStyle   = accentColor;
+      ctx.fill();
+      ctx.strokeStyle = '#0A0E1A';
+      ctx.lineWidth   = 2;
+      ctx.stroke();
+    }
+  });
+
+  // X axis labels (show ~5 evenly spaced)
+  ctx.fillStyle   = '#5a6a82';
+  ctx.textAlign   = 'center';
+  ctx.font        = '9px "DM Mono", monospace';
+  const step = Math.max(1, Math.floor(n / 5));
+  for (let i = 0; i < n; i += step) {
+    const [y,m] = totals[i].month.split('-');
+    const lbl   = new Date(y,m-1).toLocaleDateString('fr-FR',{month:'short',year:'2-digit'});
+    ctx.fillText(lbl, xPos(i), H - 6);
+  }
+  // Always show last label
+  const [ly,lm] = totals[n-1].month.split('-');
+  const lastLbl = new Date(ly,lm-1).toLocaleDateString('fr-FR',{month:'short',year:'2-digit'});
+  ctx.fillText(lastLbl, xPos(n-1), H - 6);
+
+  // Tooltip on touch/hover
+  canvas._totals = totals;
+  canvas._xPos   = xPos;
+  canvas._yPos   = yPos;
+  canvas._PAD    = PAD;
+  canvas._W      = W;
+  canvas._n      = n;
+}
+
+function handleChartTouch(e) {
+  const canvas  = document.getElementById('chart-portfolio');
+  if (!canvas._totals) return;
+  const rect    = canvas.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const relX    = clientX - rect.left;
+
+  const totals  = canvas._totals;
+  const n       = canvas._n;
+  const PAD     = canvas._PAD;
+  const cW      = canvas._W - PAD.left - PAD.right;
+
+  // Find nearest point
+  let best = 0, bestDist = 9999;
+  totals.forEach((d, i) => {
+    const x = PAD.left + (i / (n-1)) * cW;
+    const dist = Math.abs(relX - x);
+    if (dist < bestDist) { bestDist = dist; best = i; }
+  });
+
+  const d   = totals[best];
+  const tip = document.getElementById('chart-tooltip');
+  const x   = canvas._xPos(best);
+  const y   = canvas._yPos(d.total);
+
+  tip.innerHTML = `<b style="color:${accentColor}">${moLbl(d.month)}</b><br>${fmtY(d.total)}`;
+  tip.style.display = 'block';
+  const tipW = 110;
+  const left = Math.min(x - tipW/2, canvas._W - tipW - 4);
+  tip.style.left = Math.max(4, left) + 'px';
+  tip.style.top  = Math.max(4, y - 60) + 'px';
+
+  // Highlight dot on canvas
+  renderChart();
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(x, y, 6, 0, Math.PI*2);
+  ctx.fillStyle   = accentColor;
+  ctx.fill();
+  ctx.strokeStyle = '#0A0E1A';
+  ctx.lineWidth   = 2;
+  ctx.stroke();
+  ctx.restore();
+}
+
+function hideTooltip() {
+  const tip = document.getElementById('chart-tooltip');
+  if (tip) tip.style.display = 'none';
+  renderChart();
+}
+
+// ═══════════════════════════════════════════════════════════
+// MOM — Comparaison mois sur mois dépenses
+// ═══════════════════════════════════════════════════════════
+function renderMoM() {
+  const el = document.getElementById('mom-card');
+  if (!el) return;
+  const el2   = document.getElementById('mom-card');
+  const exps  = DB.exp;
+  // Read from selectors if present, else use defaults
+  const prevSel = document.getElementById('mom-prev-sel');
+  const curSel  = document.getElementById('mom-cur-sel');
+  const now     = new Date();
+  const prevYM  = prevSel?.value || new Date(now.getFullYear(), now.getMonth()-1, 1).toISOString().slice(0,7);
+  const curYM   = curSel?.value  || now.toISOString().slice(0,7);
+
+  const cats   = DB.cats.map(c => c.name);
+  const sum    = (ym, type, cat) => exps.filter(e =>
+    moOf(e.date)===ym && e.type===type && (!cat || e.categorie===cat)
+  ).reduce((s,e)=>s+e.montant_qar, 0);
+
+  const depC = sum(curYM,'Depense'), depP = sum(prevYM,'Depense');
+  const salC = sum(curYM,'Salaire'), salP = sum(prevYM,'Salaire');
+  const activeCats = cats.filter(c => sum(curYM,'Depense',c)>0 || sum(prevYM,'Depense',c)>0);
+  const maxVal = Math.max(depC, depP, ...activeCats.flatMap(c=>[sum(curYM,'Depense',c),sum(prevYM,'Depense',c)]), 1);
+
+  const chip = (cur, prev, invert=false) => {
+    if (!prev && !cur) return '<span class="mom-delta neu">—</span>';
+    if (!prev)         return '<span class="mom-delta pos">+</span>';
+    const pct = (cur - prev) / prev * 100;
+    const good = invert ? pct < 0 : pct > 0;
+    const cls  = pct === 0 ? 'neu' : good ? 'pos' : 'neg';
+    return `<span class="mom-delta ${cls}">${pct>=0?'+':''}${pct.toFixed(0)}%</span>`;
+  };
+
+  const fmtQ = v => v ? fmt(v) : '—';
+
+  const bar = (cur, prev) => {
+    const pct = (cur/maxVal*100).toFixed(1);
+    const col = !prev ? 'var(--accent)' : cur<=prev ? 'var(--green)' : 'var(--red)';
+    return `<div class="mom-bar-wrap"><div class="mom-bar" style="width:${pct}%;background:${col}"></div></div>`;
+  };
+
+  // Grid layout — 4 cols: label | prev | cur | delta
+  let g = `<div class="mom-grid">
+    <div class="mom-hdr">Catégorie</div>
+    <div class="mom-hdr">${moLbl(prevYM)}</div>
+    <div class="mom-hdr">${moLbl(curYM)}</div>
+    <div class="mom-hdr">Δ</div>`;
+
+  // Salaire
+  g += `<div class="mom-row">
+    <div class="mcell mcell-lbl">💰 <b>Salaire</b></div>
+    <div class="mcell mcell-num" style="color:var(--muted)">${fmtQ(salP)}</div>
+    <div class="mcell mcell-num" style="color:var(--green)">${fmtQ(salC)}</div>
+    <div class="mcell mcell-delta">${chip(salC,salP,false)}</div>
+  </div>`;
+
+  // Categories
+  activeCats.forEach(cat => {
+    const c=sum(curYM,'Depense',cat), p=sum(prevYM,'Depense',cat);
+    g += `<div class="mom-row">
+      <div class="mcell mcell-lbl">
+        <div>${bar(c,p)}</div>
+        <span>${catIcon(cat)} ${cat}</span>
+      </div>
+      <div class="mcell mcell-num" style="color:var(--muted)">${fmtQ(p)}</div>
+      <div class="mcell mcell-num">${fmtQ(c)}</div>
+      <div class="mcell mcell-delta">${chip(c,p,true)}</div>
+    </div>`;
+  });
+
+  // Separator
+  g += `<hr class="mom-sep">`;
+
+  // Total dépenses
+  g += `<div class="mom-row">
+    <div class="mcell mcell-lbl" style="font-weight:700;color:var(--text)">💸 Total dép.</div>
+    <div class="mcell mcell-num" style="color:var(--muted);font-weight:700">${fmtQ(depP)}</div>
+    <div class="mcell mcell-num" style="color:var(--red);font-weight:700">${fmtQ(depC)}</div>
+    <div class="mcell mcell-delta">${chip(depC,depP,true)}</div>
+  </div>`;
+
+  // Disponible
+  const disC=salC-depC, disP=salP-depP;
+  g += `<div class="mom-row">
+    <div class="mcell mcell-lbl" style="font-weight:700;color:var(--text)">✨ Disponible</div>
+    <div class="mcell mcell-num" style="color:var(--muted);font-weight:700">${salP||depP?fmtQ(disP):'—'}</div>
+    <div class="mcell mcell-num" style="color:var(--amber);font-weight:700">${salC||depC?fmtQ(disC):'—'}</div>
+    <div class="mcell mcell-delta">${salC||depC?chip(disC,disP,false):'—'}</div>
+  </div>`;
+
+  g += '</div>';
+
+  // Note: values in QAR
+  g += `<div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:10px;text-align:right">Valeurs en QAR</div>`;
+
+  el.innerHTML = g;
+}
+
 // ═══════════════════════════════════════════════════════════
 // TOAST
 // ═══════════════════════════════════════════════════════════
@@ -917,6 +1355,18 @@ renderCatSelect();
 loadHist();
 renderInvForm();
 renderDashboard();
+
+// Chart interactions
+const chartCanvas = document.getElementById('chart-portfolio');
+if (chartCanvas) {
+  chartCanvas.addEventListener('touchstart', handleChartTouch, {passive:true});
+  chartCanvas.addEventListener('touchmove',  handleChartTouch, {passive:true});
+  chartCanvas.addEventListener('touchend',   hideTooltip);
+  chartCanvas.addEventListener('mousemove',  handleChartTouch);
+  chartCanvas.addEventListener('mouseleave', hideTooltip);
+}
+// Re-render chart on resize
+window.addEventListener('resize', ()=>{ if(curScreen==='dashboard') renderChart(); });
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
