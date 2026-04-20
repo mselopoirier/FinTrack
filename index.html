@@ -2,172 +2,99 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0A0E1A">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
 <title>FinTrack</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#0A0E1A;--bg2:#111827;--bg3:#1a2235;--border:#1e2d45;
-  --text:#e8edf5;--muted:#5a6a82;--accent:#3b82f6;--a2:#06b6d4;
-  --green:#10b981;--lgreen:#D5F5E3;--red:#ef4444;--lred:#FDECEA;
-  --amber:#f59e0b;--purple:#8b5cf6;--teal:#117A65;--lteal:#D1F2EB;
-  --org:#D35400;--lorg:#FDEBD0;--safe:env(safe-area-inset-bottom,0px);
-}
+:root{--bg:#0A0E1A;--bg2:#111827;--bg3:#1a2235;--bdr:#1e2d45;--text:#e8edf5;--mut:#5a6a82;--acc:#3b82f6;--a2:#06b6d4;--grn:#10b981;--red:#ef4444;--amb:#f59e0b;--pur:#8b5cf6;--saf:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Syne',sans-serif}
 body{display:flex;flex-direction:column}
-
-/* ── CHARTS ── */
-/* chart asset selector + mom pickers */
-.chart-controls{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.ctrl-sel{flex:1;min-width:120px;padding:7px 10px;background:var(--bg3);
-  border:1px solid var(--border);border-radius:10px;color:var(--text);
-  font-family:'DM Mono',monospace;font-size:12px;outline:none;-webkit-appearance:none;
-  cursor:pointer;transition:border .2s}
-.ctrl-sel:focus{border-color:var(--accent)}
-.ctrl-sel option{background:var(--bg2)}
-.mom-pickers{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.mom-pickers label{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px}
-.mom-picker{padding:6px 10px;background:var(--bg3);border:1px solid var(--border);
-  border-radius:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;
-  outline:none;-webkit-appearance:none;cursor:pointer;flex:1;min-width:100px}
-.mom-picker:focus{border-color:var(--accent)}
-.mom-vs{font-size:12px;color:var(--muted);font-family:'DM Mono',monospace}
-.chart-wrap{position:relative;width:100%;touch-action:pan-y}
-.chart-canvas{width:100%;display:block;border-radius:8px}
-.chart-tabs{display:flex;gap:6px;margin-bottom:12px}
-.ctab{padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;
-  background:var(--bg3);border:1px solid var(--border);color:var(--muted);
-  font-family:'DM Mono',monospace;transition:all .2s}
-.ctab.active{background:var(--accent);border-color:var(--accent);color:white}
-.tooltip-box{position:absolute;background:var(--bg2);border:1px solid var(--border);
-  border-radius:8px;padding:8px 10px;font-family:'DM Mono',monospace;font-size:11px;
-  pointer-events:none;display:none;white-space:nowrap;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,.4)}
-/* ── MOM COMPARISON ── */
-.mom-grid{display:grid;align-items:center;gap:0;
-  grid-template-columns:1fr 72px 72px 46px}
-.mom-hdr{font-size:9px;color:var(--muted);font-family:'DM Mono',monospace;
-  padding:6px 0 8px;border-bottom:2px solid var(--border);text-transform:uppercase;letter-spacing:.5px}
-.mom-hdr:nth-child(n+2){text-align:right}
-.mom-hdr:last-child{text-align:center}
-.mom-row{display:contents}
-.mom-row .mcell{padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
-.mom-row:last-of-type .mcell{border-bottom:none}
-.mcell-lbl{display:flex;align-items:center;gap:6px;color:var(--muted)}
-.mcell-lbl b{color:var(--text)}
-.mcell-num{font-family:'DM Mono',monospace;text-align:right;font-weight:500}
-.mcell-delta{text-align:center}
-.mom-delta{font-family:'DM Mono',monospace;font-size:10px;padding:2px 6px;border-radius:8px;font-weight:700;white-space:nowrap}
-.mom-delta.pos{background:#0a2518;color:var(--green)}
-.mom-delta.neg{background:#2a0a0a;color:var(--red)}
-.mom-delta.neu{background:var(--bg3);color:var(--muted)}
-.mom-bar-wrap{width:100%;height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:3px}
-.mom-bar{height:100%;border-radius:2px}
-.mom-sep{grid-column:1/-1;border:none;border-top:2px solid var(--border);margin:4px 0}
-
 /* topbar */
-.topbar{display:flex;align-items:center;justify-content:space-between;
-  padding:14px 20px 10px;padding-top:calc(14px + env(safe-area-inset-top,0px));
-  background:var(--bg);border-bottom:1px solid var(--border);flex-shrink:0}
-.topbar-title{font-size:18px;font-weight:700;letter-spacing:-.3px}
-.topbar-sub{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px}
-.icon-btn{width:36px;height:36px;border-radius:10px;background:var(--bg3);
-  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
-  cursor:pointer;font-size:17px}
+.tb{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 10px;padding-top:calc(14px + env(safe-area-inset-top,0px));background:var(--bg);border-bottom:1px solid var(--bdr);flex-shrink:0}
+.tb-t{font-size:18px;font-weight:700;letter-spacing:-.3px}
+.tb-s{font-size:11px;color:var(--mut);font-family:'DM Mono',monospace;margin-top:1px}
+.ib{width:36px;height:36px;border-radius:10px;background:var(--bg3);border:1px solid var(--bdr);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px}
 /* screens */
-.screen{display:none;flex:1;overflow-y:auto;padding:16px 16px 100px}
-.screen.active{display:block}
+.sc{display:none;flex:1;overflow-y:auto;padding:16px 16px 100px}.sc.on{display:block}
 /* nav */
-.nav{display:flex;background:var(--bg2);border-top:1px solid var(--border);
-  padding-bottom:var(--safe);flex-shrink:0}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:10px 4px;cursor:pointer;color:var(--muted);font-size:10px;
-  font-family:'DM Mono',monospace;border:none;background:none;transition:color .2s}
-.nav-btn.active{color:var(--accent)}
-.nav-btn svg{width:22px;height:22px}
+.nav{display:flex;background:var(--bg2);border-top:1px solid var(--bdr);padding-bottom:var(--saf);flex-shrink:0}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 4px;cursor:pointer;color:var(--mut);font-size:10px;font-family:'DM Mono',monospace;border:none;background:none;transition:color .2s}
+.nb.on{color:var(--acc)}.nb svg{width:22px;height:22px}
 /* cards */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:12px}
+.card{background:var(--bg2);border:1px solid var(--bdr);border-radius:16px;padding:16px;margin-bottom:12px}
 /* kpis */
-.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.kpi{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px}
-.kpi.wide{grid-column:1/-1}
-.kpi-label{font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
-.kpi-value{font-size:22px;font-weight:800;letter-spacing:-1px}
-.kpi-sub{font-size:10px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace}
+.kg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.kp{background:var(--bg2);border:1px solid var(--bdr);border-radius:14px;padding:14px}
+.kp.w{grid-column:1/-1}
+.kl{font-size:10px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
+.kv{font-size:22px;font-weight:800;letter-spacing:-1px}
+.ks{font-size:10px;color:var(--mut);margin-top:3px;font-family:'DM Mono',monospace}
 /* section header */
-.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}
-.sec-hdr h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+.sh{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}
+.sh h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--mut)}
 /* table rows */
-.trow{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
-.trow:last-child{border-bottom:none}
-.tlbl{color:var(--muted)}.tval{font-family:'DM Mono',monospace;font-weight:500}
+.tr2{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bdr);font-size:13px}
+.tr2:last-child{border-bottom:none}
+.tl{color:var(--mut)}.tv{font-family:'DM Mono',monospace;font-weight:500}
 /* forms */
 .fg{margin-bottom:14px}
-.fl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;font-family:'DM Mono',monospace}
-.fi,.fs{width:100%;padding:12px 14px;background:var(--bg3);border:1px solid var(--border);
-  border-radius:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:15px;
-  outline:none;transition:border .2s;-webkit-appearance:none}
-.fi:focus,.fs:focus{border-color:var(--accent)}
-.fs option{background:var(--bg2)}
+.fl{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;font-family:'DM Mono',monospace}
+.fi,.fs{width:100%;padding:12px 14px;background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:15px;outline:none;transition:border .2s;-webkit-appearance:none}
+.fi:focus,.fs:focus{border-color:var(--acc)}.fs option{background:var(--bg2)}
 /* segment */
 .seg{display:flex;background:var(--bg3);border-radius:10px;padding:3px;margin-bottom:16px}
-.seg-btn{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:600;border-radius:8px;
-  cursor:pointer;color:var(--muted);background:none;border:none;font-family:'Syne',sans-serif;transition:all .2s}
-.seg-btn.active{background:var(--accent);color:white}
+.sb{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:600;border-radius:8px;cursor:pointer;color:var(--mut);background:none;border:none;font-family:'Syne',sans-serif;transition:all .2s}
+.sb.on{background:var(--acc);color:white}
 /* buttons */
-.btn{width:100%;padding:14px;border-radius:12px;font-size:15px;font-weight:700;
-  font-family:'Syne',sans-serif;cursor:pointer;border:none;transition:all .15s}
-.btn-p{background:var(--accent);color:white}.btn-p:active{background:#2563eb}
-.btn-g{background:var(--bg3);color:var(--text);border:1px solid var(--border)}
-.btn-d{background:transparent;color:var(--red);border:1px solid var(--red)}
+.btn{width:100%;padding:14px;border-radius:12px;font-size:15px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;border:none;transition:all .15s}
+.bp{background:var(--acc);color:white}.bp:active{background:#2563eb}
+.bg{background:var(--bg3);color:var(--text);border:1px solid var(--bdr)}
+.bd{background:transparent;color:var(--red);border:1px solid var(--red)}
 /* expense items */
-.exp-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
-.exp-item:last-child{border-bottom:none}
-.exp-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.exp-info{flex:1;min-width:0}
-.exp-cat{font-size:14px;font-weight:600}
-.exp-date{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px}
-.exp-amt{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;text-align:right}
-.exp-amt.sal{color:var(--green)}
-.del-btn{background:none;border:none;color:var(--muted);padding:4px;cursor:pointer;font-size:16px;flex-shrink:0}
-.del-btn:active{color:var(--red)}
-/* month chips */
+.ei{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--bdr)}
+.ei:last-child{border-bottom:none}
+.eic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ein{flex:1;min-width:0}
+.ecat{font-size:14px;font-weight:600}
+.edate{font-size:11px;color:var(--mut);font-family:'DM Mono',monospace;margin-top:1px}
+.eamt{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;text-align:right}
+.eamt.sal{color:var(--grn)}
+.delbtn{background:none;border:none;color:var(--mut);padding:4px;cursor:pointer;font-size:16px;flex-shrink:0}
+.delbtn:active{color:var(--red)}
+/* chips */
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px}
 .chips::-webkit-scrollbar{display:none}
-.chip{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;
-  cursor:pointer;background:var(--bg3);border:1px solid var(--border);color:var(--muted);
-  font-family:'DM Mono',monospace;transition:all .2s}
-.chip.active{background:var(--accent);border-color:var(--accent);color:white}
-/* budget 5-month table */
-.b5wrap{overflow-x:auto;border-radius:12px}
+.chip{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;background:var(--bg3);border:1px solid var(--bdr);color:var(--mut);font-family:'DM Mono',monospace;transition:all .2s}
+.chip.on{background:var(--acc);border-color:var(--acc);color:white}
+/* budget 5M */
+.b5w{overflow-x:auto;border-radius:12px}
 .b5{border-collapse:collapse;font-size:12px;font-family:'DM Mono',monospace;min-width:100%}
-.b5 th{padding:8px 10px;color:var(--muted);font-size:10px;white-space:nowrap;border-bottom:1px solid var(--border);text-align:right;background:var(--bg3)}
-.b5 th:first-child{text-align:left;position:sticky;left:0;z-index:2;background:var(--bg3);min-width:95px}
+.b5 th{padding:8px 10px;color:var(--mut);font-size:10px;white-space:nowrap;border-bottom:1px solid var(--bdr);text-align:right;background:var(--bg3)}
+.b5 th:first-child{text-align:left;position:sticky;left:0;z-index:2;background:var(--bg3);min-width:88px}
 .b5 td{padding:9px 10px;text-align:right;border-bottom:1px solid #0d1525;white-space:nowrap}
-.b5 td:first-child{text-align:left;position:sticky;left:0;z-index:1;background:var(--bg2);min-width:95px;font-weight:600}
+.b5 td:first-child{text-align:left;position:sticky;left:0;z-index:1;background:var(--bg2);min-width:88px;font-weight:600}
 .b5 tr:nth-child(even) td:first-child{background:#0d1525}
 .b5 tr:last-child td{border-bottom:none}
-.b5 tr.sal-r td{color:var(--green)}.b5 tr.sal-r td:first-child{background:#0a1f14}
-.b5 tr.dep-r td{color:var(--red)}.b5 tr.dep-r td:first-child{background:#1a0a0a}
-.b5 tr.dis-r td{color:var(--amber);font-weight:700}.b5 tr.dis-r td:first-child{background:#1a1500}
-/* inv inputs */
-.inv-sec{font-size:10px;color:var(--a2);text-transform:uppercase;letter-spacing:1.5px;
-  font-family:'DM Mono',monospace;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
-.inv-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #0d1525}
-.inv-row:last-child{border-bottom:none}
-.inv-lbl{flex:1;font-size:13px}
-.inv-inp{width:120px;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);
-  border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;text-align:right;outline:none}
-.inv-inp:focus{border-color:var(--accent)}
-.inv-inp.eur{border-color:#2d4a6e}.inv-inp.eur:focus{border-color:var(--a2)}
-.inv-inp.crypto{border-color:#3d2d6e}.inv-inp.crypto:focus{border-color:var(--purple)}
+.b5 .sr td{color:var(--grn)}.b5 .sr td:first-child{background:#0a1f14}
+.b5 .dr td{color:var(--red)}.b5 .dr td:first-child{background:#1a0a0a}
+.b5 .disr td{color:var(--amb);font-weight:700}.b5 .disr td:first-child{background:#1a1500}
+/* inv form */
+.isec{font-size:10px;color:var(--a2);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Mono',monospace;margin:16px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--bdr)}
+.irow{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #0d1525}
+.irow:last-child{border-bottom:none}
+.ilbl{flex:1;font-size:13px}
+.iinp{width:120px;padding:7px 10px;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;text-align:right;outline:none}
+.iinp:focus{border-color:var(--acc)}
+.iinp.eur{border-color:#2d4a6e}.iinp.eur:focus{border-color:var(--a2)}
+.iinp.cry{border-color:#3d2d6e}.iinp.cry:focus{border-color:var(--pur)}
 /* hist table */
 .ht{overflow-x:auto}
 .ht table{width:100%;border-collapse:collapse;font-size:12px;font-family:'DM Mono',monospace}
-.ht th{padding:8px 6px;text-align:right;color:var(--muted);font-size:10px;white-space:nowrap;border-bottom:1px solid var(--border)}
+.ht th{padding:8px 6px;text-align:right;color:var(--mut);font-size:10px;white-space:nowrap;border-bottom:1px solid var(--bdr)}
 .ht th:first-child{text-align:left}
 .ht td{padding:10px 6px;text-align:right;border-bottom:1px solid #0d1525}
 .ht td:first-child{text-align:left;color:var(--text)}
@@ -176,320 +103,288 @@ body{display:flex;flex-direction:column}
 .abar{height:8px;border-radius:4px;overflow:hidden;display:flex;margin:8px 0 4px;gap:2px}
 .aseg{height:100%;border-radius:2px}
 .aleg{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:8px}
-.aitem{display:flex;align-items:center;font-size:11px;font-family:'DM Mono',monospace;color:var(--muted)}
+.ai{display:flex;align-items:center;font-size:11px;font-family:'DM Mono',monospace;color:var(--mut)}
 .adot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0}
+/* chart */
+.cctrl{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.ctabs{display:flex;background:var(--bg3);border-radius:10px;padding:3px}
+.ctab{padding:5px 10px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;color:var(--mut);background:none;border:none;font-family:'DM Mono',monospace;transition:all .2s}
+.ctab.on{background:var(--acc);color:white}
+.csel{flex:1;min-width:120px;padding:7px 10px;background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;-webkit-appearance:none;cursor:pointer}
+.csel:focus{border-color:var(--acc)}.csel option{background:var(--bg2)}
+.cwrap{position:relative;width:100%;touch-action:pan-y}
+.ccvs{width:100%;display:block;border-radius:8px}
+.ctip{position:absolute;background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;padding:8px 10px;font-family:'DM Mono',monospace;font-size:11px;pointer-events:none;display:none;white-space:nowrap;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+/* MoM */
+.momps{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.momps label{font-size:10px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px}
+.momp{padding:6px 10px;background:var(--bg3);border:1px solid var(--bdr);border-radius:10px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;-webkit-appearance:none;cursor:pointer;flex:1;min-width:100px}
+.momp:focus{border-color:var(--acc)}
+.momvs{font-size:12px;color:var(--mut);font-family:'DM Mono',monospace;flex-shrink:0}
+.momg{display:grid;grid-template-columns:1fr 68px 68px 44px;align-items:center}
+.momh{font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;padding:6px 0 8px;border-bottom:2px solid var(--bdr);text-transform:uppercase;letter-spacing:.5px}
+.momh:nth-child(n+2){text-align:right}.momh:last-child{text-align:center}
+.momr{display:contents}
+.momr .mc{padding:8px 0;border-bottom:1px solid var(--bdr);font-size:12px}
+.momr:last-of-type .mc{border-bottom:none}
+.mclbl{display:flex;align-items:center;gap:5px;color:var(--mut)}.mclbl b{color:var(--text)}
+.mcnum{font-family:'DM Mono',monospace;text-align:right;font-weight:500}
+.mcd{text-align:center}
+.mdlt{font-family:'DM Mono',monospace;font-size:10px;padding:2px 5px;border-radius:8px;font-weight:700;white-space:nowrap}
+.mdlt.pos{background:#0a2518;color:var(--grn)}.mdlt.neg{background:#2a0a0a;color:var(--red)}.mdlt.neu{background:var(--bg3);color:var(--mut)}
+.mbarw{width:100%;height:3px;background:var(--bdr);border-radius:2px;overflow:hidden;margin-bottom:3px}
+.mbar{height:100%;border-radius:2px}
+.momsep{grid-column:1/-1;border:none;border-top:2px solid var(--bdr);margin:4px 0}
+/* savings rate */
+.srmos{display:flex;gap:5px;overflow-x:auto;padding-bottom:4px;margin-top:10px}
+.srmos::-webkit-scrollbar{display:none}
+.srmo{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:3px}
+.srmo-i{width:26px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative}
+.srmo-f{position:absolute;bottom:0;left:0;right:0;border-radius:4px}
+.srmo-l{font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;white-space:nowrap}
 /* modals */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;
-  align-items:flex-end;backdrop-filter:blur(4px)}
-.modal-overlay.open{display:flex}
-.modal{width:100%;background:var(--bg2);border-radius:20px 20px 0 0;
-  padding:20px 20px calc(20px + var(--safe));border-top:1px solid var(--border);
-  max-height:90vh;overflow-y:auto}
-.mhandle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
-.mtitle{font-size:17px;font-weight:700;margin-bottom:16px}
-/* settings rows */
-.srow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)}
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:flex-end;backdrop-filter:blur(4px)}
+.mo.on{display:flex}
+.mod{width:100%;background:var(--bg2);border-radius:20px 20px 0 0;padding:20px 20px calc(20px + var(--saf));border-top:1px solid var(--bdr);max-height:90vh;overflow-y:auto}
+.mh{width:36px;height:4px;background:var(--bdr);border-radius:2px;margin:0 auto 20px}
+.mt{font-size:17px;font-weight:700;margin-bottom:16px}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--bdr)}
 .srow:last-child{border-bottom:none}
-.slbl{font-size:14px}.ssub{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace}
-.sinp{width:90px;padding:7px 10px;background:var(--bg3);border:1px solid var(--border);
-  border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;text-align:right;outline:none}
-.sinp:focus{border-color:var(--accent)}
-/* cat/asset manager */
-.mi{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border)}
-.mi:last-child{border-bottom:none}
-.mi.arch{opacity:.4}
-.mini{flex:1;padding:8px 10px;background:var(--bg3);border:1px solid var(--border);
-  border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none}
-.mini:focus{border-color:var(--accent)}
-.mcur{width:70px;padding:7px 8px;background:var(--bg3);border:1px solid var(--border);
-  border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;
-  outline:none;-webkit-appearance:none}
-.mtog{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
-  background:none;cursor:pointer;font-size:15px;flex-shrink:0;transition:all .2s}
-.mghdr{font-size:10px;color:var(--a2);text-transform:uppercase;letter-spacing:1.5px;
-  font-family:'DM Mono',monospace;padding:12px 0 6px;border-bottom:1px solid var(--border);margin-bottom:4px}
-/* cat emoji picker */
-.epick{display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--bg3);border-radius:12px;margin-top:6px}
-.eopt{width:36px;height:36px;border-radius:8px;font-size:20px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center}
-.eopt.sel,.eopt:active{background:var(--accent)}
+.slbl{font-size:14px}.ssub{font-size:11px;color:var(--mut);font-family:'DM Mono',monospace}
+.si{width:90px;padding:7px 10px;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;text-align:right;outline:none}
+.si:focus{border-color:var(--acc)}
+/* manager */
+.mi{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--bdr)}
+.mi:last-child{border-bottom:none}.mi.arch{opacity:.4}
+.mni{flex:1;padding:8px 10px;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none}
+.mni:focus{border-color:var(--acc)}
+.mcs{width:70px;padding:7px 8px;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:12px;outline:none;-webkit-appearance:none}
+.mtog{width:32px;height:32px;border-radius:8px;border:1px solid var(--bdr);background:none;cursor:pointer;font-size:15px;flex-shrink:0}
+.mgh{font-size:10px;color:var(--a2);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Mono',monospace;padding:12px 0 6px;border-bottom:1px solid var(--bdr);margin-bottom:4px}
+.epw{display:flex;flex-wrap:wrap;gap:6px;padding:10px;background:var(--bg3);border-radius:12px;margin-top:6px}
+.ep{width:36px;height:36px;border-radius:8px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.ep.on,.ep:active{background:var(--acc)}
 /* toast */
-.toast{position:fixed;bottom:calc(80px + var(--safe));left:50%;transform:translateX(-50%) translateY(20px);
-  background:var(--green);color:white;padding:10px 20px;border-radius:20px;font-size:13px;
-  font-weight:600;opacity:0;transition:all .3s;z-index:200;white-space:nowrap}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-/* empty */
-.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.toast{position:fixed;bottom:calc(80px + var(--saf));left:50%;transform:translateX(-50%) translateY(20px);background:var(--grn);color:white;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;z-index:200;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.empty{text-align:center;padding:40px 20px;color:var(--mut)}
 .empty-icon{font-size:40px;margin-bottom:12px}
-/* colors */
-.green{color:var(--green)}.red{color:var(--red)}.blue{color:var(--accent)}.amber{color:var(--amber)}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.grn{color:var(--grn)}.red{color:var(--red)}.blu{color:var(--acc)}.amb{color:var(--amb)}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div>
-    <div class="topbar-title">FinTrack</div>
-    <div class="topbar-sub" id="topbar-date"></div>
-  </div>
+<div class="tb">
+  <div><div class="tb-t">FinTrack</div><div class="tb-s" id="tdate"></div></div>
   <div style="display:flex;gap:8px">
-    <div class="icon-btn" onclick="exportExcel()" title="Exporter Excel">📤</div>
-    <div class="icon-btn" onclick="openSettings()">⚙️</div>
+    <div class="ib" onclick="exportExcel()">📤</div>
+    <div class="ib" onclick="openSettings()">⚙️</div>
   </div>
 </div>
 
-<!-- ══ DASHBOARD ══ -->
-<div class="screen active" id="screen-dashboard">
-  <div class="kpi-grid">
-    <div class="kpi wide">
-      <div class="kpi-label">Portefeuille Total</div>
-      <div class="kpi-value blue" id="kpi-total">—</div>
-      <div class="kpi-sub" id="kpi-sub">USD · dernier mois saisi</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Ret. Mensuel</div>
-      <div class="kpi-value" id="kpi-retm">—</div>
-      <div class="kpi-sub">vs mois précédent</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Ret. Total</div>
-      <div class="kpi-value" id="kpi-rett">—</div>
-      <div class="kpi-sub">depuis le début</div>
-    </div>
+<!-- DASHBOARD -->
+<div class="sc on" id="sc-dash">
+  <div class="kg">
+    <div class="kp w"><div class="kl">Portefeuille Total</div><div class="kv blu" id="kpi-total">—</div><div class="ks" id="kpi-sub">USD</div></div>
+    <div class="kp"><div class="kl">Ret. Mensuel</div><div class="kv" id="kpi-retm">—</div><div class="ks">vs mois précédent</div></div>
+    <div class="kp"><div class="kl">Ret. Total</div><div class="kv" id="kpi-rett">—</div><div class="ks">depuis le début</div></div>
   </div>
-
-  <div class="sec-hdr"><h2>Budget — 5 derniers mois</h2></div>
-  <div class="card" style="padding:12px">
-    <div class="b5wrap"><table class="b5" id="b5-table"></table></div>
-  </div>
-
-  <div class="sec-hdr">
-    <h2>Investissements</h2>
-    <span style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace" id="inv-mo-lbl"></span>
-  </div>
-  <div class="card" id="inv-detail"></div>
-
-  <div class="sec-hdr"><h2>Composition du portefeuille</h2></div>
-  <div class="card" id="inv-alloc"></div>
-
-  <div class="sec-hdr">
-    <h2>Évolution du portefeuille</h2>
-  </div>
+  <div class="sh"><h2>Budget — 5 derniers mois</h2></div>
+  <div class="card" style="padding:12px"><div class="b5w"><table class="b5" id="b5t"></table></div></div>
+  <div class="sh"><h2>Taux d'épargne</h2></div>
+  <div class="card" id="src"></div>
+  <div class="sh"><h2>Investissements</h2><span style="font-size:11px;color:var(--mut);font-family:'DM Mono',monospace" id="imlbl"></span></div>
+  <div class="card" id="idet"></div>
+  <div class="sh"><h2>Composition du portefeuille</h2></div>
+  <div class="card" id="ialc"></div>
+  <div class="sh"><h2>Évolution du portefeuille</h2></div>
   <div class="card" style="padding:14px">
-    <div class="chart-controls">
-      <div class="chart-tabs" id="chart-tabs" style="margin-bottom:0;flex-shrink:0">
-        <div class="ctab active" onclick="setChartRange(6,this)">6M</div>
-        <div class="ctab" onclick="setChartRange(12,this)">1A</div>
-        <div class="ctab" onclick="setChartRange(24,this)">2A</div>
-        <div class="ctab" onclick="setChartRange(999,this)">Tout</div>
+    <div class="cctrl">
+      <div class="ctabs">
+        <button class="ctab on" onclick="setCR(6,this)">6M</button>
+        <button class="ctab" onclick="setCR(12,this)">1A</button>
+        <button class="ctab" onclick="setCR(24,this)">2A</button>
+        <button class="ctab" onclick="setCR(999,this)">Tout</button>
       </div>
-      <select class="ctrl-sel" id="asset-sel" onchange="setChartAsset(this.value)">
-        <!-- Populated by buildAssetSelector() -->
-      </select>
+      <select class="csel" id="asel" onchange="setCA(this.value)"></select>
     </div>
-    <div class="chart-wrap" id="chart-wrap">
-      <canvas class="chart-canvas" id="chart-portfolio" height="180"></canvas>
-      <div class="tooltip-box" id="chart-tooltip"></div>
-    </div>
+    <div class="cwrap" id="cwrap"><canvas class="ccvs" id="ccvs" height="180"></canvas><div class="ctip" id="ctip"></div></div>
   </div>
-
-  <div class="sec-hdr"><h2>Comparaison mois sur mois</h2></div>
+  <div class="sh"><h2>Comparaison mois sur mois</h2></div>
   <div class="card">
-    <div class="mom-pickers">
-      <div style="display:flex;flex-direction:column;gap:4px;flex:1">
-        <label>Mois A</label>
-        <select class="mom-picker" id="mom-prev-sel" onchange="renderMoM()"><!-- populated --></select>
-      </div>
-      <span class="mom-vs">vs</span>
-      <div style="display:flex;flex-direction:column;gap:4px;flex:1">
-        <label>Mois B</label>
-        <select class="mom-picker" id="mom-cur-sel" onchange="renderMoM()"><!-- populated --></select>
-      </div>
+    <div class="momps">
+      <div style="display:flex;flex-direction:column;gap:4px;flex:1"><label>Mois A</label><select class="momp" id="moma" onchange="renderMoM()"></select></div>
+      <span class="momvs">vs</span>
+      <div style="display:flex;flex-direction:column;gap:4px;flex:1"><label>Mois B</label><select class="momp" id="momb" onchange="renderMoM()"></select></div>
     </div>
-    <div id="mom-card"></div>
+    <div id="momc"></div>
   </div>
-
-  <div class="sec-hdr"><h2>Dernières dépenses</h2></div>
-  <div class="card" id="recent-exp"></div>
+  <div class="sh"><h2>Dernières dépenses</h2></div>
+  <div class="card" id="rexp"></div>
 </div>
 
-<!-- ══ DÉPENSES ══ -->
-<div class="screen" id="screen-dep">
+<!-- DÉPENSES -->
+<div class="sc" id="sc-dep">
   <div class="seg">
-    <button class="seg-btn active" onclick="switchDep('saisie',this)">+ Saisir</button>
-    <button class="seg-btn" onclick="switchDep('liste',this)">Liste</button>
+    <button class="sb on" onclick="swDep('s',this)">+ Saisir</button>
+    <button class="sb" onclick="swDep('l',this)">Liste</button>
   </div>
-  <div id="dep-saisie">
-    <div class="fg">
-      <div class="fl">Type</div>
+  <div id="deps">
+    <div class="fg"><div class="fl">Type</div>
       <div class="seg" style="margin-bottom:0">
-        <button class="seg-btn active" id="btn-dep" onclick="setDepType('Depense')">Dépense</button>
-        <button class="seg-btn" id="btn-sal" onclick="setDepType('Salaire')">Salaire</button>
+        <button class="sb on" id="btd" onclick="setDT('Depense')">Dépense</button>
+        <button class="sb" id="bts" onclick="setDT('Salaire')">Salaire</button>
       </div>
     </div>
-    <div class="fg" id="fg-cat">
-      <div class="fl">Catégorie</div>
-      <select class="fs" id="dep-cat"></select>
-    </div>
-    <div class="fg">
-      <div class="fl">Date</div>
-      <input type="date" class="fi" id="dep-date">
-    </div>
-    <div class="fg">
-      <div class="fl">Montant (QAR)</div>
-      <input type="number" class="fi" id="dep-amt" placeholder="0.00" step="0.01" inputmode="decimal">
-    </div>
+    <div class="fg" id="fgc"><div class="fl">Catégorie</div><select class="fs" id="dcat"></select></div>
+    <div class="fg"><div class="fl">Date</div><input type="date" class="fi" id="ddate"></div>
+    <div class="fg"><div class="fl">Montant (QAR)</div><input type="number" class="fi" id="damt" placeholder="0.00" step="0.01" inputmode="decimal"></div>
     <div style="background:var(--bg3);border-radius:10px;padding:10px 14px;margin-bottom:16px;display:flex;justify-content:space-between">
-      <span style="font-size:12px;color:var(--muted);font-family:'DM Mono',monospace">≈ USD</span>
-      <span style="font-family:'DM Mono',monospace;font-size:14px;color:var(--a2)" id="dep-usd-prev">—</span>
+      <span style="font-size:12px;color:var(--mut);font-family:'DM Mono',monospace">≈ USD</span>
+      <span style="font-family:'DM Mono',monospace;font-size:14px;color:var(--a2)" id="dusd">—</span>
     </div>
-    <button class="btn btn-p" onclick="saveDep()">Enregistrer</button>
+    <button class="btn bp" onclick="saveDep()">Enregistrer</button>
   </div>
-  <div id="dep-liste" style="display:none">
-    <div class="chips" id="dep-chips"></div>
-    <div id="dep-summary" style="margin-bottom:12px;display:flex;gap:8px"></div>
-    <div class="card" id="dep-items"></div>
+  <div id="depl" style="display:none">
+    <div class="chips" id="dchips"></div>
+    <div id="dsum" style="margin-bottom:12px;display:flex;gap:8px"></div>
+    <div class="card" id="ditems"></div>
   </div>
 </div>
 
-<!-- ══ INVESTISSEMENTS ══ -->
-<div class="screen" id="screen-inv">
+<!-- INVESTISSEMENTS -->
+<div class="sc" id="sc-inv">
   <div class="seg">
-    <button class="seg-btn active" onclick="switchInv('saisie',this)">+ Saisir</button>
-    <button class="seg-btn" onclick="switchInv('historique',this)">Historique</button>
+    <button class="sb on" onclick="swInv('s',this)">+ Saisir</button>
+    <button class="sb" onclick="swInv('h',this)">Historique</button>
   </div>
-  <div id="inv-saisie">
-    <div class="fg">
-      <div class="fl">Mois</div>
-      <input type="month" class="fi" id="inv-month">
-    </div>
-    <div class="card" style="padding:12px 16px" id="inv-fields"></div>
+  <div id="invs">
+    <div class="fg"><div class="fl">Mois</div><input type="month" class="fi" id="imon"></div>
+    <div class="card" style="padding:12px 16px" id="ifields"></div>
     <div class="card" style="background:var(--bg3);border-color:#1e3a5f;margin-top:-4px">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:13px;color:var(--muted)">Total estimé</span>
-        <span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:800;color:var(--accent)" id="inv-preview">$0</span>
+        <span style="font-size:13px;color:var(--mut)">Total estimé</span>
+        <span style="font-family:'DM Mono',monospace;font-size:18px;font-weight:800;color:var(--acc)" id="iprev">$0</span>
       </div>
     </div>
     <div style="height:12px"></div>
-    <button class="btn btn-p" onclick="saveInv()">Enregistrer ce mois</button>
+    <button class="btn bp" onclick="saveInv()">Enregistrer ce mois</button>
     <div style="height:8px"></div>
-    <button class="btn btn-g" onclick="loadLastInv()">Recopier mois précédent</button>
+    <button class="btn bg" onclick="loadLastInv()">Recopier mois précédent</button>
   </div>
-  <div id="inv-historique" style="display:none">
+  <div id="invh" style="display:none">
     <div class="ht card">
-      <table><thead><tr>
-        <th style="text-align:left">Mois</th><th>Total $</th><th>Ret.M</th><th>Ret.T</th>
-      </tr></thead><tbody id="inv-hist-body"></tbody></table>
+      <table><thead><tr><th style="text-align:left">Mois</th><th>Total $</th><th>Ret.M</th><th>Ret.T</th></tr></thead>
+      <tbody id="ihtb"></tbody></table>
     </div>
   </div>
 </div>
 
 <nav class="nav">
-  <button class="nav-btn active" id="nav-dashboard" onclick="nav('dashboard')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-      <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-    </svg>Dashboard
+  <button class="nb on" id="nb-dash" onclick="goTo('dash')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard
   </button>
-  <button class="nav-btn" id="nav-dep" onclick="nav('dep')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/>
-    </svg>Dépenses
+  <button class="nb" id="nb-dep" onclick="goTo('dep')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>Dépenses
   </button>
-  <button class="nav-btn" id="nav-inv" onclick="nav('inv')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
-    </svg>Invest.
+  <button class="nb" id="nb-inv" onclick="goTo('inv')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>Invest.
   </button>
 </nav>
 
-<!-- Settings -->
-<div class="modal-overlay" id="modal-settings">
-  <div class="modal">
-    <div class="mhandle"></div>
-    <div class="mtitle">⚙️ Paramètres</div>
-    <div class="srow"><div><div class="slbl">1 USD = ? QAR</div><div class="ssub">Taux QAR</div></div><input class="sinp" id="s-qar" type="number" step="0.01"></div>
-    <div class="srow"><div><div class="slbl">1 USD = ? CLP</div><div class="ssub">Taux CLP</div></div><input class="sinp" id="s-clp" type="number" step="1"></div>
-    <div class="srow"><div><div class="slbl">1 EUR = ? USD</div><div class="ssub">Taux EUR</div></div><input class="sinp" id="s-eur" type="number" step="0.001"></div>
+<!-- SETTINGS -->
+<div class="mo" id="mo-set">
+  <div class="mod">
+    <div class="mh"></div><div class="mt">⚙️ Paramètres</div>
+    <div class="srow"><div><div class="slbl">1 USD = ? QAR</div><div class="ssub">Taux QAR</div></div><input class="si" id="sqar" type="number" step="0.01"></div>
+    <div class="srow"><div><div class="slbl">1 USD = ? CLP</div><div class="ssub">Taux CLP</div></div><input class="si" id="sclp" type="number" step="1"></div>
+    <div class="srow"><div><div class="slbl">1 EUR = ? USD</div><div class="ssub">Taux EUR</div></div><input class="si" id="seur" type="number" step="0.001"></div>
     <div style="height:14px"></div>
-    <button class="btn btn-p" onclick="saveSettings()">Sauvegarder</button>
+    <button class="btn bp" onclick="saveSettings()">Sauvegarder</button>
     <div style="height:8px"></div>
-    <button class="btn btn-g" style="color:var(--amber);border-color:var(--amber)" onclick="closeSettings();openCats()">🏷️ Gérer les catégories</button>
+    <button class="btn bg" style="color:var(--amb);border-color:var(--amb)" onclick="closeMo('set');openCats()">🏷️ Gérer les catégories</button>
     <div style="height:8px"></div>
-    <button class="btn btn-g" style="color:var(--a2);border-color:var(--a2)" onclick="closeSettings();openAssets()">📊 Gérer les actifs</button>
+    <button class="btn bg" style="color:var(--a2);border-color:var(--a2)" onclick="closeMo('set');openAssets()">📊 Gérer les actifs</button>
+    <div style="height:14px"></div>
+    <div style="font-size:10px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px;padding-bottom:8px;border-bottom:1px solid var(--bdr)">Sauvegarde</div>
+    <div style="height:10px"></div>
+    <button class="btn bg" onclick="backupJSON()">💾 Exporter toutes les données (JSON)</button>
     <div style="height:8px"></div>
-    <button class="btn btn-d" onclick="if(confirm('Effacer toutes les données ?'))clearAll()">Effacer toutes les données</button>
+    <label class="btn bg" style="display:flex;align-items:center;justify-content:center;cursor:pointer">
+      📂 Importer une sauvegarde (JSON)
+      <input type="file" id="rfile" accept=".json" style="display:none" onchange="restoreJSON(this)">
+    </label>
+    <div style="height:14px"></div>
+    <button class="btn bd" onclick="if(confirm('Effacer toutes les données ?'))clearAll()">Effacer toutes les données</button>
     <div style="height:8px"></div>
-    <button class="btn btn-g" onclick="closeSettings()">Fermer</button>
+    <button class="btn bg" onclick="closeMo('set')">Fermer</button>
   </div>
 </div>
 
-<!-- Cat manager -->
-<div class="modal-overlay" id="modal-cats">
-  <div class="modal">
-    <div class="mhandle"></div>
+<!-- CATS -->
+<div class="mo" id="mo-cats">
+  <div class="mod">
+    <div class="mh"></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-      <div class="mtitle" style="margin-bottom:0">🏷️ Catégories</div>
-      <button class="btn btn-p" style="width:auto;padding:8px 16px;font-size:13px" onclick="addCat()">+ Ajouter</button>
+      <div class="mt" style="margin-bottom:0">🏷️ Catégories</div>
+      <button class="btn bp" style="width:auto;padding:8px 16px;font-size:13px" onclick="addCat()">+ Ajouter</button>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;font-family:'DM Mono',monospace">L'historique est préservé lors du renommage</div>
-    <div id="cat-list"></div>
-    <div id="epick-wrap" style="display:none"><div class="epick" id="epick"></div></div>
+    <div style="font-size:11px;color:var(--mut);margin-bottom:14px;font-family:'DM Mono',monospace">L'historique est préservé lors du renommage</div>
+    <div id="catlist"></div>
+    <div id="epwrap" style="display:none"><div class="epw" id="epick"></div></div>
     <div style="height:12px"></div>
-    <button class="btn btn-p" onclick="saveCats()">✅ Sauvegarder</button>
+    <button class="btn bp" onclick="saveCats()">✅ Sauvegarder</button>
     <div style="height:8px"></div>
-    <button class="btn btn-g" onclick="closeCats()">Fermer</button>
+    <button class="btn bg" onclick="closeMo('cats')">Fermer</button>
   </div>
 </div>
 
-<!-- Asset manager -->
-<div class="modal-overlay" id="modal-assets">
-  <div class="modal">
-    <div class="mhandle"></div>
+<!-- ASSETS -->
+<div class="mo" id="mo-assets">
+  <div class="mod">
+    <div class="mh"></div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-      <div class="mtitle" style="margin-bottom:0">📊 Actifs</div>
-      <button class="btn btn-p" style="width:auto;padding:8px 16px;font-size:13px" onclick="addAsset()">+ Ajouter</button>
+      <div class="mt" style="margin-bottom:0">📊 Actifs</div>
+      <button class="btn bp" style="width:auto;padding:8px 16px;font-size:13px" onclick="addAsset()">+ Ajouter</button>
     </div>
-    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;font-family:'DM Mono',monospace">✓ actif · 👁 archivé (masqué, historique conservé)</div>
-    <div id="asset-list"></div>
+    <div style="font-size:11px;color:var(--mut);margin-bottom:14px;font-family:'DM Mono',monospace">✓ actif · 👁 archivé (masqué, historique conservé)</div>
+    <div id="astlist"></div>
     <div style="height:12px"></div>
-    <button class="btn btn-p" onclick="saveAssets()">✅ Sauvegarder</button>
+    <button class="btn bp" onclick="saveAssets()">✅ Sauvegarder</button>
     <div style="height:8px"></div>
-    <button class="btn btn-g" onclick="closeAssets()">Fermer</button>
+    <button class="btn bg" onclick="closeMo('assets')">Fermer</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════════════════════
-// HISTORICAL DATA
-// ═══════════════════════════════════════════════════════════
-const HIST_INV = [{"month": "2021-11", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 16856.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2021-11"}, {"month": "2021-12", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 19486.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2021-12"}, {"month": "2022-01", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 19045.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-01"}, {"month": "2022-02", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 22060.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-02"}, {"month": "2022-03", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 22075.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-03"}, {"month": "2022-04", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 22090.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-04"}, {"month": "2022-05", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21605.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-05"}, {"month": "2022-06", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21620.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-06"}, {"month": "2022-07", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21635.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-07"}, {"month": "2022-08", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21650.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-08"}, {"month": "2022-09", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21665.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-09"}, {"month": "2022-10", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18180.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-10"}, {"month": "2022-11", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18195.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-11"}, {"month": "2022-12", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18210.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2022-12"}, {"month": "2023-01", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 20999.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-01"}, {"month": "2023-02", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21014.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-02"}, {"month": "2023-03", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21029.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-03"}, {"month": "2023-04", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21044.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-04"}, {"month": "2023-05", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21059.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-05"}, {"month": "2023-06", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21074.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-06"}, {"month": "2023-07", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21089.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-07"}, {"month": "2023-08", "santander": 1000000.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 19104.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-08"}, {"month": "2023-09", "santander": 1002831.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 19119.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-09"}, {"month": "2023-10", "santander": 1009016.0, "mm_dollar": 500.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 19133.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-10"}, {"month": "2023-11", "santander": 1014367.0, "mm_dollar": 500.62, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18149.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-11"}, {"month": "2023-12", "santander": 1027058.0, "mm_dollar": 502.61, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18164.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2023-12"}, {"month": "2024-01", "santander": 1040430.0, "mm_dollar": 755.09, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18756.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-01"}, {"month": "2024-02", "santander": 1293137.0, "mm_dollar": 757.76, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18756.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-02"}, {"month": "2024-03", "santander": 1305692.0, "mm_dollar": 1056.36, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18756.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-03"}, {"month": "2024-04", "santander": 1415321.0, "mm_dollar": 2264.37, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18456.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-04"}, {"month": "2024-05", "santander": 1654312.0, "mm_dollar": 2793.56, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 18456.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-05"}, {"month": "2024-06", "santander": 1668020.0, "mm_dollar": 4029.81, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 17956.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-06"}, {"month": "2024-07", "santander": 1679040.0, "mm_dollar": 5370.75, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 16556.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-07"}, {"month": "2024-08", "santander": 1690296.0, "mm_dollar": 6761.53, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 16556.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-08"}, {"month": "2024-09", "santander": 1701027.0, "mm_dollar": 7483.9, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 16556.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-09"}, {"month": "2024-10", "santander": 1701036.0, "mm_dollar": 9528.2, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 16056.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-10"}, {"month": "2024-11", "santander": 9311089.0, "mm_dollar": 11216.0, "etf_usd": 5072.39, "apple": 158.65, "msft": 158.34, "nvidia": 125.67, "amazon": 96.8, "alphabet": 63.7, "tesla": 30.79, "btc": 561.96, "eth": 144.18, "livret_a": 16056.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-11"}, {"month": "2024-12", "santander": 9352093.0, "mm_dollar": 11249.92, "etf_usd": 7176.01, "apple": 245.06, "msft": 229.78, "nvidia": 177.23, "amazon": 147.28, "alphabet": 102.87, "tesla": 55.78, "btc": 742.97, "eth": 183.01, "livret_a": 15556.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2024-12"}, {"month": "2025-01", "santander": 9415500.0, "mm_dollar": 11283.17, "etf_usd": 8508.93, "apple": 271.5, "msft": 259.51, "nvidia": 184.62, "amazon": 178.41, "alphabet": 122.72, "tesla": 59.17, "btc": 931.2, "eth": 201.04, "livret_a": 15780.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-01"}, {"month": "2025-02", "santander": 9455186.0, "mm_dollar": 11312.29, "etf_usd": 10666.64, "apple": 341.5, "msft": 317.47, "nvidia": 243.64, "amazon": 199.38, "alphabet": 129.02, "tesla": 52.46, "btc": 896.8399999999999, "eth": 166.55, "livret_a": 14880.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-02"}, {"month": "2025-03", "santander": 9504590.0, "mm_dollar": 11344.32, "etf_usd": 11039.08, "apple": 341.91, "msft": 334.93, "nvidia": 234.96, "amazon": 198.25, "alphabet": 129.0, "tesla": 52.33, "btc": 1019.15, "eth": 162.54, "livret_a": 10280.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-03"}, {"month": "2025-04", "santander": 9560511.0, "mm_dollar": 11374.92, "etf_usd": 12504.27, "apple": 374.83, "msft": 400.33, "nvidia": 273.94, "amazon": 220.15, "alphabet": 152.82, "tesla": 70.11, "btc": 1337.64, "eth": 196.4, "livret_a": 9280.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-04"}, {"month": "2025-05", "santander": 9577179.0, "mm_dollar": 11404.69, "etf_usd": 13473.6, "apple": 366.83, "msft": 470.11, "nvidia": 366.5, "amazon": 249.3, "alphabet": 167.77, "tesla": 89.54, "btc": 1528.9, "eth": 295.61, "livret_a": 10368.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-05"}, {"month": "2025-06", "santander": 9606852.0, "mm_dollar": 11437.56, "etf_usd": 14067.22, "apple": 362.11, "msft": 509.09, "nvidia": 409.33, "amazon": 268.17, "alphabet": 174.42, "tesla": 78.95, "btc": 1516.53, "eth": 268.64, "livret_a": 6868.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-06"}, {"month": "2025-07", "santander": 9612680.0, "mm_dollar": 11466.51, "etf_usd": 14816.27, "apple": 384.01, "msft": 525.94, "nvidia": 451.17, "amazon": 279.41, "alphabet": 186.95, "tesla": 79.08, "btc": 1674.22, "eth": 423.97, "livret_a": 6868.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-07"}, {"month": "2025-08", "santander": 9676320.0, "mm_dollar": 11499.71, "etf_usd": 18885.88, "apple": 544.96, "msft": 635.06, "nvidia": 556.24, "amazon": 348.97, "alphabet": 253.61, "tesla": 112.57, "btc": 1872.99, "eth": 595.64, "livret_a": 6868.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-08"}, {"month": "2025-09", "santander": 9709458.0, "mm_dollar": 11531.86, "etf_usd": 21423.93, "apple": 663.29, "msft": 701.97, "nvidia": 611.05, "amazon": 370.44, "alphabet": 329.52, "tesla": 160.51, "btc": 2090.22, "eth": 603.4, "livret_a": 6868.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-09"}, {"month": "2025-10", "santander": 9737678.0, "mm_dollar": 11563.68, "etf_usd": 28570.24, "apple": 916.96, "msft": 922.87, "nvidia": 875.78, "amazon": 505.05, "alphabet": 485.59, "tesla": 207.1, "btc": 2629.17, "eth": 672.3, "livret_a": 6868.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-10"}, {"month": "2025-11", "santander": 9746202.0, "mm_dollar": 11571.8, "etf_usd": 30233.86, "apple": 985.52, "msft": 938.5, "nvidia": 848.68, "amazon": 577.58, "alphabet": 496.26, "tesla": 217.84, "btc": 2615.3, "eth": 617.8, "livret_a": 6868.0, "etf_eur": 0.0, "cash_eur": 0.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2025-11"}, {"month": "2026-03", "santander": 0.0, "mm_dollar": 0.0, "etf_usd": 0.0, "apple": 0.0, "msft": 0.0, "nvidia": 0.0, "amazon": 0.0, "alphabet": 0.0, "tesla": 0.0, "btc": 0.0, "eth": 0.0, "livret_a": 21000.0, "etf_eur": 16000.0, "cash_eur": 9000.0, "ap_clp": 0.0, "ap_usd": 0.0, "ap_eur": 0.0, "ap_crypto": 0.0, "id": "2026-03"}];
-const HIST_EXP = [{"id": "hist_5", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 59.950549450549445, "montant_usd": 16.469931167733364}, {"id": "hist_6", "date": "2026-02-01", "type": "Depense", "categorie": "Autre", "montant_qar": 100.0, "montant_usd": 27.47252747252747}, {"id": "hist_7", "date": "2026-02-01", "type": "Salaire", "categorie": "Salaire", "montant_qar": 11945.0, "montant_usd": 3281.5934065934066}, {"id": "hist_8", "date": "2026-02-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 441.5302197802198, "montant_usd": 121.2995109286318}, {"id": "hist_9", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 38.0, "montant_usd": 10.43956043956044}, {"id": "hist_10", "date": "2026-02-01", "type": "Depense", "categorie": "Voiture", "montant_qar": 1680.0, "montant_usd": 461.53846153846155}, {"id": "hist_11", "date": "2026-02-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 75.79945054945055, "montant_usd": 20.82402487622268}, {"id": "hist_12", "date": "2026-02-01", "type": "Depense", "categorie": "Santé", "montant_qar": 109.4010989010989, "montant_usd": 30.05524695085135}, {"id": "hist_13", "date": "2026-02-01", "type": "Depense", "categorie": "Santé", "montant_qar": 103.0, "montant_usd": 28.296703296703296}, {"id": "hist_14", "date": "2026-02-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 2883.25, "montant_usd": 792.1016483516484}, {"id": "hist_15", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 19.0, "montant_usd": 5.21978021978022}, {"id": "hist_16", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 34.0, "montant_usd": 9.340659340659341}, {"id": "hist_17", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 36.0, "montant_usd": 9.89010989010989}, {"id": "hist_18", "date": "2026-02-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 88.0, "montant_usd": 24.175824175824175}, {"id": "hist_19", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 36.0, "montant_usd": 9.89010989010989}, {"id": "hist_20", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 34.0, "montant_usd": 9.340659340659341}, {"id": "hist_21", "date": "2026-02-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 247.49999999999997, "montant_usd": 67.99450549450549}, {"id": "hist_22", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 25.499999999999996, "montant_usd": 7.005494505494505}, {"id": "hist_23", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 49.5, "montant_usd": 13.598901098901099}, {"id": "hist_24", "date": "2026-02-01", "type": "Depense", "categorie": "Autre", "montant_qar": 350.0, "montant_usd": 96.15384615384615}, {"id": "hist_25", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 50.730769230769226, "montant_usd": 13.93702451394759}, {"id": "hist_26", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 25.499999999999996, "montant_usd": 7.005494505494505}, {"id": "hist_27", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 54.74999999999999, "montant_usd": 15.041208791208788}, {"id": "hist_28", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 65.51923076923077, "montant_usd": 17.999788672865595}, {"id": "hist_29", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 1.0, "montant_usd": 0.2747252747252747}, {"id": "hist_30", "date": "2026-02-01", "type": "Depense", "categorie": "Transport", "montant_qar": 1.0, "montant_usd": 0.2747252747252747}, {"id": "hist_31", "date": "2026-02-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 130.54945054945054, "montant_usd": 35.86523366743147}, {"id": "hist_32", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 88.99999999999999, "montant_usd": 24.450549450549445}, {"id": "hist_33", "date": "2026-03-01", "type": "Depense", "categorie": "Sortie", "montant_qar": 15.0, "montant_usd": 4.1208791208791204}, {"id": "hist_34", "date": "2026-03-01", "type": "Depense", "categorie": "Cadeaux", "montant_qar": 1000.0, "montant_usd": 274.72527472527474}, {"id": "hist_35", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 494.59065934065933, "montant_usd": 135.8765547639174}, {"id": "hist_36", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 174.49999999999997, "montant_usd": 47.93956043956043}, {"id": "hist_37", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 84.9010989010989, "montant_usd": 23.324477720082115}, {"id": "hist_38", "date": "2026-03-01", "type": "Depense", "categorie": "Cadeaux", "montant_qar": 200.0, "montant_usd": 54.94505494505494}, {"id": "hist_39", "date": "2026-03-01", "type": "Depense", "categorie": "Shopping", "montant_qar": 175.5, "montant_usd": 48.214285714285715}, {"id": "hist_40", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 119.0, "montant_usd": 32.69230769230769}, {"id": "hist_41", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 59.480769230769226, "montant_usd": 16.340870667793745}, {"id": "hist_42", "date": "2026-03-01", "type": "Depense", "categorie": "Sortie", "montant_qar": 199.0, "montant_usd": 54.67032967032967}, {"id": "hist_43", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 191.0, "montant_usd": 52.47252747252747}, {"id": "hist_44", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 2957.0, "montant_usd": 812.3626373626373}, {"id": "hist_45", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 182.0, "montant_usd": 50.0}, {"id": "hist_46", "date": "2026-03-01", "type": "Depense", "categorie": "Sortie", "montant_qar": 84.0, "montant_usd": 23.076923076923077}, {"id": "hist_47", "date": "2026-03-01", "type": "Depense", "categorie": "Sortie", "montant_qar": 68.0, "montant_usd": 18.681318681318682}, {"id": "hist_48", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 626.0, "montant_usd": 171.97802197802199}, {"id": "hist_49", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 503.0, "montant_usd": 138.18681318681317}, {"id": "hist_50", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 506.68131868131866, "montant_usd": 139.19816447288974}, {"id": "hist_51", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 626.0, "montant_usd": 171.97802197802199}, {"id": "hist_52", "date": "2026-03-01", "type": "Depense", "categorie": "Coiffeur", "montant_qar": 64.0, "montant_usd": 17.58241758241758}, {"id": "hist_53", "date": "2026-03-01", "type": "Depense", "categorie": "Autre", "montant_qar": 235.99999999999997, "montant_usd": 64.83516483516483}, {"id": "hist_54", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 226.8708791208791, "montant_usd": 62.3271645936481}, {"id": "hist_55", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 109.4010989010989, "montant_usd": 30.05524695085135}, {"id": "hist_56", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 136.0, "montant_usd": 37.362637362637365}, {"id": "hist_57", "date": "2026-03-01", "type": "Depense", "categorie": "Shopping", "montant_qar": 386.70054945054943, "montant_usd": 106.23641468421687}, {"id": "hist_58", "date": "2026-03-01", "type": "Depense", "categorie": "Carburant", "montant_qar": 70.0, "montant_usd": 19.23076923076923}, {"id": "hist_59", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 111.0, "montant_usd": 30.494505494505493}, {"id": "hist_60", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 783.1510989010989, "montant_usd": 215.15140079700518}, {"id": "hist_61", "date": "2026-03-01", "type": "Depense", "categorie": "Téléphone", "montant_qar": 50.0, "montant_usd": 13.736263736263735}, {"id": "hist_62", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 35.0, "montant_usd": 9.615384615384615}, {"id": "hist_63", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 109.4010989010989, "montant_usd": 30.05524695085135}, {"id": "hist_64", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 175.0, "montant_usd": 48.07692307692307}, {"id": "hist_65", "date": "2026-03-01", "type": "Depense", "categorie": "Livraison", "montant_qar": 71.0, "montant_usd": 19.505494505494504}, {"id": "hist_66", "date": "2026-03-01", "type": "Depense", "categorie": "Hélène", "montant_qar": 1312.1510989010987, "montant_usd": 360.4810711266755}, {"id": "hist_67", "date": "2026-03-01", "type": "Depense", "categorie": "Loyer", "montant_qar": 9500.0, "montant_usd": 2609.8901098901097}, {"id": "hist_68", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 182.0, "montant_usd": 50.0}, {"id": "hist_69", "date": "2026-03-01", "type": "Depense", "categorie": "Santé", "montant_qar": 109.4, "montant_usd": 30.054945054945055}, {"id": "hist_70", "date": "2026-03-01", "type": "Depense", "categorie": "Voiture", "montant_qar": 3360.0, "montant_usd": 923.0769230769231}, {"id": "hist_71", "date": "2026-03-01", "type": "Depense", "categorie": "Alimentation", "montant_qar": 10.0, "montant_usd": 2.7472527472527473}, {"id": "hist_72", "date": "2026-03-01", "type": "Depense", "categorie": "Supermarché", "montant_qar": 764.32, "montant_usd": 209.97802197802199}, {"id": "hist_73", "date": "2026-03-01", "type": "Depense", "categorie": "Shopping", "montant_qar": 111.85, "montant_usd": 30.728021978021975}, {"id": "hist_74", "date": "2026-03-01", "type": "Salaire", "categorie": "Salaire", "montant_qar": 28009.0, "montant_usd": 7694.780219780219}, {"id": "hist_75", "date": "2026-04-01", "type": "Salaire", "categorie": "Salaire", "montant_qar": 29410.0, "montant_usd": 8079.670329670329}];
+// ─────────────────────────────────────────────────────────
+// HISTORICAL DATA (injected at build time)
+// ─────────────────────────────────────────────────────────
+const HIST_INV = [{"month":"2021-11","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":16856.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2021-11"},{"month":"2021-12","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":19486.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2021-12"},{"month":"2022-01","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":19045.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2022-01"},{"month":"2022-02","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":22060.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2022-02"},{"month":"2022-03","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":22075.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2022-03"},{"month":"2022-04","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":22090.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2022-04"},{"month":"2022-05","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":21605.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2022-05"},{"month":"2022-06","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":21620.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2022-06"},{"month":"2022-07","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":21635.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2022-07"},{"month":"2022-08","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":21650.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2022-08"},{"month":"2022-09","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":21665.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2022-09"},{"month":"2022-10","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":18180.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2022-10"},{"month":"2022-11","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":18195.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2022-11"},{"month":"2022-12","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":18210.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2022-12"},{"month":"2023-01","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":20999.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2023-01"},{"month":"2023-02","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":21014.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2023-02"},{"month":"2023-03","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":21029.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2023-03"},{"month":"2023-04","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":21044.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2023-04"},{"month":"2023-05","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":21059.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2023-05"},{"month":"2023-06","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":21074.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2023-06"},{"month":"2023-07","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":21089.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2023-07"},{"month":"2023-08","santander":1000000.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":19104.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2023-08"},{"month":"2023-09","santander":1002831.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":19119.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2023-09"},{"month":"2023-10","santander":1009016.0,"mm_dollar":500.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":19133.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2023-10"},{"month":"2023-11","santander":1014367.0,"mm_dollar":500.62,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":18149.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2023-11"},{"month":"2023-12","santander":1027058.0,"mm_dollar":502.61,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":18164.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2023-12"},{"month":"2024-01","santander":1040430.0,"mm_dollar":755.09,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":18756.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2024-01"},{"month":"2024-02","santander":1293137.0,"mm_dollar":757.76,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":18756.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2024-02"},{"month":"2024-03","santander":1305692.0,"mm_dollar":1056.36,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":18756.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2024-03"},{"month":"2024-04","santander":1415321.0,"mm_dollar":2264.37,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":18456.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2024-04"},{"month":"2024-05","santander":1654312.0,"mm_dollar":2793.56,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":18456.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2024-05"},{"month":"2024-06","santander":1668020.0,"mm_dollar":4029.81,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":17956.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2024-06"},{"month":"2024-07","santander":1679040.0,"mm_dollar":5370.75,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":16556.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2024-07"},{"month":"2024-08","santander":1690296.0,"mm_dollar":6761.53,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":16556.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2024-08"},{"month":"2024-09","santander":1701027.0,"mm_dollar":7483.9,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":16556.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2024-09"},{"month":"2024-10","santander":1701036.0,"mm_dollar":9528.2,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":16056.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2024-10"},{"month":"2024-11","santander":9311089.0,"mm_dollar":11216.0,"etf_usd":5072.39,"apple":158.65,"msft":158.34,"nvidia":125.67,"amazon":96.8,"alphabet":63.7,"tesla":30.79,"btc":561.96,"eth":144.18,"livret_a":16056.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2024-11"},{"month":"2024-12","santander":9352093.0,"mm_dollar":11249.92,"etf_usd":7176.01,"apple":245.06,"msft":229.78,"nvidia":177.23,"amazon":147.28,"alphabet":102.87,"tesla":55.78,"btc":742.97,"eth":183.01,"livret_a":15556.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2024-12"},{"month":"2025-01","santander":9415500.0,"mm_dollar":11283.17,"etf_usd":8508.93,"apple":271.5,"msft":259.51,"nvidia":184.62,"amazon":178.41,"alphabet":122.72,"tesla":59.17,"btc":931.2,"eth":201.04,"livret_a":15780.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2025-01"},{"month":"2025-02","santander":9455186.0,"mm_dollar":11312.29,"etf_usd":10666.64,"apple":341.5,"msft":317.47,"nvidia":243.64,"amazon":199.38,"alphabet":129.02,"tesla":52.46,"btc":896.8399999999999,"eth":166.55,"livret_a":14880.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2025-02"},{"month":"2025-03","santander":9504590.0,"mm_dollar":11344.32,"etf_usd":11039.08,"apple":341.91,"msft":334.93,"nvidia":234.96,"amazon":198.25,"alphabet":129.0,"tesla":52.33,"btc":1019.15,"eth":162.54,"livret_a":10280.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2025-03"},{"month":"2025-04","santander":9560511.0,"mm_dollar":11374.92,"etf_usd":12504.27,"apple":374.83,"msft":400.33,"nvidia":273.94,"amazon":220.15,"alphabet":152.82,"tesla":70.11,"btc":1337.64,"eth":196.4,"livret_a":9280.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2025-04"},{"month":"2025-05","santander":9577179.0,"mm_dollar":11404.69,"etf_usd":13473.6,"apple":366.83,"msft":470.11,"nvidia":366.5,"amazon":249.3,"alphabet":167.77,"tesla":89.54,"btc":1528.9,"eth":295.61,"livret_a":10368.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2025-05"},{"month":"2025-06","santander":9606852.0,"mm_dollar":11437.56,"etf_usd":14067.22,"apple":362.11,"msft":509.09,"nvidia":409.33,"amazon":268.17,"alphabet":174.42,"tesla":78.95,"btc":1516.53,"eth":268.64,"livret_a":6868.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2025-06"},{"month":"2025-07","santander":9612680.0,"mm_dollar":11466.51,"etf_usd":14816.27,"apple":384.01,"msft":525.94,"nvidia":451.17,"amazon":279.41,"alphabet":186.95,"tesla":79.08,"btc":1674.22,"eth":423.97,"livret_a":6868.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2025-07"},{"month":"2025-08","santander":9676320.0,"mm_dollar":11499.71,"etf_usd":18885.88,"apple":544.96,"msft":635.06,"nvidia":556.24,"amazon":348.97,"alphabet":253.61,"tesla":112.57,"btc":1872.99,"eth":595.64,"livret_a":6868.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2025-08"},{"month":"2025-09","santander":9709458.0,"mm_dollar":11531.86,"etf_usd":21423.93,"apple":663.29,"msft":701.97,"nvidia":611.05,"amazon":370.44,"alphabet":329.52,"tesla":160.51,"btc":2090.22,"eth":603.4,"livret_a":6868.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2025-09"},{"month":"2025-10","santander":9737678.0,"mm_dollar":11563.68,"etf_usd":28570.24,"apple":916.96,"msft":922.87,"nvidia":875.78,"amazon":505.05,"alphabet":485.59,"tesla":207.1,"btc":2629.17,"eth":672.3,"livret_a":6868.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2025-10"},{"month":"2025-11","santander":9746202.0,"mm_dollar":11571.8,"etf_usd":30233.86,"apple":985.52,"msft":938.5,"nvidia":848.68,"amazon":577.58,"alphabet":496.26,"tesla":217.84,"btc":2615.3,"eth":617.8,"livret_a":6868.0,"etf_eur":0.0,"cash_eur":0.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2025-11"},{"month":"2026-03","santander":0.0,"mm_dollar":0.0,"etf_usd":0.0,"apple":0.0,"msft":0.0,"nvidia":0.0,"amazon":0.0,"alphabet":0.0,"tesla":0.0,"btc":0.0,"eth":0.0,"livret_a":21000.0,"etf_eur":16000.0,"cash_eur":9000.0,"ap_clp":0.0,"ap_usd":0.0,"ap_eur":0.0,"ap_crypto":0.0,"id":"2026-03"}];
+const HIST_EXP = [{"id":"hist_5","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":59.950549450549445,"montant_usd":16.469931167733364},{"id":"hist_6","date":"2026-02-01","type":"Depense","categorie":"Autre","montant_qar":100.0,"montant_usd":27.47252747252747},{"id":"hist_7","date":"2026-02-01","type":"Salaire","categorie":"Salaire","montant_qar":11945.0,"montant_usd":3281.5934065934066},{"id":"hist_8","date":"2026-02-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":441.5302197802198,"montant_usd":121.2995109286318},{"id":"hist_9","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":38.0,"montant_usd":10.43956043956044},{"id":"hist_10","date":"2026-02-01","type":"Depense","categorie":"Voiture","montant_qar":1680.0,"montant_usd":461.53846153846155},{"id":"hist_11","date":"2026-02-01","type":"Depense","categorie":"Livraison","montant_qar":75.79945054945055,"montant_usd":20.82402487622268},{"id":"hist_12","date":"2026-02-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":109.4010989010989,"montant_usd":30.05524695085135},{"id":"hist_13","date":"2026-02-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":103.0,"montant_usd":28.296703296703296},{"id":"hist_14","date":"2026-02-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":2883.25,"montant_usd":792.1016483516484},{"id":"hist_15","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":19.0,"montant_usd":5.21978021978022},{"id":"hist_16","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":34.0,"montant_usd":9.340659340659341},{"id":"hist_17","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":36.0,"montant_usd":9.89010989010989},{"id":"hist_18","date":"2026-02-01","type":"Depense","categorie":"Livraison","montant_qar":88.0,"montant_usd":24.175824175824175},{"id":"hist_19","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":36.0,"montant_usd":9.89010989010989},{"id":"hist_20","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":34.0,"montant_usd":9.340659340659341},{"id":"hist_21","date":"2026-02-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":247.49999999999997,"montant_usd":67.99450549450549},{"id":"hist_22","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":25.499999999999996,"montant_usd":7.005494505494505},{"id":"hist_23","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":49.5,"montant_usd":13.598901098901099},{"id":"hist_24","date":"2026-02-01","type":"Depense","categorie":"Autre","montant_qar":350.0,"montant_usd":96.15384615384615},{"id":"hist_25","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":50.730769230769226,"montant_usd":13.93702451394759},{"id":"hist_26","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":25.499999999999996,"montant_usd":7.005494505494505},{"id":"hist_27","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":54.74999999999999,"montant_usd":15.041208791208788},{"id":"hist_28","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":65.51923076923077,"montant_usd":17.999788672865595},{"id":"hist_29","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":1.0,"montant_usd":0.2747252747252747},{"id":"hist_30","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":1.0,"montant_usd":0.2747252747252747},{"id":"hist_31","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":130.54945054945054,"montant_usd":35.86523366743147},{"id":"hist_32","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":88.99999999999999,"montant_usd":24.450549450549445},{"id":"hist_33","date":"2026-03-01","type":"Depense","categorie":"Sortie","montant_qar":15.0,"montant_usd":4.1208791208791204},{"id":"hist_34","date":"2026-03-01","type":"Depense","categorie":"Cadeaux","montant_qar":1000.0,"montant_usd":274.72527472527474},{"id":"hist_35","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":494.59065934065933,"montant_usd":135.8765547639174},{"id":"hist_36","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":174.49999999999997,"montant_usd":47.93956043956043},{"id":"hist_37","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":84.9010989010989,"montant_usd":23.324477720082115},{"id":"hist_38","date":"2026-03-01","type":"Depense","categorie":"Cadeaux","montant_qar":200.0,"montant_usd":54.94505494505494},{"id":"hist_39","date":"2026-03-01","type":"Depense","categorie":"Shopping","montant_qar":175.5,"montant_usd":48.214285714285715},{"id":"hist_40","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":119.0,"montant_usd":32.69230769230769},{"id":"hist_41","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":59.480769230769226,"montant_usd":16.340870667793745},{"id":"hist_42","date":"2026-03-01","type":"Depense","categorie":"Sortie","montant_qar":199.0,"montant_usd":54.67032967032967},{"id":"hist_43","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":191.0,"montant_usd":52.47252747252747},{"id":"hist_44","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":2957.0,"montant_usd":812.3626373626373},{"id":"hist_45","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":182.0,"montant_usd":50.0},{"id":"hist_46","date":"2026-03-01","type":"Depense","categorie":"Sortie","montant_qar":84.0,"montant_usd":23.076923076923077},{"id":"hist_47","date":"2026-03-01","type":"Depense","categorie":"Sortie","montant_qar":68.0,"montant_usd":18.681318681318682},{"id":"hist_48","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":626.0,"montant_usd":171.97802197802199},{"id":"hist_49","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":503.0,"montant_usd":138.18681318681317},{"id":"hist_50","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":506.68131868131866,"montant_usd":139.19816447288974},{"id":"hist_51","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":626.0,"montant_usd":171.97802197802199},{"id":"hist_52","date":"2026-03-01","type":"Depense","categorie":"Coiffeur","montant_qar":64.0,"montant_usd":17.58241758241758},{"id":"hist_53","date":"2026-03-01","type":"Depense","categorie":"Autre","montant_qar":235.99999999999997,"montant_usd":64.83516483516483},{"id":"hist_54","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":226.8708791208791,"montant_usd":62.3271645936481},{"id":"hist_55","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":109.4010989010989,"montant_usd":30.05524695085135},{"id":"hist_56","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":136.0,"montant_usd":37.362637362637365},{"id":"hist_57","date":"2026-03-01","type":"Depense","categorie":"Shopping","montant_qar":386.70054945054943,"montant_usd":106.23641468421687},{"id":"hist_58","date":"2026-03-01","type":"Depense","categorie":"Carburant","montant_qar":70.0,"montant_usd":19.23076923076923},{"id":"hist_59","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":111.0,"montant_usd":30.494505494505493},{"id":"hist_60","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":783.1510989010989,"montant_usd":215.15140079700518},{"id":"hist_61","date":"2026-03-01","type":"Depense","categorie":"T\u00e9l\u00e9phone","montant_qar":50.0,"montant_usd":13.736263736263735},{"id":"hist_62","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":35.0,"montant_usd":9.615384615384615},{"id":"hist_63","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":109.4010989010989,"montant_usd":30.05524695085135},{"id":"hist_64","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":175.0,"montant_usd":48.07692307692307},{"id":"hist_65","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":71.0,"montant_usd":19.505494505494504},{"id":"hist_66","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":1312.1510989010987,"montant_usd":360.4810711266755},{"id":"hist_67","date":"2026-03-01","type":"Depense","categorie":"Loyer","montant_qar":9500.0,"montant_usd":2609.8901098901097},{"id":"hist_68","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":182.0,"montant_usd":50.0},{"id":"hist_69","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":109.4,"montant_usd":30.054945054945055},{"id":"hist_70","date":"2026-03-01","type":"Depense","categorie":"Voiture","montant_qar":3360.0,"montant_usd":923.0769230769231},{"id":"hist_71","date":"2026-03-01","type":"Depense","categorie":"Alimentation","montant_qar":10.0,"montant_usd":2.7472527472527473},{"id":"hist_72","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":764.32,"montant_usd":209.97802197802199},{"id":"hist_73","date":"2026-03-01","type":"Depense","categorie":"Shopping","montant_qar":111.85,"montant_usd":30.728021978021975},{"id":"hist_74","date":"2026-03-01","type":"Salaire","categorie":"Salaire","montant_qar":28009.0,"montant_usd":7694.780219780219},{"id":"hist_75","date":"2026-04-01","type":"Salaire","categorie":"Salaire","montant_qar":29410.0,"montant_usd":8079.670329670329}];
 
-// ═══════════════════════════════════════════════════════════
-// DEFAULT CONFIG
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
+// DEFAULTS
+// ─────────────────────────────────────────────────────────
 const DEF_ASSETS = [
-  {id:'santander', label:'Santander MP',   cur:'CLP',    grp:'CLP',    arch:false},
-  {id:'mm_dollar', label:'MM Dollar',      cur:'USD',    grp:'USD',    arch:false},
-  {id:'etf_usd',   label:'ETF S&P500 USD', cur:'USD',    grp:'USD',    arch:false},
-  {id:'apple',     label:'Apple',          cur:'USD',    grp:'USD',    arch:false},
-  {id:'msft',      label:'Microsoft',      cur:'USD',    grp:'USD',    arch:false},
-  {id:'nvidia',    label:'Nvidia',         cur:'USD',    grp:'USD',    arch:false},
-  {id:'amazon',    label:'Amazon',         cur:'USD',    grp:'USD',    arch:false},
-  {id:'alphabet',  label:'Alphabet',       cur:'USD',    grp:'USD',    arch:false},
-  {id:'tesla',     label:'Tesla',          cur:'USD',    grp:'USD',    arch:false},
-  {id:'livret_a',  label:'Livret A',       cur:'EUR',    grp:'EUR',    arch:false},
-  {id:'etf_eur',   label:'ETF S&P500 EUR', cur:'EUR',    grp:'EUR',    arch:false},
-  {id:'cash_eur',  label:'Cash EUR',       cur:'EUR',    grp:'EUR',    arch:false},
-  {id:'btc',       label:'BTC',            cur:'CRYPTO', grp:'Crypto', arch:false},
-  {id:'eth',       label:'ETH',            cur:'CRYPTO', grp:'Crypto', arch:false},
+  {id:'santander',label:'Santander MP',   cur:'CLP',    grp:'CLP',   arch:false},
+  {id:'mm_dollar',label:'MM Dollar',      cur:'USD',    grp:'USD',   arch:false},
+  {id:'etf_usd',  label:'ETF S&P500 USD', cur:'USD',    grp:'USD',   arch:false},
+  {id:'apple',    label:'Apple',          cur:'USD',    grp:'USD',   arch:false},
+  {id:'msft',     label:'Microsoft',      cur:'USD',    grp:'USD',   arch:false},
+  {id:'nvidia',   label:'Nvidia',         cur:'USD',    grp:'USD',   arch:false},
+  {id:'amazon',   label:'Amazon',         cur:'USD',    grp:'USD',   arch:false},
+  {id:'alphabet', label:'Alphabet',       cur:'USD',    grp:'USD',   arch:false},
+  {id:'tesla',    label:'Tesla',          cur:'USD',    grp:'USD',   arch:false},
+  {id:'livret_a', label:'Livret A',       cur:'EUR',    grp:'EUR',   arch:false},
+  {id:'etf_eur',  label:'ETF S&P500 EUR', cur:'EUR',    grp:'EUR',   arch:false},
+  {id:'cash_eur', label:'Cash EUR',       cur:'EUR',    grp:'EUR',   arch:false},
+  {id:'btc',      label:'BTC',            cur:'CRYPTO', grp:'Crypto',arch:false},
+  {id:'eth',      label:'ETH',            cur:'CRYPTO', grp:'Crypto',arch:false},
 ];
-
 const DEF_CATS = [
   {name:'Alimentation',icon:'🍽️',color:'#3b82f6'},{name:'Supermarché',icon:'🛒',color:'#06b6d4'},
   {name:'Livraison',icon:'📦',color:'#8b5cf6'},{name:'Transport',icon:'🚖',color:'#f59e0b'},
@@ -501,872 +396,575 @@ const DEF_CATS = [
   {name:'Autre',icon:'💫',color:'#6b7280'},
 ];
 
-// ═══════════════════════════════════════════════════════════
-// DATABASE
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
+// DB
+// ─────────────────────────────────────────────────────────
 const DB = {
-  get exp()    { return JSON.parse(localStorage.getItem('ft_exp')  ||'[]') },
-  set exp(v)   { localStorage.setItem('ft_exp',  JSON.stringify(v)) },
-  get inv()    { return JSON.parse(localStorage.getItem('ft_inv')  ||'[]') },
-  set inv(v)   { localStorage.setItem('ft_inv',  JSON.stringify(v)) },
-  get set()    { return JSON.parse(localStorage.getItem('ft_set')  ||'{"qar":3.64,"clp":920,"eur":1.08}') },
-  set set(v)   { localStorage.setItem('ft_set',  JSON.stringify(v)) },
-  get assets() { return JSON.parse(localStorage.getItem('ft_ast')  ||'null') || DEF_ASSETS },
-  set assets(v){ localStorage.setItem('ft_ast',  JSON.stringify(v)) },
-  get cats()   { return JSON.parse(localStorage.getItem('ft_cats') ||'null') || DEF_CATS },
-  set cats(v)  { localStorage.setItem('ft_cats', JSON.stringify(v)) },
-  get loaded() { return localStorage.getItem('ft_loaded')==='1' },
-  set loaded(v){ localStorage.setItem('ft_loaded', v?'1':'0') },
+  g: k => { try { return JSON.parse(localStorage.getItem(k)); } catch(e) { return null; } },
+  s: (k,v) => localStorage.setItem(k, JSON.stringify(v)),
+  get exp()    { return this.g('ft_exp')    || [] },  set exp(v)    { this.s('ft_exp',v) },
+  get inv()    { return this.g('ft_inv')    || [] },  set inv(v)    { this.s('ft_inv',v) },
+  get set()    { return this.g('ft_set')    || {qar:3.64,clp:920,eur:1.08} }, set set(v) { this.s('ft_set',v) },
+  get assets() { return this.g('ft_ast')    || DEF_ASSETS }, set assets(v) { this.s('ft_ast',v) },
+  get cats()   { return this.g('ft_cats')   || DEF_CATS },   set cats(v)   { this.s('ft_cats',v) },
+  get loaded() { return localStorage.getItem('ft_ok')==='1' }, set loaded(v) { localStorage.setItem('ft_ok',v?'1':'0') },
 };
 
 function loadHist() {
   if (DB.loaded) return;
   const ei = new Set(DB.inv.map(i=>i.month));
-  const mi = [...DB.inv];
-  HIST_INV.forEach(i=>{ if(!ei.has(i.month)) mi.push(i); });
-  DB.inv = mi;
+  DB.inv = [...DB.inv, ...HIST_INV.filter(i=>!ei.has(i.month))];
   const ee = new Set(DB.exp.map(e=>e.id));
-  const me = [...DB.exp];
-  HIST_EXP.forEach(e=>{ if(!ee.has(e.id)) me.push(e); });
-  DB.exp = me;
+  DB.exp = [...DB.exp, ...HIST_EXP.filter(e=>!ee.has(e.id))];
   DB.loaded = true;
 }
 
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
 // HELPERS
-// ═══════════════════════════════════════════════════════════
-const fmt   = (n,d=0)=>isFinite(n)?n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}):'—';
-const fmtP  = n=>isFinite(n)?(n>=0?'+':'')+fmt(n*100,2)+'%':'—';
-const fmtU  = n=>isFinite(n)?'$'+fmt(n):'—';
-const today = ()=>new Date().toISOString().slice(0,10);
-const moOf  = d=>d?d.slice(0,7):'';
-const moLbl = ym=>{ if(!ym)return''; const[y,m]=ym.split('-'); return new Date(y,m-1).toLocaleDateString('fr-FR',{month:'short',year:'numeric'}); };
-const catIcon  = n=>(DB.cats.find(c=>c.name===n)||{icon:'💫'}).icon;
-const catColor = n=>(DB.cats.find(c=>c.name===n)||{color:'#6b7280'}).color;
+// ─────────────────────────────────────────────────────────
+const F  = (n,d=0) => isFinite(n) ? n.toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d}) : '—';
+const FP = n => isFinite(n) ? (n>=0?'+':'')+F(n*100,2)+'%' : '—';
+const FU = n => isFinite(n) ? '$'+F(n) : '—';
+const today = () => new Date().toISOString().slice(0,10);
+const moOf  = d => d ? d.slice(0,7) : '';
+const moLbl = ym => { if(!ym) return ''; const [y,m]=ym.split('-'); return new Date(y,m-1).toLocaleDateString('fr-FR',{month:'short',year:'numeric'}); };
+const cIcon = n => (DB.cats.find(c=>c.name===n)||{icon:'💫'}).icon;
+const cClr  = n => (DB.cats.find(c=>c.name===n)||{color:'#6b7280'}).color;
 
-// ═══════════════════════════════════════════════════════════
-// INVESTMENT CALC
-// ═══════════════════════════════════════════════════════════
-function toUSD(assetId, value) {
-  if (!value) return 0;
-  const s = DB.set;
-  const a = DB.assets.find(x=>x.id===assetId);
-  if (!a) return value; // unknown = assume USD
-  if (a.cur==='CLP')    return value / s.clp;
-  if (a.cur==='EUR')    return value * s.eur;
-  return value; // USD + CRYPTO
+// ─────────────────────────────────────────────────────────
+// INV CALC
+// ─────────────────────────────────────────────────────────
+function toUSD(id, v) {
+  if (!v) return 0;
+  const s = DB.set, a = DB.assets.find(x=>x.id===id);
+  if (!a) return v;
+  return a.cur==='CLP' ? v/s.clp : a.cur==='EUR' ? v*s.eur : v;
+}
+function calcTotal(inv) { return DB.assets.reduce((s,a)=>s+toUSD(a.id,inv[a.id]||0),0); }
+function calcAp(inv) { const s=DB.set; return (inv.ap_clp||0)/s.clp+(inv.ap_usd||0)+(inv.ap_eur||0)*s.eur+(inv.ap_crypto||0); }
+function calcRets(sorted) {
+  if (sorted.length < 2) return {rm:null,rt:null};
+  const last=sorted[sorted.length-1], prev=sorted[sorted.length-2], first=sorted[0];
+  const tN=calcTotal(last), tP=calcTotal(prev), t0=calcTotal(first);
+  const totAp=sorted.slice(1).reduce((s,i)=>s+calcAp(i),0);
+  return { rm: tP>0?(tN-tP-calcAp(last))/tP:null, rt:(t0+totAp)>0?(tN-t0-totAp)/(t0+totAp):null };
 }
 
-function calcTotal(inv) {
-  return DB.assets.reduce((sum,a)=>sum + toUSD(a.id, inv[a.id]||0), 0);
-}
-
-function calcApport(inv) {
-  const s = DB.set;
-  return (inv.ap_clp||0)/s.clp + (inv.ap_usd||0) + (inv.ap_eur||0)*s.eur + (inv.ap_crypto||0);
-}
-
-function calcReturns(sorted) {
-  if (sorted.length < 2) return {retM:null, retT:null};
-  const last  = sorted[sorted.length-1];
-  const prev  = sorted[sorted.length-2];
-  const first = sorted[0];
-  const tNow  = calcTotal(last), tPrev = calcTotal(prev), tFirst = calcTotal(first);
-  const totalAp = sorted.slice(1).reduce((s,i)=>s+calcApport(i), 0);
-  return {
-    retM: tPrev > 0 ? (tNow - tPrev - calcApport(last)) / tPrev : null,
-    retT: (tFirst + totalAp) > 0 ? (tNow - tFirst - totalAp) / (tFirst + totalAp) : null,
-  };
-}
-
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
 // NAVIGATION
-// ═══════════════════════════════════════════════════════════
-let curScreen = 'dashboard';
-function nav(s) {
-  document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('screen-'+s).classList.add('active');
-  document.getElementById('nav-'+s).classList.add('active');
-  curScreen = s;
-  if (s==='dashboard') renderDashboard();
-  if (s==='dep')       { renderDepList(); }
-  if (s==='inv')       { renderInvForm(); renderInvHist(); }
+// ─────────────────────────────────────────────────────────
+let curSc = 'dash';
+function goTo(s) {
+  document.querySelectorAll('.sc').forEach(e=>e.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('sc-'+s).classList.add('on');
+  document.getElementById('nb-'+s).classList.add('on');
+  curSc = s;
+  if (s==='dash') renderDash();
+  if (s==='dep')  renderDepList();
+  if (s==='inv')  { renderInvForm(); renderInvHist(); }
 }
 
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
 // DASHBOARD
-// ═══════════════════════════════════════════════════════════
-function renderDashboard() {
-  document.getElementById('topbar-date').textContent =
-    new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
-  const s    = DB.set;
+// ─────────────────────────────────────────────────────────
+function renderDash() {
+  document.getElementById('tdate').textContent = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
   const invs = [...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));
-  const exps = DB.exp;
-  const nowYM= today().slice(0,7);
 
-  // KPIs
   if (invs.length > 0) {
-    const last  = invs[invs.length-1];
-    const total = calcTotal(last);
-    document.getElementById('kpi-total').textContent = fmtU(total);
+    const last=invs[invs.length-1], total=calcTotal(last);
+    document.getElementById('kpi-total').textContent = FU(total);
     document.getElementById('kpi-sub').textContent   = 'USD · '+moLbl(last.month);
-    document.getElementById('inv-mo-lbl').textContent = moLbl(last.month);
-    const {retM,retT} = calcReturns(invs);
-    const rm = document.getElementById('kpi-retm');
-    rm.textContent = fmtP(retM); rm.className='kpi-value '+(retM>0?'green':retM<0?'red':'');
-    const rt = document.getElementById('kpi-rett');
-    rt.textContent = fmtP(retT); rt.className='kpi-value '+(retT>0?'green':retT<0?'red':'');
-
+    document.getElementById('imlbl').textContent      = moLbl(last.month);
+    const {rm,rt} = calcRets(invs);
+    const re=document.getElementById('kpi-retm'); re.textContent=FP(rm); re.className='kv '+(rm>0?'grn':rm<0?'red':'');
+    const te=document.getElementById('kpi-rett'); te.textContent=FP(rt); te.className='kv '+(rt>0?'grn':rt<0?'red':'');
     // Detail by group
-    const byGroup = {};
-    DB.assets.forEach(a => {
-      if (!byGroup[a.grp]) byGroup[a.grp] = 0;
-      byGroup[a.grp] += toUSD(a.id, last[a.id]||0);
-    });
-    const GRP_ICONS = {CLP:'🏦',USD:'📈',EUR:'🇫🇷',Crypto:'₿'};
-    document.getElementById('inv-detail').innerHTML = Object.entries(byGroup)
-      .filter(([,v])=>v>0)
-      .map(([g,v])=>`<div class="trow"><span class="tlbl">${GRP_ICONS[g]||'•'} ${g}</span><span class="tval">${fmtU(v)}</span></div>`)
-      .join('') || '<div class="empty"><div class="empty-icon">📊</div><div>Aucun investissement</div></div>';
-
-    // Allocation
+    const byG={};
+    DB.assets.forEach(a=>{ if(!byG[a.grp])byG[a.grp]=0; byG[a.grp]+=toUSD(a.id,last[a.id]||0); });
+    const GI={CLP:'🏦',USD:'📈',EUR:'🇫🇷',Crypto:'₿'};
+    document.getElementById('idet').innerHTML = Object.entries(byG).filter(([,v])=>v>0)
+      .map(([g,v])=>`<div class="tr2"><span class="tl">${GI[g]||'•'} ${g}</span><span class="tv">${FU(v)}</span></div>`).join('')
+      || '<div class="empty"><div class="empty-icon">📊</div><div>Aucun investissement</div></div>';
     renderAlloc(total, last);
   } else {
     ['kpi-total','kpi-retm','kpi-rett'].forEach(id=>document.getElementById(id).textContent='—');
-    document.getElementById('inv-detail').innerHTML='<div class="empty"><div class="empty-icon">📊</div><div>Aucun investissement saisi</div></div>';
-    document.getElementById('inv-alloc').innerHTML='';
+    document.getElementById('idet').innerHTML='<div class="empty"><div class="empty-icon">📊</div><div>Aucun investissement saisi</div></div>';
+    document.getElementById('ialc').innerHTML='';
   }
 
-  // Budget 5 months
-  renderBudget5();
+  renderB5();
+  renderSR();
+  setTimeout(()=>{ buildAsel(); buildMomPickers(); renderChart(); renderMoM(); }, 60);
 
-  // Chart + MoM (deferred so DOM is ready)
-  setTimeout(()=>{ buildAssetSelector(); buildMomPickers(); renderChart(); renderMoM(); }, 50);
-
-  // Recent expenses
-  const recent = exps.filter(e=>moOf(e.date)===nowYM&&e.type==='Depense')
-    .sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
-  document.getElementById('recent-exp').innerHTML = recent.length
+  const nowYM=today().slice(0,7);
+  const recent=DB.exp.filter(e=>moOf(e.date)===nowYM&&e.type==='Depense').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  document.getElementById('rexp').innerHTML = recent.length
     ? recent.map(e=>expItem(e,false)).join('')
     : '<div class="empty"><div class="empty-icon">🧾</div><div>Aucune dépense ce mois</div></div>';
 }
 
-function renderBudget5() {
-  const exps = DB.exp;
-  const months5 = [];
-  for (let i=0; i<=4; i++) {
-    const d=new Date(); d.setDate(1); d.setMonth(d.getMonth()-i);
-    months5.push(d.toISOString().slice(0,7));
-  }
-  const CATS = DB.cats.map(c=>c.name);
-  const tbl  = document.getElementById('b5-table');
-  const hdr  = '<thead><tr><th style="text-align:left;min-width:90px">Catégorie</th>'
-    +months5.map(m=>`<th style="min-width:68px">${moLbl(m)}</th>`).join('')+'</tr></thead>';
-  const salRow = '<tr class="sal-r"><td>💰 Salaire</td>'
-    +months5.map(m=>{ const v=exps.filter(e=>moOf(e.date)===m&&e.type==='Salaire').reduce((s,e)=>s+e.montant_qar,0); return `<td>${v?fmt(v):'-'}</td>`; }).join('')+'</tr>';
-  const catRows = CATS.filter(c=>exps.some(e=>e.categorie===c))
-    .map((c,i)=>`<tr ${i%2?'style="background:#0d1525"':''}><td style="color:var(--muted)">${catIcon(c)} ${c}</td>`
-      +months5.map(m=>{ const v=exps.filter(e=>moOf(e.date)===m&&e.type==='Depense'&&e.categorie===c).reduce((s,e)=>s+e.montant_qar,0); return `<td>${v?fmt(v):'-'}</td>`; }).join('')+'</tr>').join('');
-  const depRow = '<tr class="dep-r"><td>💸 Total</td>'
-    +months5.map(m=>{ const v=exps.filter(e=>moOf(e.date)===m&&e.type==='Depense').reduce((s,e)=>s+e.montant_qar,0); return `<td><b>${v?fmt(v)+' QAR':'-'}</b></td>`; }).join('')+'</tr>';
-  const disRow = '<tr class="dis-r"><td>✨ Dispo</td>'
-    +months5.map(m=>{ const sal=exps.filter(e=>moOf(e.date)===m&&e.type==='Salaire').reduce((s,e)=>s+e.montant_qar,0); const dep=exps.filter(e=>moOf(e.date)===m&&e.type==='Depense').reduce((s,e)=>s+e.montant_qar,0); return sal||dep?`<td style="color:${sal-dep>=0?'var(--amber)':'var(--red)'}">${fmt(sal-dep)} QAR</td>`:'<td>-</td>'; }).join('')+'</tr>';
-  tbl.innerHTML = hdr+'<tbody>'+salRow+catRows+depRow+disRow+'</tbody>';
+// ─────────────────────────────────────────────────────────
+// BUDGET 5M
+// ─────────────────────────────────────────────────────────
+function renderB5() {
+  const exps=DB.exp, tbl=document.getElementById('b5t');
+  const months=[];
+  for(let i=0;i<=4;i++){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);months.push(d.toISOString().slice(0,7));}
+  const CATS=DB.cats.map(c=>c.name);
+  const sum=(ym,type,cat)=>exps.filter(e=>moOf(e.date)===ym&&e.type===type&&(!cat||e.categorie===cat)).reduce((s,e)=>s+e.montant_qar,0);
+  const hdr='<thead><tr><th style="text-align:left;min-width:88px">Catégorie</th>'+months.map(m=>`<th style="min-width:66px">${moLbl(m)}</th>`).join('')+'</tr></thead>';
+  const salR='<tr class="sr"><td>💰 Salaire</td>'+months.map(m=>{const v=sum(m,'Salaire');return`<td>${v?F(v):'-'}</td>`;}).join('')+'</tr>';
+  const catRs=CATS.filter(c=>months.some(m=>sum(m,'Depense',c)>0)).map((c,i)=>`<tr ${i%2?'style="background:#0d1525"':''}><td style="color:var(--mut)">${cIcon(c)} ${c}</td>`+months.map(m=>{const v=sum(m,'Depense',c);return`<td>${v?F(v):'-'}</td>`;}).join('')+'</tr>').join('');
+  const depR='<tr class="dr"><td>💸 Total</td>'+months.map(m=>{const v=sum(m,'Depense');return`<td><b>${v?F(v)+' QAR':'-'}</b></td>`;}).join('')+'</tr>';
+  const disR='<tr class="disr"><td>✨ Dispo</td>'+months.map(m=>{const s2=sum(m,'Salaire'),d2=sum(m,'Depense');return s2||d2?`<td style="color:${s2-d2>=0?'var(--amb)':'var(--red)'}">${F(s2-d2)} QAR</td>`:'<td>-</td>';}).join('')+'</tr>';
+  tbl.innerHTML=hdr+'<tbody>'+salR+catRs+depR+disR+'</tbody>';
 }
 
+// ─────────────────────────────────────────────────────────
+// SAVINGS RATE
+// ─────────────────────────────────────────────────────────
+function rateColor(r) { return r===null?'var(--mut)':r>=0.3?'var(--grn)':r>=0.15?'var(--amb)':'var(--red)'; }
+
+function renderSR() {
+  const el=document.getElementById('src'); if(!el) return;
+  const exps=DB.exp;
+  const months=[];
+  for(let i=11;i>=0;i--){const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);months.push(d.toISOString().slice(0,7));}
+  const data=months.map(ym=>{
+    const sal=exps.filter(e=>moOf(e.date)===ym&&e.type==='Salaire').reduce((s,e)=>s+e.montant_qar,0);
+    const dep=exps.filter(e=>moOf(e.date)===ym&&e.type==='Depense').reduce((s,e)=>s+e.montant_qar,0);
+    return {ym,sal,dep,rate:sal>0?Math.max(0,(sal-dep)/sal):null};
+  });
+  const withD=data.filter(d=>d.sal>0);
+  if(!withD.length){el.innerHTML='<div class="empty"><div class="empty-icon">💰</div><div>Ajoutez votre salaire dans Dépenses pour voir le taux d\'épargne</div></div>';return;}
+  const avg=withD.reduce((s,d)=>s+d.rate,0)/withD.length;
+  const best=withD.reduce((a,b)=>b.rate>a.rate?b:a,withD[0]);
+  const nowYM=today().slice(0,7);
+  const cur=data.find(d=>d.ym===nowYM);
+  const curR=cur?.rate??null;
+  // Ring SVG
+  const pct=Math.min(1,Math.max(0,curR??avg??0));
+  const r=38,circ=2*Math.PI*r,dash=(pct*circ).toFixed(1),gap=((1-pct)*circ).toFixed(1);
+  const col=rateColor(curR??avg);
+  const ring=`<svg width="88" height="88" viewBox="0 0 100 100" style="transform:rotate(-90deg);flex-shrink:0">
+    <circle cx="50" cy="50" r="${r}" fill="none" stroke="var(--bg3)" stroke-width="10"/>
+    <circle cx="50" cy="50" r="${r}" fill="none" stroke="${col}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${dash} ${gap}"/>
+  </svg>`;
+  // Bar chart
+  const maxH=50;
+  const bars=data.map(d=>{
+    const h=d.rate!==null?Math.max(3,Math.round(d.rate*maxH)):0;
+    const lbl=new Date(d.ym+'-01').toLocaleDateString('fr-FR',{month:'short'}).slice(0,3);
+    const isNow=d.ym===nowYM;
+    return `<div class="srmo" title="${moLbl(d.ym)}: ${d.rate!==null?(d.rate*100).toFixed(0)+'%':'—'}">
+      <div class="srmo-i" style="height:${maxH}px">${d.rate!==null?`<div class="srmo-f" style="height:${h}px;background:${rateColor(d.rate)}"></div>`:''}</div>
+      <div class="srmo-l" style="${isNow?'color:var(--text);font-weight:700':''}">${lbl}</div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;gap:14px">
+      ${ring}
+      <div style="flex:1">
+        <div style="font-size:10px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Mois en cours</div>
+        <div style="font-size:26px;font-weight:800;letter-spacing:-1px;color:${rateColor(curR)}">${curR!==null?(curR*100).toFixed(0)+'%':'—'}</div>
+        <div style="font-size:11px;color:var(--mut);margin-top:2px">${cur&&cur.sal>0?`${F(cur.sal)} − ${F(cur.dep)} QAR`:'Pas de données ce mois'}</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:16px;margin-top:12px;flex-wrap:wrap">
+      <div style="text-align:center"><div style="font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px">Moy. 12M</div><div style="font-size:15px;font-weight:800;color:${rateColor(avg)}">${(avg*100).toFixed(0)}%</div></div>
+      <div style="text-align:center"><div style="font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px">Meilleur mois</div><div style="font-size:15px;font-weight:800;color:var(--grn)">${(best.rate*100).toFixed(0)}%</div><div style="font-size:9px;color:var(--mut);font-family:'DM Mono',monospace">${moLbl(best.ym)}</div></div>
+      <div style="text-align:center"><div style="font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px">Épargné ce mois</div><div style="font-size:15px;font-weight:800;color:${rateColor(curR)}">${cur&&cur.sal>0?F(cur.sal-cur.dep)+' QAR':'—'}</div></div>
+    </div>
+    <div style="margin-top:12px;border-top:1px solid var(--bdr);padding-top:10px">
+      <div style="font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">12 derniers mois</div>
+      <div class="srmos">${bars}</div>
+    </div>`;
+}
+
+// ─────────────────────────────────────────────────────────
+// ALLOC
+// ─────────────────────────────────────────────────────────
 function renderAlloc(total, last) {
-  const el = document.getElementById('inv-alloc');
-  if (!total) { el.innerHTML=''; return; }
-  const COLORS=['#3b82f6','#22c55e','#10b981','#f97316','#06b6d4','#84cc16','#f59e0b','#ec4899','#ef4444','#0891b2','#22d3ee','#8b5cf6','#a855f7','#14b8a6'];
-  // By group
+  const el=document.getElementById('ialc'); if(!el||!total) return;
+  const AC=['#3b82f6','#22c55e','#10b981','#f97316','#06b6d4','#84cc16','#f59e0b','#ec4899','#ef4444','#0891b2','#22d3ee','#8b5cf6','#a855f7','#14b8a6'];
+  const GC={CLP:'#3b82f6',USD:'#10b981',EUR:'#06b6d4',Crypto:'#8b5cf6'};
   const grps={};
-  DB.assets.forEach((a,i)=>{ const v=toUSD(a.id,last[a.id]||0); if(v>0){ if(!grps[a.grp])grps[a.grp]=0; grps[a.grp]+=v; } });
-  const GRP_C={CLP:'#3b82f6',USD:'#10b981',EUR:'#06b6d4',Crypto:'#8b5cf6'};
-  const classes=Object.entries(grps).filter(([,v])=>v>0).map(([g,v])=>({label:g,color:GRP_C[g]||'#6b7280',value:v}));
+  DB.assets.forEach(a=>{if(!grps[a.grp])grps[a.grp]=0;grps[a.grp]+=toUSD(a.id,last[a.id]||0);});
+  const classes=Object.entries(grps).filter(([,v])=>v>0).map(([g,v])=>({label:g,color:GC[g]||'#6b7280',value:v}));
   const bar=classes.map(c=>`<div class="aseg" style="width:${(c.value/total*100).toFixed(1)}%;background:${c.color};flex-shrink:0"></div>`).join('');
-  const leg=classes.map(c=>`<div class="aitem"><span class="adot" style="background:${c.color}"></span>${c.label} <b style="color:var(--text);margin-left:4px">${(c.value/total*100).toFixed(1)}%</b></div>`).join('');
-  // Individual assets
-  const assets=DB.assets.map((a,i)=>({label:a.label,color:COLORS[i%COLORS.length],value:toUSD(a.id,last[a.id]||0)})).filter(a=>a.value>0).sort((a,b)=>b.value-a.value);
-  const rows=assets.map(a=>{ const p=(a.value/total*100).toFixed(1); return `<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #0d1525"><div style="width:6px;height:6px;border-radius:50%;background:${a.color};flex-shrink:0"></div><span style="flex:1;font-size:12px;color:var(--muted)">${a.label}</span><div style="width:80px;height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;width:${p}%;background:${a.color}"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;width:40px;text-align:right">${p}%</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);width:68px;text-align:right">${fmtU(a.value)}</span></div>`; }).join('');
-  el.innerHTML=`<div class="abar">${bar}</div><div class="aleg">${leg}</div><div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px">${rows}</div>`;
+  const leg=classes.map(c=>`<div class="ai"><span class="adot" style="background:${c.color}"></span>${c.label} <b style="color:var(--text);margin-left:4px">${(c.value/total*100).toFixed(1)}%</b></div>`).join('');
+  const rows=DB.assets.map((a,i)=>({label:a.label,color:AC[i%AC.length],value:toUSD(a.id,last[a.id]||0)})).filter(a=>a.value>0).sort((a,b)=>b.value-a.value)
+    .map(a=>{const p=(a.value/total*100).toFixed(1);return`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #0d1525"><div style="width:6px;height:6px;border-radius:50%;background:${a.color};flex-shrink:0"></div><span style="flex:1;font-size:12px;color:var(--mut)">${a.label}</span><div style="width:80px;height:4px;background:var(--bdr);border-radius:2px;overflow:hidden"><div style="height:100%;width:${p}%;background:${a.color}"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;width:40px;text-align:right">${p}%</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--mut);width:68px;text-align:right">${FU(a.value)}</span></div>`;}).join('');
+  document.getElementById('ialc').innerHTML=`<div class="abar">${bar}</div><div class="aleg">${leg}</div><div style="margin-top:12px;border-top:1px solid var(--bdr);padding-top:10px">${rows}</div>`;
 }
 
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
+// CHART
+// ─────────────────────────────────────────────────────────
+let cRange=6, cAsset='__total__';
+
+function setCR(n,btn){cRange=n;document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderChart();}
+function setCA(id){cAsset=id;renderChart();}
+
+function buildAsel() {
+  const sel=document.getElementById('asel'); if(!sel) return;
+  const opts=[{id:'__total__',label:'📊 Total portefeuille'},...DB.assets.filter(a=>!a.arch).map(a=>({id:a.id,label:a.label}))];
+  sel.innerHTML=opts.map(o=>`<option value="${o.id}" ${cAsset===o.id?'selected':''}>${o.label}</option>`).join('');
+}
+
+function renderChart() {
+  const cvs=document.getElementById('ccvs'); if(!cvs) return;
+  const ctx=cvs.getContext('2d'), wrap=document.getElementById('cwrap');
+  const allInvs=[...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));
+  if(allInvs.length<2){ctx.clearRect(0,0,cvs.width,cvs.height);return;}
+  const data=cRange>=999?allInvs:allInvs.slice(-cRange);
+  const asset=DB.assets.find(a=>a.id===cAsset);
+  const totals=data.map(inv=>({month:inv.month,v:cAsset==='__total__'?calcTotal(inv):toUSD(cAsset,inv[cAsset]||0)}));
+  const ac=cAsset==='__total__'?'#3b82f6':asset?.cur==='EUR'?'#06b6d4':asset?.cur==='CLP'?'#10b981':asset?.cur==='CRYPTO'?'#8b5cf6':'#3b82f6';
+  const fY=v=>cAsset!=='__total__'&&asset?.cur==='CLP'?(v/1000).toFixed(0)+'k':cAsset!=='__total__'&&asset?.cur==='EUR'?'€'+F(v):v>=1000?'$'+(v/1000).toFixed(0)+'k':'$'+Math.round(v);
+  const dpr=window.devicePixelRatio||1,W=wrap.clientWidth||340,H=180;
+  cvs.width=W*dpr;cvs.height=H*dpr;cvs.style.width=W+'px';cvs.style.height=H+'px';ctx.scale(dpr,dpr);
+  const P={t:20,r:16,b:36,l:52},cW=W-P.l-P.r,cH=H-P.t-P.b,n=totals.length;
+  const mn=Math.min(...totals.map(d=>d.v)),mx=Math.max(...totals.map(d=>d.v)),rng=mx-mn||1;
+  const xP=i=>P.l+(i/(n-1))*cW, yP=v=>P.t+(1-(v-mn)/rng)*cH;
+  ctx.clearRect(0,0,W,H);
+  // Grid
+  ctx.font=`9px 'DM Mono',monospace`;ctx.fillStyle='#5a6a82';ctx.textAlign='right';
+  for(let i=0;i<=4;i++){const v=mn+(rng*i/4),y=yP(v);ctx.strokeStyle='rgba(30,45,69,.8)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(P.l,y);ctx.lineTo(P.l+cW,y);ctx.stroke();ctx.fillText(fY(v),P.l-4,y+3);}
+  // Area
+  const rr=parseInt(ac.slice(1,3),16),gg=parseInt(ac.slice(3,5),16),bb=parseInt(ac.slice(5,7),16);
+  const gr=ctx.createLinearGradient(0,P.t,0,P.t+cH);
+  gr.addColorStop(0,`rgba(${rr},${gg},${bb},.35)`);gr.addColorStop(.6,`rgba(${rr},${gg},${bb},.08)`);gr.addColorStop(1,`rgba(${rr},${gg},${bb},0)`);
+  ctx.beginPath();totals.forEach((d,i)=>i===0?ctx.moveTo(xP(i),yP(d.v)):ctx.lineTo(xP(i),yP(d.v)));
+  ctx.lineTo(xP(n-1),P.t+cH);ctx.lineTo(xP(0),P.t+cH);ctx.closePath();ctx.fillStyle=gr;ctx.fill();
+  // Line
+  ctx.beginPath();totals.forEach((d,i)=>i===0?ctx.moveTo(xP(i),yP(d.v)):ctx.lineTo(xP(i),yP(d.v)));
+  ctx.strokeStyle=ac;ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.stroke();
+  // End dot
+  [0,n-1].forEach(i=>{ctx.beginPath();ctx.arc(xP(i),yP(totals[i].v),4,0,Math.PI*2);ctx.fillStyle=ac;ctx.fill();ctx.strokeStyle='#0A0E1A';ctx.lineWidth=2;ctx.stroke();});
+  // X labels
+  ctx.fillStyle='#5a6a82';ctx.textAlign='center';ctx.font=`9px 'DM Mono',monospace`;
+  const step=Math.max(1,Math.floor(n/5));
+  for(let i=0;i<n;i+=step){const [y2,m2]=totals[i].month.split('-');ctx.fillText(new Date(y2,m2-1).toLocaleDateString('fr-FR',{month:'short',year:'2-digit'}),xP(i),H-6);}
+  const [ly,lm]=totals[n-1].month.split('-');ctx.fillText(new Date(ly,lm-1).toLocaleDateString('fr-FR',{month:'short',year:'2-digit'}),xP(n-1),H-6);
+  cvs._d={totals,xP,yP,ac,fY,W,n,P};
+}
+
+function onChartTouch(e) {
+  const cvs=document.getElementById('ccvs'); if(!cvs||!cvs._d) return;
+  const {totals,xP,yP,ac,fY,W,n,P}=cvs._d;
+  const rect=cvs.getBoundingClientRect();
+  const cx=e.touches?e.touches[0].clientX:e.clientX;
+  const relX=cx-rect.left;
+  let best=0,bd=9999;
+  totals.forEach((d,i)=>{const dist=Math.abs(relX-xP(i));if(dist<bd){bd=dist;best=i;}});
+  const d=totals[best];
+  const tip=document.getElementById('ctip');
+  tip.innerHTML=`<b style="color:${ac}">${moLbl(d.month)}</b><br>${fY(d.v)}`;
+  tip.style.display='block';
+  const tW=110,lft=Math.max(4,Math.min(xP(best)-tW/2,W-tW-4));
+  tip.style.left=lft+'px';tip.style.top=Math.max(4,yP(d.v)-60)+'px';
+  renderChart();
+  const ctx=cvs.getContext('2d'),dpr=window.devicePixelRatio||1;
+  ctx.save();ctx.beginPath();ctx.arc(xP(best),yP(d.v),6,0,Math.PI*2);ctx.fillStyle=ac;ctx.fill();ctx.strokeStyle='#0A0E1A';ctx.lineWidth=2;ctx.stroke();ctx.restore();
+}
+function hideCtip(){const t=document.getElementById('ctip');if(t)t.style.display='none';renderChart();}
+
+// ─────────────────────────────────────────────────────────
+// MoM
+// ─────────────────────────────────────────────────────────
+function buildMomPickers() {
+  const months=[...new Set(DB.exp.map(e=>moOf(e.date)))].filter(Boolean).sort().reverse();
+  if(!months.length) return;
+  const opts=months.map(m=>`<option value="${m}">${moLbl(m)}</option>`).join('');
+  const ma=document.getElementById('moma'), mb=document.getElementById('momb');
+  if(!ma||!mb) return;
+  ma.innerHTML=opts; mb.innerHTML=opts;
+  const now=new Date().toISOString().slice(0,7);
+  const prev=new Date(new Date().getFullYear(),new Date().getMonth()-1,1).toISOString().slice(0,7);
+  ma.value=months.includes(prev)?prev:months[1]||months[0];
+  mb.value=months.includes(now)?now:months[0];
+}
+
+function renderMoM() {
+  const el=document.getElementById('momc'); if(!el) return;
+  const ma=document.getElementById('moma'), mb=document.getElementById('momb');
+  if(!ma||!mb) return;
+  const aYM=ma.value, bYM=mb.value;
+  const exps=DB.exp;
+  const sum=(ym,type,cat)=>exps.filter(e=>moOf(e.date)===ym&&e.type===type&&(!cat||e.categorie===cat)).reduce((s,e)=>s+e.montant_qar,0);
+  const CATS=DB.cats.map(c=>c.name).filter(c=>sum(aYM,'Depense',c)>0||sum(bYM,'Depense',c)>0);
+  const depA=sum(aYM,'Depense'),depB=sum(bYM,'Depense');
+  const salA=sum(aYM,'Salaire'),salB=sum(bYM,'Salaire');
+  const maxV=Math.max(depA,depB,...CATS.flatMap(c=>[sum(aYM,'Depense',c),sum(bYM,'Depense',c)]),1);
+
+  const chip=(a,b,inv=false)=>{
+    if(!a&&!b) return '<span class="mdlt neu">—</span>';
+    if(!b) return '<span class="mdlt pos">+</span>';
+    const p=(a-b)/b*100,good=inv?p<0:p>0,cls=p===0?'neu':good?'pos':'neg';
+    return `<span class="mdlt ${cls}">${p>=0?'+':''}${p.toFixed(0)}%</span>`;
+  };
+  const fQ=v=>v?F(v):'—';
+  const bar=(a,b)=>{const p=(a/maxV*100).toFixed(1),c=!b?'var(--acc)':a<=b?'var(--grn)':'var(--red)';return`<div class="mbarw"><div class="mbar" style="width:${p}%;background:${c}"></div></div>`;};
+
+  let g=`<div class="momg">
+    <div class="momh">Catégorie</div>
+    <div class="momh">${moLbl(aYM)}</div>
+    <div class="momh">${moLbl(bYM)}</div>
+    <div class="momh">Δ</div>
+    <div class="momr">
+      <div class="mc mclbl">💰 <b>Salaire</b></div>
+      <div class="mc mcnum" style="color:var(--mut)">${fQ(salA)}</div>
+      <div class="mc mcnum" style="color:var(--grn)">${fQ(salB)}</div>
+      <div class="mc mcd">${chip(salB,salA,false)}</div>
+    </div>`;
+
+  CATS.forEach(cat=>{
+    const a=sum(aYM,'Depense',cat),b=sum(bYM,'Depense',cat);
+    g+=`<div class="momr">
+      <div class="mc mclbl"><div>${bar(b,a)}</div><span>${cIcon(cat)} ${cat}</span></div>
+      <div class="mc mcnum" style="color:var(--mut)">${fQ(a)}</div>
+      <div class="mc mcnum">${fQ(b)}</div>
+      <div class="mc mcd">${chip(b,a,true)}</div>
+    </div>`;
+  });
+
+  g+=`<hr class="momsep">
+    <div class="momr">
+      <div class="mc mclbl" style="font-weight:700;color:var(--text)">💸 Total</div>
+      <div class="mc mcnum" style="color:var(--mut);font-weight:700">${fQ(depA)}</div>
+      <div class="mc mcnum" style="color:var(--red);font-weight:700">${fQ(depB)}</div>
+      <div class="mc mcd">${chip(depB,depA,true)}</div>
+    </div>
+    <div class="momr">
+      <div class="mc mclbl" style="font-weight:700;color:var(--text)">✨ Disponible</div>
+      <div class="mc mcnum" style="color:var(--mut);font-weight:700">${salA||depA?fQ(salA-depA):'—'}</div>
+      <div class="mc mcnum" style="color:var(--amb);font-weight:700">${salB||depB?fQ(salB-depB):'—'}</div>
+      <div class="mc mcd">${salA||depA?chip(salB-depB,salA-depA,false):'—'}</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:var(--mut);font-family:'DM Mono',monospace;margin-top:8px;text-align:right">Valeurs en QAR</div>`;
+
+  el.innerHTML=g;
+}
+
+// ─────────────────────────────────────────────────────────
 // DÉPENSES
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
 let depType='Depense', depMo=today().slice(0,7);
 
-function setDepType(t) {
-  depType=t;
-  document.getElementById('btn-dep').classList.toggle('active',t==='Depense');
-  document.getElementById('btn-sal').classList.toggle('active',t==='Salaire');
-  document.getElementById('fg-cat').style.display=t==='Depense'?'block':'none';
-}
-
-function renderCatSelect() {
-  const sel=document.getElementById('dep-cat');
-  if(!sel) return;
-  sel.innerHTML=DB.cats.map(c=>`<option value="${c.name}">${c.name}</option>`).join('');
-}
-
-function switchDep(tab,btn) {
-  document.querySelectorAll('#screen-dep .seg-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('dep-saisie').style.display=tab==='saisie'?'block':'none';
-  document.getElementById('dep-liste').style.display=tab==='liste'?'block':'none';
-  if(tab==='liste') renderDepList();
-}
-
-document.getElementById('dep-amt').addEventListener('input',function(){
-  const v=parseFloat(this.value);
-  document.getElementById('dep-usd-prev').textContent=isNaN(v)?'—':'$'+fmt(v/DB.set.qar,2);
-});
+function setDT(t) { depType=t; document.getElementById('btd').classList.toggle('on',t==='Depense'); document.getElementById('bts').classList.toggle('on',t==='Salaire'); document.getElementById('fgc').style.display=t==='Depense'?'block':'none'; }
+function buildCatSel() { const s=document.getElementById('dcat');if(!s)return;s.innerHTML=DB.cats.map(c=>`<option value="${c.name}">${c.name}</option>`).join(''); }
+function swDep(t,btn) { document.querySelectorAll('#sc-dep .sb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('deps').style.display=t==='s'?'block':'none';document.getElementById('depl').style.display=t==='l'?'block':'none';if(t==='l')renderDepList(); }
+document.getElementById('damt').addEventListener('input',function(){const v=parseFloat(this.value);document.getElementById('dusd').textContent=isNaN(v)?'—':'$'+F(v/DB.set.qar,2);});
 
 function saveDep() {
-  const amt=parseFloat(document.getElementById('dep-amt').value);
-  const dt =document.getElementById('dep-date').value;
-  if(!amt||amt<=0){showToast('❌ Montant invalide');return;}
-  if(!dt){showToast('❌ Date manquante');return;}
-  const cat=depType==='Salaire'?'Salaire':document.getElementById('dep-cat').value;
+  const amt=parseFloat(document.getElementById('damt').value), dt=document.getElementById('ddate').value;
+  if(!amt||amt<=0){toast('❌ Montant invalide');return;} if(!dt){toast('❌ Date manquante');return;}
+  const cat=depType==='Salaire'?'Salaire':document.getElementById('dcat').value;
   DB.exp=[...DB.exp,{id:Date.now().toString(),date:dt,type:depType,categorie:cat,montant_qar:amt,montant_usd:amt/DB.set.qar}];
-  document.getElementById('dep-amt').value='';
-  document.getElementById('dep-date').value=today();
-  showToast('✅ Enregistré !');
-  if(curScreen==='dashboard') renderDashboard();
+  document.getElementById('damt').value=''; document.getElementById('ddate').value=today();
+  toast('✅ Enregistré !'); if(curSc==='dash') renderDash();
 }
 
-function expItem(e,canDel=true) {
-  const ic=e.type==='Salaire'?'💰':catIcon(e.categorie);
-  const co=e.type==='Salaire'?'#10b981':catColor(e.categorie);
-  const d=canDel?`<button class="del-btn" onclick="delExp('${e.id}')">✕</button>`:'';
-  return `<div class="exp-item">
-    <div class="exp-icon" style="background:${co}22">${ic}</div>
-    <div class="exp-info">
-      <div class="exp-cat">${e.type==='Salaire'?'Salaire':e.categorie}</div>
-      <div class="exp-date">${new Date(e.date+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'})}</div>
-    </div>
-    <div>
-      <div class="exp-amt ${e.type==='Salaire'?'sal':''}">${e.type==='Salaire'?'+':''}${fmt(e.montant_qar)} QAR</div>
-      <div style="font-size:10px;color:var(--muted);text-align:right;font-family:'DM Mono',monospace">≈ $${fmt(e.montant_qar/DB.set.qar,1)}</div>
-    </div>${d}
-  </div>`;
+function expItem(e, canDel=true) {
+  const ic=e.type==='Salaire'?'💰':cIcon(e.categorie), co=e.type==='Salaire'?'#10b981':cClr(e.categorie);
+  const d=canDel?`<button class="delbtn" onclick="delExp('${e.id}')">✕</button>`:'';
+  return `<div class="ei"><div class="eic" style="background:${co}22">${ic}</div><div class="ein"><div class="ecat">${e.type==='Salaire'?'Salaire':e.categorie}</div><div class="edate">${new Date(e.date+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'})}</div></div><div><div class="eamt ${e.type==='Salaire'?'sal':''}">${e.type==='Salaire'?'+':''}${F(e.montant_qar)} QAR</div><div style="font-size:10px;color:var(--mut);text-align:right;font-family:'DM Mono',monospace">≈ $${F(e.montant_qar/DB.set.qar,1)}</div></div>${d}</div>`;
 }
 
-function delExp(id) {
-  DB.exp=DB.exp.filter(e=>e.id!==id);
-  renderDepList();
-  if(curScreen==='dashboard') renderDashboard();
-}
+function delExp(id) { DB.exp=DB.exp.filter(e=>e.id!==id); renderDepList(); if(curSc==='dash')renderDash(); }
 
 function renderDepList() {
   const exps=DB.exp;
   const months=[...new Set(exps.map(e=>moOf(e.date)))].sort().reverse();
   if(!months.includes(depMo)) depMo=months[0]||today().slice(0,7);
-  document.getElementById('dep-chips').innerHTML=months.slice(0,18).map(m=>`<div class="chip ${m===depMo?'active':''}" onclick="selDepMo('${m}')">${moLbl(m)}</div>`).join('');
+  document.getElementById('dchips').innerHTML=months.slice(0,18).map(m=>`<div class="chip ${m===depMo?'on':''}" onclick="selDepMo('${m}')">${moLbl(m)}</div>`).join('');
   const fil=exps.filter(e=>moOf(e.date)===depMo).sort((a,b)=>b.date.localeCompare(a.date));
   const sal=fil.filter(e=>e.type==='Salaire').reduce((s,e)=>s+e.montant_qar,0);
   const dep=fil.filter(e=>e.type==='Depense').reduce((s,e)=>s+e.montant_qar,0);
-  document.getElementById('dep-summary').innerHTML=[['💰 Salaire',fmt(sal),'var(--green)'],['💸 Dépenses',fmt(dep),'var(--red)'],['✨ Dispo',fmt(sal-dep),'var(--amber)']].map(([l,v,c])=>`<div style="flex:1;background:var(--bg3);border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace">${l}</div><div style="font-family:'DM Mono',monospace;color:${c};font-weight:700;font-size:13px">${v} QAR</div></div>`).join('');
-  document.getElementById('dep-items').innerHTML=fil.length?fil.map(e=>expItem(e,true)).join(''):'<div class="empty"><div class="empty-icon">🧾</div><div>Aucune entrée</div></div>';
+  document.getElementById('dsum').innerHTML=[['💰 Salaire',F(sal),'var(--grn)'],['💸 Dépenses',F(dep),'var(--red)'],['✨ Dispo',F(sal-dep),'var(--amb)']].map(([l,v,c])=>`<div style="flex:1;background:var(--bg3);border-radius:10px;padding:10px;text-align:center"><div style="font-size:10px;color:var(--mut);font-family:'DM Mono',monospace">${l}</div><div style="font-family:'DM Mono',monospace;color:${c};font-weight:700;font-size:13px">${v} QAR</div></div>`).join('');
+  document.getElementById('ditems').innerHTML=fil.length?fil.map(e=>expItem(e,true)).join(''):'<div class="empty"><div class="empty-icon">🧾</div><div>Aucune entrée</div></div>';
 }
-
 function selDepMo(m){depMo=m;renderDepList();}
 
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
 // INVESTISSEMENTS
-// ═══════════════════════════════════════════════════════════
-function switchInv(tab,btn) {
-  document.querySelectorAll('#screen-inv .seg-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('inv-saisie').style.display=tab==='saisie'?'block':'none';
-  document.getElementById('inv-historique').style.display=tab==='historique'?'block':'none';
-  if(tab==='saisie') renderInvForm();
-  if(tab==='historique') renderInvHist();
-}
+// ─────────────────────────────────────────────────────────
+function swInv(t,btn){document.querySelectorAll('#sc-inv .sb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('invs').style.display=t==='s'?'block':'none';document.getElementById('invh').style.display=t==='h'?'block':'none';if(t==='s')renderInvForm();if(t==='h')renderInvHist();}
+function cCls(c){return c==='EUR'?'eur':c==='CRYPTO'?'cry':'';}
+function cIco(c){return c==='EUR'?'🇫🇷':c==='CRYPTO'?'₿':c==='CLP'?'🏦':'📈';}
 
-function curCls(cur){ return cur==='EUR'?'eur':cur==='CRYPTO'?'crypto':''; }
-function curIco(cur){ return cur==='EUR'?'🇫🇷':cur==='CRYPTO'?'₿':cur==='CLP'?'🏦':'📈'; }
-
-function renderInvForm(prefill) {
-  const active=DB.assets.filter(a=>!a.arch);
-  const groups={};
-  active.forEach(a=>{ if(!groups[a.grp]) groups[a.grp]=[]; groups[a.grp].push(a); });
+function renderInvForm(pre) {
+  const active=DB.assets.filter(a=>!a.arch), groups={};
+  active.forEach(a=>{if(!groups[a.grp])groups[a.grp]=[];groups[a.grp].push(a);});
   let h='';
-  for(const[grp,items] of Object.entries(groups)){
-    h+=`<div class="inv-sec">${curIco(items[0].cur)} ${grp}</div>`;
-    items.forEach(a=>{
-      const v=prefill&&prefill[a.id]?prefill[a.id]:'';
-      h+=`<div class="inv-row"><span class="inv-lbl">${a.label}</span><input class="inv-inp ${curCls(a.cur)}" id="f-${a.id}" placeholder="0" inputmode="decimal" value="${v}" oninput="updPrev()"></div>`;
-    });
+  for(const[g,items] of Object.entries(groups)){
+    h+=`<div class="isec">${cIco(items[0].cur)} ${g}</div>`;
+    items.forEach(a=>{const v=pre&&pre[a.id]?pre[a.id]:'';h+=`<div class="irow"><span class="ilbl">${a.label}</span><input class="iinp ${cCls(a.cur)}" id="f-${a.id}" placeholder="0" inputmode="decimal" value="${v}" oninput="updPrev()"></div>`;});
   }
-  // Apports
   const curs=[...new Set(active.map(a=>a.cur))];
-  h+=`<div class="inv-sec" style="color:var(--amber)">+ Apports du mois</div>`;
-  [{c:'CLP',id:'ap_clp',lbl:'Apport CLP'},{c:'USD',id:'ap_usd',lbl:'Apport USD'},
-   {c:'EUR',id:'ap_eur',lbl:'Apport EUR'},{c:'CRYPTO',id:'ap_crypto',lbl:'Apport Crypto'}]
-  .filter(x=>curs.includes(x.c)).forEach(x=>{
-    const v=prefill&&prefill[x.id]?prefill[x.id]:'';
-    h+=`<div class="inv-row"><span class="inv-lbl" style="color:var(--muted)">${x.lbl}</span><input class="inv-inp ${curCls(x.c)}" id="f-${x.id}" placeholder="0" inputmode="decimal" value="${v}" oninput="updPrev()"></div>`;
-  });
-  document.getElementById('inv-fields').innerHTML=h;
-  updPrev();
+  h+=`<div class="isec" style="color:var(--amb)">+ Apports du mois</div>`;
+  [{c:'CLP',id:'ap_clp',l:'Apport CLP'},{c:'USD',id:'ap_usd',l:'Apport USD'},{c:'EUR',id:'ap_eur',l:'Apport EUR'},{c:'CRYPTO',id:'ap_crypto',l:'Apport Crypto'}]
+    .filter(x=>curs.includes(x.c)).forEach(x=>{const v=pre&&pre[x.id]?pre[x.id]:'';h+=`<div class="irow"><span class="ilbl" style="color:var(--mut)">${x.l}</span><input class="iinp ${cCls(x.c)}" id="f-${x.id}" placeholder="0" inputmode="decimal" value="${v}" oninput="updPrev()"></div>`;});
+  document.getElementById('ifields').innerHTML=h; updPrev();
 }
+function updPrev(){const g=id=>parseFloat(document.getElementById('f-'+id)?.value)||0;document.getElementById('iprev').textContent=FU(DB.assets.reduce((s,a)=>s+toUSD(a.id,g(a.id)),0));}
 
-function updPrev(){
-  const g=id=>parseFloat(document.getElementById('f-'+id)?.value)||0;
-  const t=DB.assets.reduce((sum,a)=>sum+toUSD(a.id,g(a.id)),0);
-  document.getElementById('inv-preview').textContent=fmtU(t);
-}
-
-function saveInv(){
-  const mo=document.getElementById('inv-month').value;
-  if(!mo){showToast('❌ Mois manquant');return;}
+function saveInv() {
+  const mo=document.getElementById('imon').value; if(!mo){toast('❌ Mois manquant');return;}
   const g=id=>parseFloat(document.getElementById('f-'+id)?.value)||0;
   const entry={id:mo,month:mo};
   DB.assets.forEach(a=>{entry[a.id]=g(a.id);});
   ['ap_clp','ap_usd','ap_eur','ap_crypto'].forEach(f=>{entry[f]=g(f);});
   DB.inv=[...DB.inv.filter(i=>i.month!==mo),entry];
-  showToast('✅ Mois enregistré !');
-  renderInvHist();
-  if(curScreen==='dashboard') renderDashboard();
+  toast('✅ Mois enregistré !'); renderInvHist(); if(curSc==='dash')renderDash();
 }
 
-function loadLastInv(){
-  const sorted=[...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));
-  if(!sorted.length){showToast('Aucun mois précédent');return;}
-  renderInvForm(sorted[sorted.length-1]);
-  showToast('✅ Données recopiées');
-}
+function loadLastInv(){const s=[...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));if(!s.length){toast('Aucun mois précédent');return;}renderInvForm(s[s.length-1]);toast('✅ Données recopiées');}
 
 function renderInvHist(){
   const invs=[...DB.inv].sort((a,b)=>b.month.localeCompare(a.month));
   const sorted=[...invs].sort((a,b)=>a.month.localeCompare(b.month));
-  const tb=document.getElementById('inv-hist-body');
-  if(!invs.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--muted)">Aucun mois saisi</td></tr>';return;}
-  const fT=calcTotal(sorted[0]);
-  let cumAp=0;
+  const tb=document.getElementById('ihtb');
+  if(!invs.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--mut)">Aucun mois saisi</td></tr>';return;}
+  const t0=calcTotal(sorted[0]); let cumAp=0;
   tb.innerHTML=invs.map(inv=>{
-    const total=calcTotal(inv);
-    const idx=sorted.indexOf(inv);
-    const prev=idx>0?sorted[idx-1]:null;
-    if(idx>0) cumAp+=calcApport(inv);
-    const prevT=prev?calcTotal(prev):null;
-    const retM=prevT?(total-prevT-calcApport(inv))/prevT:null;
-    const retT=(fT+cumAp)>0?(total-fT-cumAp)/(fT+cumAp):null;
-    const mc=v=>v>0?'var(--green)':v<0?'var(--red)':'';
-    return `<tr><td>${moLbl(inv.month)}</td><td>${fmtU(total)}</td><td style="color:${mc(retM)}">${fmtP(retM)}</td><td style="color:${mc(retT)}">${fmtP(retT)}</td></tr>`;
+    const total=calcTotal(inv),idx=sorted.indexOf(inv),prev=idx>0?sorted[idx-1]:null;
+    if(idx>0)cumAp+=calcAp(inv);
+    const pT=prev?calcTotal(prev):null,rm=pT?(total-pT-calcAp(inv))/pT:null,rt=(t0+cumAp)>0?(total-t0-cumAp)/(t0+cumAp):null;
+    const mc=v=>v>0?'var(--grn)':v<0?'var(--red)':'';
+    return `<tr><td>${moLbl(inv.month)}</td><td>${FU(total)}</td><td style="color:${mc(rm)}">${FP(rm)}</td><td style="color:${mc(rt)}">${FP(rt)}</td></tr>`;
   }).join('');
 }
 
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
 // SETTINGS
-// ═══════════════════════════════════════════════════════════
-function openSettings(){const s=DB.set;document.getElementById('s-qar').value=s.qar;document.getElementById('s-clp').value=s.clp;document.getElementById('s-eur').value=s.eur;document.getElementById('modal-settings').classList.add('open');}
-function closeSettings(){document.getElementById('modal-settings').classList.remove('open');}
-function saveSettings(){
-  DB.set={qar:parseFloat(document.getElementById('s-qar').value)||3.64,clp:parseFloat(document.getElementById('s-clp').value)||920,eur:parseFloat(document.getElementById('s-eur').value)||1.08};
-  closeSettings();showToast('✅ Taux mis à jour');renderDashboard();
+// ─────────────────────────────────────────────────────────
+function openSettings(){const s=DB.set;document.getElementById('sqar').value=s.qar;document.getElementById('sclp').value=s.clp;document.getElementById('seur').value=s.eur;openMo('set');}
+function saveSettings(){DB.set={qar:parseFloat(document.getElementById('sqar').value)||3.64,clp:parseFloat(document.getElementById('sclp').value)||920,eur:parseFloat(document.getElementById('seur').value)||1.08};closeMo('set');toast('✅ Taux mis à jour');renderDash();}
+function clearAll(){['ft_exp','ft_inv','ft_ast','ft_cats','ft_ok'].forEach(k=>localStorage.removeItem(k));closeMo('set');loadHist();buildCatSel();renderInvForm();renderDash();toast('🗑️ Données effacées');}
+
+// ─────────────────────────────────────────────────────────
+// BACKUP / RESTORE
+// ─────────────────────────────────────────────────────────
+function backupJSON(){
+  const data={version:2,exported:new Date().toISOString(),expenses:DB.exp,investments:DB.inv,assets:DB.assets,categories:DB.cats,settings:DB.set};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=`FinTrack_backup_${today()}.json`;a.click();URL.revokeObjectURL(url);
+  toast('✅ Sauvegarde téléchargée !');
 }
-function clearAll(){
-  ['ft_exp','ft_inv','ft_ast','ft_cats','ft_loaded'].forEach(k=>localStorage.removeItem(k));
-  closeSettings();loadHist();renderDashboard();showToast('🗑️ Données effacées');
+function restoreJSON(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(!data.expenses||!data.investments){toast('❌ Fichier invalide');return;}
+      if(!confirm(`Importer ${data.investments.length} mois + ${data.expenses.length} dépenses ?\n\nCela remplacera toutes les données actuelles.`))return;
+      DB.exp=data.expenses||[];DB.inv=data.investments||[];
+      if(data.assets)DB.assets=data.assets;if(data.categories)DB.cats=data.categories;if(data.settings)DB.set=data.settings;
+      localStorage.setItem('ft_ok','1');
+      closeMo('set');buildCatSel();buildAsel();buildMomPickers();renderInvForm();renderDash();
+      toast(`✅ ${data.investments.length} mois + ${data.expenses.length} dépenses importés !`);
+    }catch(err){toast('❌ Fichier JSON corrompu');}
+    input.value='';
+  };
+  reader.readAsText(file);
 }
 
-// ═══════════════════════════════════════════════════════════
-// CATEGORY MANAGER
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
+// EXPORT EXCEL
+// ─────────────────────────────────────────────────────────
+function exportExcel(){toast('⏳ Génération...');const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';sc.onload=doExport;sc.onerror=()=>toast('❌ Besoin internet');document.head.appendChild(sc);}
+function doExport(){
+  const WB=XLSX.utils.book_new(),s=DB.set;
+  const invs=[...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));
+  const exps=[...DB.exp].sort((a,b)=>a.date.localeCompare(b.date));
+  const ws1=XLSX.utils.aoa_to_sheet([['INVESTISSEMENTS'],[],['Date',...DB.assets.map(a=>a.label),'Ap.CLP','Ap.USD','Ap.EUR','Ap.Crypto','Total USD'],...invs.map(i=>[i.month+'-01',...DB.assets.map(a=>i[a.id]||0),i.ap_clp||0,i.ap_usd||0,i.ap_eur||0,i.ap_crypto||0,calcTotal(i)])]);
+  XLSX.utils.book_append_sheet(WB,ws1,'Inv - Saisie');
+  const ws2=XLSX.utils.aoa_to_sheet([['DEPENSES'],[],['Date','Type','Catégorie','QAR','USD'],...exps.map(e=>[e.date,e.type,e.categorie,e.montant_qar,+(e.montant_qar/s.qar).toFixed(2)])]);
+  XLSX.utils.book_append_sheet(WB,ws2,'Dep - Saisie');
+  const ws3=XLSX.utils.aoa_to_sheet([['Paramètre','Valeur'],['TC_QAR_USD',s.qar],['TC_USD_CLP',s.clp],['TC_EUR_USD',s.eur]]);
+  XLSX.utils.book_append_sheet(WB,ws3,'Parametres');
+  XLSX.writeFile(WB,`FinTrack_Export_${today()}.xlsx`);toast('✅ Export téléchargé !');
+}
+
+// ─────────────────────────────────────────────────────────
+// CAT MANAGER
+// ─────────────────────────────────────────────────────────
 const EMOJIS=['🍽️','🛒','📦','🚖','👩','🏥','🚗','🏠','🎉','🛍️','✂️','⛽','📱','🎁','💫','💊','🏋️','🎮','🎵','📚','☕','🍕','🍺','🐾','🧴','👔','🏦','💡','🛠️','✈️','🎓','🏖️','🎭','🍿','💻','🧹','🌿','🎨','🚿','💈'];
 let eCats=[], ePick=-1;
 
-function openCats(){eCats=DB.cats.map(c=>({...c}));renderCatList();document.getElementById('modal-cats').classList.add('open');}
-function closeCats(){document.getElementById('modal-cats').classList.remove('open');document.getElementById('epick-wrap').style.display='none';ePick=-1;}
-
+function openCats(){eCats=DB.cats.map(c=>({...c}));renderCatList();openMo('cats');}
 function renderCatList(){
-  document.getElementById('cat-list').innerHTML=eCats.map((c,i)=>`
-    <div class="mi" id="cr-${i}">
-      <div class="mtog" onclick="toggleEP(${i})" style="background:${c.color}22;border-color:${c.color}">${c.icon}</div>
-      <input class="mini" value="${c.name}" oninput="eCats[${i}].name=this.value" placeholder="Nom">
-      <button class="del-btn" onclick="delCat(${i})" style="border:1px solid var(--border);border-radius:8px;width:32px;height:32px">✕</button>
-    </div>`).join('');
+  document.getElementById('catlist').innerHTML=eCats.map((c,i)=>`<div class="mi" id="cr-${i}"><div class="mtog" onclick="togEP(${i})" style="background:${c.color}22;border-color:${c.color};font-size:20px;display:flex;align-items:center;justify-content:center">${c.icon}</div><input class="mni" value="${c.name}" oninput="eCats[${i}].name=this.value" placeholder="Nom"><button class="delbtn" onclick="delCat(${i})" style="border:1px solid var(--bdr);border-radius:8px;width:32px;height:32px">✕</button></div>`).join('');
 }
-
-function toggleEP(i){
-  const wrap=document.getElementById('epick-wrap');
-  if(ePick===i){wrap.style.display='none';ePick=-1;return;}
+function togEP(i){
+  const w=document.getElementById('epwrap');
+  if(ePick===i){w.style.display='none';ePick=-1;return;}
   ePick=i;
-  document.getElementById('epick').innerHTML=EMOJIS.map(e=>`<div class="eopt ${eCats[i].icon===e?'sel':''}" onclick="selEmoji('${e}')">${e}</div>`).join('');
-  const row=document.getElementById(`cr-${i}`);
-  row.insertAdjacentElement('afterend',wrap);
-  wrap.style.display='block';
-  setTimeout(()=>wrap.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+  document.getElementById('epick').innerHTML=EMOJIS.map(e=>`<div class="ep ${eCats[i].icon===e?'on':''}" onclick="selEmo('${e}')">${e}</div>`).join('');
+  const row=document.getElementById(`cr-${i}`);row.insertAdjacentElement('afterend',w);w.style.display='block';
+  setTimeout(()=>w.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
 }
+function selEmo(e){if(ePick<0)return;eCats[ePick].icon=e;renderCatList();const w=document.getElementById('epwrap'),r=document.getElementById(`cr-${ePick}`);r.insertAdjacentElement('afterend',w);w.style.display='block';}
+function delCat(i){if(eCats.length<=1){toast('❌ Minimum 1 catégorie');return;}eCats.splice(i,1);if(ePick===i){document.getElementById('epwrap').style.display='none';ePick=-1;}else if(ePick>i)ePick--;renderCatList();}
+function addCat(){eCats.push({name:'Nouvelle',icon:'💫',color:'#6b7280'});renderCatList();setTimeout(()=>{const ins=document.querySelectorAll('.mni');if(ins.length){const l=ins[ins.length-1];l.focus();l.select();l.scrollIntoView({behavior:'smooth',block:'nearest'});}},50);}
+function saveCats(){document.querySelectorAll('.mni').forEach((inp,i)=>{if(eCats[i])eCats[i].name=inp.value.trim()||eCats[i].name;});if(eCats.some(c=>!c.name.trim())){toast('❌ Nom vide');return;}DB.cats=eCats;closeMo('cats');buildCatSel();renderDash();toast('✅ Catégories sauvegardées !');}
 
-function selEmoji(e){if(ePick<0)return;eCats[ePick].icon=e;renderCatList();const w=document.getElementById('epick-wrap');const r=document.getElementById(`cr-${ePick}`);r.insertAdjacentElement('afterend',w);w.style.display='block';}
-function delCat(i){if(eCats.length<=1){showToast('❌ Minimum 1 catégorie');return;}eCats.splice(i,1);if(ePick===i){document.getElementById('epick-wrap').style.display='none';ePick=-1;}else if(ePick>i)ePick--;renderCatList();}
-function addCat(){eCats.push({name:'Nouvelle',icon:'💫',color:'#6b7280'});renderCatList();setTimeout(()=>{const ins=document.querySelectorAll('.mini');if(ins.length){const l=ins[ins.length-1];l.focus();l.select();l.scrollIntoView({behavior:'smooth',block:'nearest'});}},50);}
-function saveCats(){
-  document.querySelectorAll('.mini').forEach((inp,i)=>{if(eCats[i])eCats[i].name=inp.value.trim()||eCats[i].name;});
-  if(eCats.some(c=>!c.name.trim())){showToast('❌ Nom vide non autorisé');return;}
-  DB.cats=eCats;closeCats();renderCatSelect();renderDashboard();showToast('✅ Catégories sauvegardées !');
-}
-
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
 // ASSET MANAGER
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
 let eAssets=[];
-
-function openAssets(){eAssets=DB.assets.map(a=>({...a}));renderAssetList();document.getElementById('modal-assets').classList.add('open');}
-function closeAssets(){document.getElementById('modal-assets').classList.remove('open');}
-
-function renderAssetList(){
-  const GRP_L={CLP:'🏦 CLP',USD:'📈 USD',EUR:'🇫🇷 EUR',CRYPTO:'₿ Crypto'};
-  const groups={};
-  eAssets.forEach((a,i)=>{const g=a.cur;if(!groups[g])groups[g]=[];groups[g].push({...a,_i:i});});
+function openAssets(){eAssets=DB.assets.map(a=>({...a}));renderAstList();openMo('assets');}
+function renderAstList(){
+  const GL={CLP:'🏦 CLP',USD:'📈 USD',EUR:'🇫🇷 EUR',CRYPTO:'₿ Crypto'};
+  const groups={};eAssets.forEach((a,i)=>{if(!groups[a.cur])groups[a.cur]=[];groups[a.cur].push({...a,_i:i});});
   let h='';
-  for(const cur of ['CLP','USD','EUR','CRYPTO']){
-    if(!groups[cur]) continue;
-    h+=`<div class="mghdr">${GRP_L[cur]||cur}</div>`;
-    groups[cur].forEach(a=>{
-      h+=`<div class="mi ${a.arch?'arch':''}" id="ar-${a._i}">
-        <button class="mtog" onclick="togArch(${a._i})" style="${a.arch?'':'border-color:var(--green);color:var(--green)'}" title="${a.arch?'Réactiver':'Masquer'}">${a.arch?'👁':'✓'}</button>
-        <input class="mini" value="${a.label}" oninput="eAssets[${a._i}].label=this.value" placeholder="Nom">
-        <select class="mcur" onchange="eAssets[${a._i}].cur=this.value;eAssets[${a._i}].grp=grpOf(this.value)">
-          ${['CLP','USD','EUR','CRYPTO'].map(c=>`<option value="${c}" ${a.cur===c?'selected':''}>${c}</option>`).join('')}
-        </select>
-      </div>`;
-    });
+  for(const cur of ['CLP','USD','EUR','CRYPTO']){if(!groups[cur])continue;h+=`<div class="mgh">${GL[cur]||cur}</div>`;
+    groups[cur].forEach(a=>{h+=`<div class="mi ${a.arch?'arch':''}" id="ar-${a._i}"><button class="mtog" onclick="togArch(${a._i})" style="${a.arch?'':'border-color:var(--grn);color:var(--grn);font-size:14px'}" >${a.arch?'👁':'✓'}</button><input class="mni" value="${a.label}" oninput="eAssets[${a._i}].label=this.value" placeholder="Nom"><select class="mcs" onchange="eAssets[${a._i}].cur=this.value;eAssets[${a._i}].grp=grpOf(this.value)">${['CLP','USD','EUR','CRYPTO'].map(c=>`<option value="${c}" ${a.cur===c?'selected':''}>${c}</option>`).join('')}</select></div>`;});
   }
-  document.getElementById('asset-list').innerHTML=h;
+  document.getElementById('astlist').innerHTML=h;
 }
-
-function grpOf(cur){return{CLP:'CLP',USD:'USD',EUR:'EUR',CRYPTO:'Crypto'}[cur]||cur;}
-function togArch(i){eAssets[i].arch=!eAssets[i].arch;renderAssetList();}
-function addAsset(){eAssets.push({id:'a_'+Date.now(),label:'Nouvel actif',cur:'USD',grp:'USD',arch:false});renderAssetList();setTimeout(()=>{const ins=document.querySelectorAll('#asset-list .mini');if(ins.length){const l=ins[ins.length-1];l.focus();l.select();l.scrollIntoView({behavior:'smooth',block:'nearest'});}},50);}
+function grpOf(c){return{CLP:'CLP',USD:'USD',EUR:'EUR',CRYPTO:'Crypto'}[c]||c;}
+function togArch(i){eAssets[i].arch=!eAssets[i].arch;renderAstList();}
+function addAsset(){eAssets.push({id:'a_'+Date.now(),label:'Nouvel actif',cur:'USD',grp:'USD',arch:false});renderAstList();setTimeout(()=>{const ins=document.querySelectorAll('#astlist .mni');if(ins.length){const l=ins[ins.length-1];l.focus();l.select();l.scrollIntoView({behavior:'smooth',block:'nearest'});}},50);}
 function saveAssets(){
-  document.querySelectorAll('#asset-list .mini').forEach((inp,i)=>{const a=Object.values(eAssets)[i];if(a)a.label=inp.value.trim()||a.label;});
-  // Sync from DOM order
-  const rows=document.querySelectorAll('#asset-list .mi');
-  rows.forEach((row,i)=>{const id=row.id.replace('ar-','');if(eAssets[id])eAssets[id].label=row.querySelector('.mini').value.trim()||eAssets[id].label;});
-  if(eAssets.some(a=>!a.label.trim())){showToast('❌ Nom vide');return;}
-  DB.assets=eAssets;closeAssets();renderInvForm();renderDashboard();showToast('✅ Actifs sauvegardés !');
+  document.querySelectorAll('#astlist .mni').forEach((inp,i)=>{const id=document.querySelectorAll('#astlist .mi')[i]?.id.replace('ar-','');if(id!==undefined&&eAssets[id])eAssets[id].label=inp.value.trim()||eAssets[id].label;});
+  if(eAssets.some(a=>!a.label.trim())){toast('❌ Nom vide');return;}
+  DB.assets=eAssets;closeMo('assets');renderInvForm();buildAsel();renderDash();toast('✅ Actifs sauvegardés !');
 }
 
-// ═══════════════════════════════════════════════════════════
-// EXPORT EXCEL
-// ═══════════════════════════════════════════════════════════
-function exportExcel(){
-  showToast('⏳ Génération...');
-  const script=document.createElement('script');
-  script.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
-  script.onload=()=>doExport();
-  script.onerror=()=>showToast('❌ Erreur (besoin internet)');
-  document.head.appendChild(script);
-}
+// ─────────────────────────────────────────────────────────
+// MODALS & TOAST
+// ─────────────────────────────────────────────────────────
+function openMo(id){document.getElementById('mo-'+id).classList.add('on');}
+function closeMo(id){document.getElementById('mo-'+id).classList.remove('on');}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2500);}
 
-function doExport(){
-  const WB=XLSX.utils.book_new(), s=DB.set;
-  const invs=[...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));
-  const exps=[...DB.exp].sort((a,b)=>a.date.localeCompare(b.date));
-  // Inv sheet
-  const invH=[['SAISIE INVESTISSEMENTS'],[],['Date',...DB.assets.map(a=>a.label),'Apport CLP','Apport USD','Apport EUR','Apport Crypto','Total USD']];
-  const invR=invs.map(inv=>[inv.month+'-01',...DB.assets.map(a=>inv[a.id]||0),inv.ap_clp||0,inv.ap_usd||0,inv.ap_eur||0,inv.ap_crypto||0,calcTotal(inv)]);
-  const ws1=XLSX.utils.aoa_to_sheet([...invH,...invR]);
-  XLSX.utils.book_append_sheet(WB,ws1,'Inv - Saisie');
-  // Exp sheet
-  const expH=[['SAISIE DEPENSES'],[],['Date','Type','Catégorie','QAR','USD']];
-  const expR=exps.map(e=>[e.date,e.type,e.categorie,e.montant_qar,+(e.montant_qar/s.qar).toFixed(2)]);
-  const ws2=XLSX.utils.aoa_to_sheet([...expH,...expR]);
-  XLSX.utils.book_append_sheet(WB,ws2,'Dep - Saisie');
-  // Params
-  const ws3=XLSX.utils.aoa_to_sheet([['Paramètre','Valeur'],['TC_QAR_USD',s.qar],['TC_USD_CLP',s.clp],['TC_EUR_USD',s.eur]]);
-  XLSX.utils.book_append_sheet(WB,ws3,'Parametres');
-  XLSX.writeFile(WB,`FinTrack_Export_${today()}.xlsx`);
-  showToast('✅ Export téléchargé !');
-}
-
-
-// ═══════════════════════════════════════════════════════════
-// CHART — Évolution du portefeuille
-// ═══════════════════════════════════════════════════════════
-let chartRange = 6;
-let chartAsset = '__total__'; // '__total__' or asset id
-
-function setChartRange(n, btn) {
-  chartRange = n;
-  document.querySelectorAll('.ctab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderChart();
-}
-
-function buildAssetSelector() {
-  const sel = document.getElementById('asset-sel');
-  if (!sel) return;
-  const assets  = DB.assets.filter(a => !a.arch);
-  const options = [{id:'__total__', label:'📊 Total portefeuille'}, ...assets.map(a => ({id:a.id, label:a.label}))];
-  sel.innerHTML = options.map(o => `<option value="${o.id}" ${chartAsset===o.id?'selected':''}>${o.label}</option>`).join('');
-}
-
-function setChartAsset(id) {
-  chartAsset = id;
-  renderChart();
-}
-
-function buildMomPickers() {
-  // Build list of months from expenses data
-  const exps    = DB.exp;
-  const months  = [...new Set(exps.map(e => moOf(e.date)))].filter(Boolean).sort().reverse();
-  if (months.length === 0) return;
-
-  const prevSel = document.getElementById('mom-prev-sel');
-  const curSel  = document.getElementById('mom-cur-sel');
-  if (!prevSel || !curSel) return;
-
-  const opts = months.map(m => `<option value="${m}">${moLbl(m)}</option>`).join('');
-  prevSel.innerHTML = opts;
-  curSel.innerHTML  = opts;
-
-  // Default: prev = last month, cur = current month
-  const nowYM  = new Date().toISOString().slice(0,7);
-  const prevYM = new Date(new Date().getFullYear(), new Date().getMonth()-1, 1).toISOString().slice(0,7);
-  if (months.includes(prevYM)) prevSel.value = prevYM; else prevSel.value = months[1] || months[0];
-  if (months.includes(nowYM))  curSel.value  = nowYM;  else curSel.value  = months[0];
-}
-
-function renderChart() {
-  const canvas = document.getElementById('chart-portfolio');
-  if (!canvas) return;
-  const ctx    = canvas.getContext('2d');
-  const wrap   = document.getElementById('chart-wrap');
-
-  // Get data
-  const allInvs = [...DB.inv].sort((a,b) => a.month.localeCompare(b.month));
-  if (allInvs.length < 2) {
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    return;
-  }
-  const data = chartRange >= 999 ? allInvs : allInvs.slice(-chartRange);
-
-  // Determine what to plot
-  const totals = data.map(inv => {
-    let val;
-    if (chartAsset === '__total__') {
-      val = calcTotal(inv);
-    } else {
-      val = toUSD(chartAsset, inv[chartAsset] || 0);
-    }
-    return { month: inv.month, total: val };
-  });
-
-  // Y label formatter — use EUR for EUR assets, CLP for CLP, else USD
-  const asset = DB.assets.find(a => a.id === chartAsset);
-  const fmtY = (v) => {
-    if (chartAsset !== '__total__' && asset) {
-      if (asset.cur === 'CLP')   return (v/1000).toFixed(0)+'k CLP';
-      if (asset.cur === 'EUR')   return '€'+fmt(v);
-    }
-    return v >= 1000 ? '$'+(v/1000).toFixed(0)+'k' : '$'+Math.round(v);
-  };
-  const accentColor = chartAsset === '__total__' ? '#3b82f6'
-    : asset?.cur === 'EUR' ? '#06b6d4'
-    : asset?.cur === 'CLP' ? '#10b981'
-    : asset?.cur === 'CRYPTO' ? '#8b5cf6'
-    : '#3b82f6';
-
-  // Canvas sizing
-  const dpr  = window.devicePixelRatio || 1;
-  const W    = wrap.clientWidth || 340;
-  const H    = 180;
-  canvas.width  = W * dpr;
-  canvas.height = H * dpr;
-  canvas.style.width  = W + 'px';
-  canvas.style.height = H + 'px';
-  ctx.scale(dpr, dpr);
-
-  const PAD = { top: 20, right: 16, bottom: 36, left: 52 };
-  const cW   = W - PAD.left - PAD.right;
-  const cH   = H - PAD.top  - PAD.bottom;
-  const n    = totals.length;
-
-  const minV = Math.min(...totals.map(d => d.total));
-  const maxV = Math.max(...totals.map(d => d.total));
-  const range = maxV - minV || 1;
-
-  // Helpers
-  const xPos = i => PAD.left + (i / (n - 1)) * cW;
-  const yPos = v => PAD.top  + (1 - (v - minV) / range) * cH;
-
-  ctx.clearRect(0, 0, W, H);
-
-  // Y grid lines + labels
-  ctx.font = '9px "DM Mono", monospace';
-  ctx.fillStyle = '#5a6a82';
-  ctx.textAlign = 'right';
-  const yTicks = 4;
-  for (let i = 0; i <= yTicks; i++) {
-    const v = minV + (range * i / yTicks);
-    const y = yPos(v);
-    ctx.strokeStyle = 'rgba(30,45,69,0.8)';
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(PAD.left, y);
-    ctx.lineTo(PAD.left + cW, y);
-    ctx.stroke();
-    // Label
-    ctx.fillText(fmtY(v), PAD.left - 4, y + 3);
-  }
-
-  // Area fill
-  const grad = ctx.createLinearGradient(0, PAD.top, 0, PAD.top + cH);
-  const r=parseInt(accentColor.slice(1,3),16),g2=parseInt(accentColor.slice(3,5),16),b2=parseInt(accentColor.slice(5,7),16);
-  grad.addColorStop(0,   `rgba(${r},${g2},${b2},0.35)`);
-  grad.addColorStop(0.6, `rgba(${r},${g2},${b2},0.08)`);
-  grad.addColorStop(1,   `rgba(${r},${g2},${b2},0)`);
-  ctx.beginPath();
-  totals.forEach((d, i) => {
-    const x = xPos(i), y = yPos(d.total);
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.lineTo(xPos(n-1), PAD.top + cH);
-  ctx.lineTo(xPos(0),   PAD.top + cH);
-  ctx.closePath();
-  ctx.fillStyle = grad;
-  ctx.fill();
-
-  // Line
-  ctx.beginPath();
-  totals.forEach((d, i) => {
-    const x = xPos(i), y = yPos(d.total);
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-  });
-  ctx.strokeStyle = accentColor;
-  ctx.lineWidth   = 2.5;
-  ctx.lineJoin    = 'round';
-  ctx.stroke();
-
-  // Dots (only last and highlighted)
-  totals.forEach((d, i) => {
-    if (i === n-1 || i === 0) {
-      const x = xPos(i), y = yPos(d.total);
-      ctx.beginPath();
-      ctx.arc(x, y, 4, 0, Math.PI*2);
-      ctx.fillStyle   = accentColor;
-      ctx.fill();
-      ctx.strokeStyle = '#0A0E1A';
-      ctx.lineWidth   = 2;
-      ctx.stroke();
-    }
-  });
-
-  // X axis labels (show ~5 evenly spaced)
-  ctx.fillStyle   = '#5a6a82';
-  ctx.textAlign   = 'center';
-  ctx.font        = '9px "DM Mono", monospace';
-  const step = Math.max(1, Math.floor(n / 5));
-  for (let i = 0; i < n; i += step) {
-    const [y,m] = totals[i].month.split('-');
-    const lbl   = new Date(y,m-1).toLocaleDateString('fr-FR',{month:'short',year:'2-digit'});
-    ctx.fillText(lbl, xPos(i), H - 6);
-  }
-  // Always show last label
-  const [ly,lm] = totals[n-1].month.split('-');
-  const lastLbl = new Date(ly,lm-1).toLocaleDateString('fr-FR',{month:'short',year:'2-digit'});
-  ctx.fillText(lastLbl, xPos(n-1), H - 6);
-
-  // Tooltip on touch/hover
-  canvas._totals = totals;
-  canvas._xPos   = xPos;
-  canvas._yPos   = yPos;
-  canvas._PAD    = PAD;
-  canvas._W      = W;
-  canvas._n      = n;
-}
-
-function handleChartTouch(e) {
-  const canvas  = document.getElementById('chart-portfolio');
-  if (!canvas._totals) return;
-  const rect    = canvas.getBoundingClientRect();
-  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-  const relX    = clientX - rect.left;
-
-  const totals  = canvas._totals;
-  const n       = canvas._n;
-  const PAD     = canvas._PAD;
-  const cW      = canvas._W - PAD.left - PAD.right;
-
-  // Find nearest point
-  let best = 0, bestDist = 9999;
-  totals.forEach((d, i) => {
-    const x = PAD.left + (i / (n-1)) * cW;
-    const dist = Math.abs(relX - x);
-    if (dist < bestDist) { bestDist = dist; best = i; }
-  });
-
-  const d   = totals[best];
-  const tip = document.getElementById('chart-tooltip');
-  const x   = canvas._xPos(best);
-  const y   = canvas._yPos(d.total);
-
-  tip.innerHTML = `<b style="color:${accentColor}">${moLbl(d.month)}</b><br>${fmtY(d.total)}`;
-  tip.style.display = 'block';
-  const tipW = 110;
-  const left = Math.min(x - tipW/2, canvas._W - tipW - 4);
-  tip.style.left = Math.max(4, left) + 'px';
-  tip.style.top  = Math.max(4, y - 60) + 'px';
-
-  // Highlight dot on canvas
-  renderChart();
-  const ctx = canvas.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(x, y, 6, 0, Math.PI*2);
-  ctx.fillStyle   = accentColor;
-  ctx.fill();
-  ctx.strokeStyle = '#0A0E1A';
-  ctx.lineWidth   = 2;
-  ctx.stroke();
-  ctx.restore();
-}
-
-function hideTooltip() {
-  const tip = document.getElementById('chart-tooltip');
-  if (tip) tip.style.display = 'none';
-  renderChart();
-}
-
-// ═══════════════════════════════════════════════════════════
-// MOM — Comparaison mois sur mois dépenses
-// ═══════════════════════════════════════════════════════════
-function renderMoM() {
-  const el = document.getElementById('mom-card');
-  if (!el) return;
-  const el2   = document.getElementById('mom-card');
-  const exps  = DB.exp;
-  // Read from selectors if present, else use defaults
-  const prevSel = document.getElementById('mom-prev-sel');
-  const curSel  = document.getElementById('mom-cur-sel');
-  const now     = new Date();
-  const prevYM  = prevSel?.value || new Date(now.getFullYear(), now.getMonth()-1, 1).toISOString().slice(0,7);
-  const curYM   = curSel?.value  || now.toISOString().slice(0,7);
-
-  const cats   = DB.cats.map(c => c.name);
-  const sum    = (ym, type, cat) => exps.filter(e =>
-    moOf(e.date)===ym && e.type===type && (!cat || e.categorie===cat)
-  ).reduce((s,e)=>s+e.montant_qar, 0);
-
-  const depC = sum(curYM,'Depense'), depP = sum(prevYM,'Depense');
-  const salC = sum(curYM,'Salaire'), salP = sum(prevYM,'Salaire');
-  const activeCats = cats.filter(c => sum(curYM,'Depense',c)>0 || sum(prevYM,'Depense',c)>0);
-  const maxVal = Math.max(depC, depP, ...activeCats.flatMap(c=>[sum(curYM,'Depense',c),sum(prevYM,'Depense',c)]), 1);
-
-  const chip = (cur, prev, invert=false) => {
-    if (!prev && !cur) return '<span class="mom-delta neu">—</span>';
-    if (!prev)         return '<span class="mom-delta pos">+</span>';
-    const pct = (cur - prev) / prev * 100;
-    const good = invert ? pct < 0 : pct > 0;
-    const cls  = pct === 0 ? 'neu' : good ? 'pos' : 'neg';
-    return `<span class="mom-delta ${cls}">${pct>=0?'+':''}${pct.toFixed(0)}%</span>`;
-  };
-
-  const fmtQ = v => v ? fmt(v) : '—';
-
-  const bar = (cur, prev) => {
-    const pct = (cur/maxVal*100).toFixed(1);
-    const col = !prev ? 'var(--accent)' : cur<=prev ? 'var(--green)' : 'var(--red)';
-    return `<div class="mom-bar-wrap"><div class="mom-bar" style="width:${pct}%;background:${col}"></div></div>`;
-  };
-
-  // Grid layout — 4 cols: label | prev | cur | delta
-  let g = `<div class="mom-grid">
-    <div class="mom-hdr">Catégorie</div>
-    <div class="mom-hdr">${moLbl(prevYM)}</div>
-    <div class="mom-hdr">${moLbl(curYM)}</div>
-    <div class="mom-hdr">Δ</div>`;
-
-  // Salaire
-  g += `<div class="mom-row">
-    <div class="mcell mcell-lbl">💰 <b>Salaire</b></div>
-    <div class="mcell mcell-num" style="color:var(--muted)">${fmtQ(salP)}</div>
-    <div class="mcell mcell-num" style="color:var(--green)">${fmtQ(salC)}</div>
-    <div class="mcell mcell-delta">${chip(salC,salP,false)}</div>
-  </div>`;
-
-  // Categories
-  activeCats.forEach(cat => {
-    const c=sum(curYM,'Depense',cat), p=sum(prevYM,'Depense',cat);
-    g += `<div class="mom-row">
-      <div class="mcell mcell-lbl">
-        <div>${bar(c,p)}</div>
-        <span>${catIcon(cat)} ${cat}</span>
-      </div>
-      <div class="mcell mcell-num" style="color:var(--muted)">${fmtQ(p)}</div>
-      <div class="mcell mcell-num">${fmtQ(c)}</div>
-      <div class="mcell mcell-delta">${chip(c,p,true)}</div>
-    </div>`;
-  });
-
-  // Separator
-  g += `<hr class="mom-sep">`;
-
-  // Total dépenses
-  g += `<div class="mom-row">
-    <div class="mcell mcell-lbl" style="font-weight:700;color:var(--text)">💸 Total dép.</div>
-    <div class="mcell mcell-num" style="color:var(--muted);font-weight:700">${fmtQ(depP)}</div>
-    <div class="mcell mcell-num" style="color:var(--red);font-weight:700">${fmtQ(depC)}</div>
-    <div class="mcell mcell-delta">${chip(depC,depP,true)}</div>
-  </div>`;
-
-  // Disponible
-  const disC=salC-depC, disP=salP-depP;
-  g += `<div class="mom-row">
-    <div class="mcell mcell-lbl" style="font-weight:700;color:var(--text)">✨ Disponible</div>
-    <div class="mcell mcell-num" style="color:var(--muted);font-weight:700">${salP||depP?fmtQ(disP):'—'}</div>
-    <div class="mcell mcell-num" style="color:var(--amber);font-weight:700">${salC||depC?fmtQ(disC):'—'}</div>
-    <div class="mcell mcell-delta">${salC||depC?chip(disC,disP,false):'—'}</div>
-  </div>`;
-
-  g += '</div>';
-
-  // Note: values in QAR
-  g += `<div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:10px;text-align:right">Valeurs en QAR</div>`;
-
-  el.innerHTML = g;
-}
-
-// ═══════════════════════════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════════════════════════
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
-
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
 // INIT
-// ═══════════════════════════════════════════════════════════
+// ─────────────────────────────────────────────────────────
 // Close modals on outside click
-['modal-settings','modal-cats','modal-assets'].forEach(id=>{
-  document.getElementById(id).addEventListener('click',e=>{if(e.target===document.getElementById(id)) document.getElementById(id).classList.remove('open');});
-});
-
-document.getElementById('dep-date').value=today();
-document.getElementById('inv-month').value=today().slice(0,7);
-setDepType('Depense');
-renderCatSelect();
-
-loadHist();
-renderInvForm();
-renderDashboard();
+['mo-set','mo-cats','mo-assets'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target===document.getElementById(id))closeMo(id.replace('mo-',''));});});
 
 // Chart interactions
-const chartCanvas = document.getElementById('chart-portfolio');
-if (chartCanvas) {
-  chartCanvas.addEventListener('touchstart', handleChartTouch, {passive:true});
-  chartCanvas.addEventListener('touchmove',  handleChartTouch, {passive:true});
-  chartCanvas.addEventListener('touchend',   hideTooltip);
-  chartCanvas.addEventListener('mousemove',  handleChartTouch);
-  chartCanvas.addEventListener('mouseleave', hideTooltip);
-}
-// Re-render chart on resize
-window.addEventListener('resize', ()=>{ if(curScreen==='dashboard') renderChart(); });
+const ccvs=document.getElementById('ccvs');
+if(ccvs){ccvs.addEventListener('touchstart',onChartTouch,{passive:true});ccvs.addEventListener('touchmove',onChartTouch,{passive:true});ccvs.addEventListener('touchend',hideCtip);ccvs.addEventListener('mousemove',onChartTouch);ccvs.addEventListener('mouseleave',hideCtip);}
+window.addEventListener('resize',()=>{if(curSc==='dash')renderChart();});
+
+document.getElementById('ddate').value=today();
+document.getElementById('imon').value=today().slice(0,7);
+setDT('Depense');
+loadHist();
+buildCatSel();
+renderInvForm();
+renderDash();
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
