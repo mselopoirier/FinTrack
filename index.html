@@ -169,6 +169,22 @@ body{display:flex;flex-direction:column}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .empty{text-align:center;padding:40px 20px;color:var(--mut)}
 .empty-icon{font-size:40px;margin-bottom:12px}
+
+/* collapsible alloc */
+.cls-hdr{display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:10px 0;border-bottom:1px solid var(--bdr);user-select:none}
+.cls-hdr:first-child{padding-top:0}
+.cls-title{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px}
+.cls-pct{font-family:'DM Mono',monospace;font-size:12px;color:var(--mut)}
+.cls-arrow{font-size:12px;transition:transform .2s;color:var(--mut)}
+.cls-arrow.open{transform:rotate(90deg)}
+.cls-body{overflow:hidden;transition:max-height .3s ease}
+.grp-hdr{display:flex;align-items:center;justify-content:space-between;padding:6px 0 4px 16px;margin-top:4px}
+.grp-title{font-size:11px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px}
+.grp-pct{font-family:'DM Mono',monospace;font-size:11px;color:var(--mut)}
+.ast-row{display:flex;align-items:center;gap:8px;padding:5px 0 5px 24px;border-bottom:1px solid #0d1525}
+.ast-row:last-child{border-bottom:none}
+.cls-mini-bar{height:4px;border-radius:2px;margin-top:4px}
+
 .grn{color:var(--grn)}.red{color:var(--red)}.blu{color:var(--acc)}.amb{color:var(--amb)}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px}
 </style>
@@ -348,7 +364,7 @@ body{display:flex;flex-direction:column}
       <div class="mt" style="margin-bottom:0">📊 Actifs</div>
       <button class="btn bp" style="width:auto;padding:8px 16px;font-size:13px" onclick="addAsset()">+ Ajouter</button>
     </div>
-    <div style="font-size:11px;color:var(--mut);margin-bottom:14px;font-family:'DM Mono',monospace">✓ actif · 👁 archivé (masqué, historique conservé)</div>
+    <div style="font-size:11px;color:var(--mut);margin-bottom:14px;font-family:'DM Mono',monospace">✓ actif · 👁 archivé (masqué, historique conservé)<br>Chaque actif a : nom · groupe · devise · classe</div>
     <div id="astlist"></div>
     <div style="height:12px"></div>
     <button class="btn bp" onclick="saveAssets()">✅ Sauvegarder</button>
@@ -369,21 +385,29 @@ const HIST_EXP = [{"id":"hist_5","date":"2026-02-01","type":"Depense","categorie
 // ─────────────────────────────────────────────────────────
 // DEFAULTS
 // ─────────────────────────────────────────────────────────
+// Asset classes (user-editable)
+const DEF_CLASSES = [
+  {id:'liquidites', label:'Liquidités',     icon:'🏦'},
+  {id:'actions',    label:'Actions & Fonds',icon:'📈'},
+  {id:'crypto',     label:'Crypto',         icon:'₿'},
+];
+
+// cls = class id, grp = sub-group label within class
 const DEF_ASSETS = [
-  {id:'santander',label:'Santander MP',   cur:'CLP',    grp:'CLP',   arch:false},
-  {id:'mm_dollar',label:'MM Dollar',      cur:'USD',    grp:'USD',   arch:false},
-  {id:'etf_usd',  label:'ETF S&P500 USD', cur:'USD',    grp:'USD',   arch:false},
-  {id:'apple',    label:'Apple',          cur:'USD',    grp:'USD',   arch:false},
-  {id:'msft',     label:'Microsoft',      cur:'USD',    grp:'USD',   arch:false},
-  {id:'nvidia',   label:'Nvidia',         cur:'USD',    grp:'USD',   arch:false},
-  {id:'amazon',   label:'Amazon',         cur:'USD',    grp:'USD',   arch:false},
-  {id:'alphabet', label:'Alphabet',       cur:'USD',    grp:'USD',   arch:false},
-  {id:'tesla',    label:'Tesla',          cur:'USD',    grp:'USD',   arch:false},
-  {id:'livret_a', label:'Livret A',       cur:'EUR',    grp:'EUR',   arch:false},
-  {id:'etf_eur',  label:'ETF S&P500 EUR', cur:'EUR',    grp:'EUR',   arch:false},
-  {id:'cash_eur', label:'Cash EUR',       cur:'EUR',    grp:'EUR',   arch:false},
-  {id:'btc',      label:'BTC',            cur:'CRYPTO', grp:'Crypto',arch:false},
-  {id:'eth',      label:'ETH',            cur:'CRYPTO', grp:'Crypto',arch:false},
+  {id:'santander',label:'Santander MP',   cur:'CLP',    grp:'Fonds CLP',    cls:'liquidites', arch:false},
+  {id:'mm_dollar',label:'MM Dollar',      cur:'USD',    grp:'Fonds USD',    cls:'actions',    arch:false},
+  {id:'etf_usd',  label:'ETF S&P500 USD', cur:'USD',    grp:'ETF',          cls:'actions',    arch:false},
+  {id:'apple',    label:'Apple',          cur:'USD',    grp:'Actions US',   cls:'actions',    arch:false},
+  {id:'msft',     label:'Microsoft',      cur:'USD',    grp:'Actions US',   cls:'actions',    arch:false},
+  {id:'nvidia',   label:'Nvidia',         cur:'USD',    grp:'Actions US',   cls:'actions',    arch:false},
+  {id:'amazon',   label:'Amazon',         cur:'USD',    grp:'Actions US',   cls:'actions',    arch:false},
+  {id:'alphabet', label:'Alphabet',       cur:'USD',    grp:'Actions US',   cls:'actions',    arch:false},
+  {id:'tesla',    label:'Tesla',          cur:'USD',    grp:'Actions US',   cls:'actions',    arch:false},
+  {id:'livret_a', label:'Livret A',       cur:'EUR',    grp:'Épargne EUR',  cls:'liquidites', arch:false},
+  {id:'etf_eur',  label:'ETF S&P500 EUR', cur:'EUR',    grp:'ETF',          cls:'actions',    arch:false},
+  {id:'cash_eur', label:'Cash EUR',       cur:'EUR',    grp:'Cash EUR',     cls:'liquidites', arch:false},
+  {id:'btc',      label:'BTC',            cur:'CRYPTO', grp:'Crypto',       cls:'crypto',     arch:false},
+  {id:'eth',      label:'ETH',            cur:'CRYPTO', grp:'Crypto',       cls:'crypto',     arch:false},
 ];
 const DEF_CATS = [
   {name:'Alimentation',icon:'🍽️',color:'#3b82f6'},{name:'Supermarché',icon:'🛒',color:'#06b6d4'},
@@ -407,6 +431,7 @@ const DB = {
   get set()    { return this.g('ft_set')    || {qar:3.64,clp:920,eur:1.08} }, set set(v) { this.s('ft_set',v) },
   get assets() { return this.g('ft_ast')    || DEF_ASSETS }, set assets(v) { this.s('ft_ast',v) },
   get cats()   { return this.g('ft_cats')   || DEF_CATS },   set cats(v)   { this.s('ft_cats',v) },
+  get classes(){ return this.g('ft_cls')    || DEF_CLASSES }, set classes(v){ this.s('ft_cls',v) },
   get loaded() { return localStorage.getItem('ft_ok')==='1' }, set loaded(v) { localStorage.setItem('ft_ok',v?'1':'0') },
 };
 
@@ -587,18 +612,108 @@ function renderSR() {
 // ─────────────────────────────────────────────────────────
 // ALLOC
 // ─────────────────────────────────────────────────────────
+// Class colors
+const CLS_COLORS = {liquidites:'#06b6d4', actions:'#3b82f6', crypto:'#8b5cf6'};
+// Asset colors within a class
+const AST_COLORS = ['#3b82f6','#2563eb','#1d4ed8','#22c55e','#16a34a','#15803d','#f97316','#ea580c','#06b6d4','#0891b2','#8b5cf6','#7c3aed','#ec4899','#f59e0b','#84cc16'];
+
 function renderAlloc(total, last) {
   const el=document.getElementById('ialc'); if(!el||!total) return;
-  const AC=['#3b82f6','#22c55e','#10b981','#f97316','#06b6d4','#84cc16','#f59e0b','#ec4899','#ef4444','#0891b2','#22d3ee','#8b5cf6','#a855f7','#14b8a6'];
-  const GC={CLP:'#3b82f6',USD:'#10b981',EUR:'#06b6d4',Crypto:'#8b5cf6'};
-  const grps={};
-  DB.assets.forEach(a=>{if(!grps[a.grp])grps[a.grp]=0;grps[a.grp]+=toUSD(a.id,last[a.id]||0);});
-  const classes=Object.entries(grps).filter(([,v])=>v>0).map(([g,v])=>({label:g,color:GC[g]||'#6b7280',value:v}));
-  const bar=classes.map(c=>`<div class="aseg" style="width:${(c.value/total*100).toFixed(1)}%;background:${c.color};flex-shrink:0"></div>`).join('');
-  const leg=classes.map(c=>`<div class="ai"><span class="adot" style="background:${c.color}"></span>${c.label} <b style="color:var(--text);margin-left:4px">${(c.value/total*100).toFixed(1)}%</b></div>`).join('');
-  const rows=DB.assets.map((a,i)=>({label:a.label,color:AC[i%AC.length],value:toUSD(a.id,last[a.id]||0)})).filter(a=>a.value>0).sort((a,b)=>b.value-a.value)
-    .map(a=>{const p=(a.value/total*100).toFixed(1);return`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #0d1525"><div style="width:6px;height:6px;border-radius:50%;background:${a.color};flex-shrink:0"></div><span style="flex:1;font-size:12px;color:var(--mut)">${a.label}</span><div style="width:80px;height:4px;background:var(--bdr);border-radius:2px;overflow:hidden"><div style="height:100%;width:${p}%;background:${a.color}"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;width:40px;text-align:right">${p}%</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--mut);width:68px;text-align:right">${FU(a.value)}</span></div>`;}).join('');
-  document.getElementById('ialc').innerHTML=`<div class="abar">${bar}</div><div class="aleg">${leg}</div><div style="margin-top:12px;border-top:1px solid var(--bdr);padding-top:10px">${rows}</div>`;
+  const classes = DB.classes;
+
+  // Compute value per class, per group, per asset
+  const clsData = {};
+  classes.forEach(cls => { clsData[cls.id] = {cls, total:0, groups:{}}; });
+
+  let colorIdx = 0;
+  DB.assets.forEach(a => {
+    const v = toUSD(a.id, last[a.id]||0);
+    if (!v || a.arch) return;
+    const clsId = a.cls || 'actions';
+    if (!clsData[clsId]) clsData[clsId] = {cls:{id:clsId,label:clsId,icon:'•'}, total:0, groups:{}};
+    clsData[clsId].total += v;
+    if (!clsData[clsId].groups[a.grp]) clsData[clsId].groups[a.grp] = {total:0, assets:[]};
+    clsData[clsId].groups[a.grp].total += v;
+    clsData[clsId].groups[a.grp].assets.push({...a, value:v, color: AST_COLORS[colorIdx++ % AST_COLORS.length]});
+  });
+
+  // Top bar (by class)
+  const topBar = classes.filter(c=>clsData[c.id]?.total>0).map(c => {
+    const pct = (clsData[c.id].total/total*100).toFixed(1);
+    return `<div class="aseg" style="width:${pct}%;background:${CLS_COLORS[c.id]||'#6b7280'};flex-shrink:0" title="${c.label}: ${pct}%"></div>`;
+  }).join('');
+
+  // Top legend
+  const topLeg = classes.filter(c=>clsData[c.id]?.total>0).map(c => {
+    const pct=(clsData[c.id].total/total*100).toFixed(1);
+    return `<div class="ai"><span class="adot" style="background:${CLS_COLORS[c.id]||'#6b7280'}"></span>${c.icon} ${c.label} <b style="color:var(--text);margin-left:4px">${pct}%</b></div>`;
+  }).join('');
+
+  // Collapsible sections per class
+  const sections = classes.filter(c=>clsData[c.id]?.total>0).map((cls, ci) => {
+    const cd = clsData[cls.id];
+    const clsPct = (cd.total/total*100).toFixed(1);
+    const clsColor = CLS_COLORS[cls.id]||'#6b7280';
+    const isOpen = ci === 0; // first open by default
+
+    // Groups within class
+    const grpRows = Object.entries(cd.groups).map(([grpName, gd]) => {
+      const gPct = (gd.total/cd.total*100).toFixed(1);
+      const astRows = gd.assets.sort((a,b)=>b.value-a.value).map(a => {
+        const p=(a.value/total*100).toFixed(1);
+        return `<div class="ast-row">
+          <div style="width:6px;height:6px;border-radius:50%;background:${a.color};flex-shrink:0"></div>
+          <span style="flex:1;font-size:12px;color:var(--mut)">${a.label}</span>
+          <div style="width:60px;height:3px;background:var(--bdr);border-radius:2px;overflow:hidden;flex-shrink:0">
+            <div style="height:100%;width:${p}%;background:${a.color}"></div>
+          </div>
+          <span style="font-family:'DM Mono',monospace;font-size:11px;width:36px;text-align:right">${p}%</span>
+          <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--mut);width:62px;text-align:right">${FU(a.value)}</span>
+        </div>`;
+      }).join('');
+
+      return `<div style="margin-bottom:6px">
+        <div class="grp-hdr">
+          <span class="grp-title">${grpName}</span>
+          <span class="grp-pct">${FU(gd.total)} · ${gPct}%</span>
+        </div>
+        ${astRows}
+      </div>`;
+    }).join('');
+
+    return `<div style="border-bottom:1px solid var(--bdr)">
+      <div class="cls-hdr" onclick="togCls(this)">
+        <div class="cls-title">
+          <div style="width:10px;height:10px;border-radius:3px;background:${clsColor};flex-shrink:0"></div>
+          ${cls.icon} ${cls.label}
+          <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--mut)">${FU(cd.total)}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="cls-pct">${clsPct}%</span>
+          <span class="cls-arrow ${isOpen?'open':''}">▶</span>
+        </div>
+      </div>
+      <div class="cls-body" style="max-height:${isOpen?'2000px':'0px'}">
+        <div style="padding:4px 0 10px">
+          <div style="height:3px;border-radius:2px;background:${clsColor};margin-bottom:10px;width:${clsPct}%"></div>
+          ${grpRows}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML = `
+    <div class="abar" style="margin-bottom:6px">${topBar}</div>
+    <div class="aleg" style="margin-bottom:14px">${topLeg}</div>
+    ${sections}`;
+}
+
+function togCls(hdr) {
+  const body = hdr.nextElementSibling;
+  const arrow = hdr.querySelector('.cls-arrow');
+  const isOpen = arrow.classList.contains('open');
+  body.style.maxHeight = isOpen ? '0px' : '2000px';
+  arrow.classList.toggle('open', !isOpen);
 }
 
 // ─────────────────────────────────────────────────────────
@@ -799,13 +914,29 @@ function cCls(c){return c==='EUR'?'eur':c==='CRYPTO'?'cry':'';}
 function cIco(c){return c==='EUR'?'🇫🇷':c==='CRYPTO'?'₿':c==='CLP'?'🏦':'📈';}
 
 function renderInvForm(pre) {
-  const active=DB.assets.filter(a=>!a.arch), groups={};
-  active.forEach(a=>{if(!groups[a.grp])groups[a.grp]=[];groups[a.grp].push(a);});
+  const active=DB.assets.filter(a=>!a.arch);
+  // Group by class → group
+  const clsList = DB.classes;
+  const byClass = {};
+  active.forEach(a=>{
+    const clsId = a.cls||'actions';
+    if(!byClass[clsId]) byClass[clsId]={label:'',items:{}};
+    const cls = clsList.find(c=>c.id===clsId);
+    byClass[clsId].label = cls ? cls.icon+' '+cls.label : clsId;
+    if(!byClass[clsId].items[a.grp]) byClass[clsId].items[a.grp]=[];
+    byClass[clsId].items[a.grp].push(a);
+  });
   let h='';
-  for(const[g,items] of Object.entries(groups)){
-    h+=`<div class="isec">${cIco(items[0].cur)} ${g}</div>`;
-    items.forEach(a=>{const v=pre&&pre[a.id]?pre[a.id]:'';h+=`<div class="irow"><span class="ilbl">${a.label}</span><input class="iinp ${cCls(a.cur)}" id="f-${a.id}" placeholder="0" inputmode="decimal" value="${v}" oninput="updPrev()"></div>`;});
-  }
+  // Render in class order
+  clsList.forEach(cls=>{
+    if(!byClass[cls.id]) return;
+    const {label,items}=byClass[cls.id];
+    h+=`<div style="font-size:11px;font-weight:700;color:var(--text);text-transform:uppercase;letter-spacing:.8px;margin:14px 0 6px;padding-bottom:6px;border-bottom:2px solid ${CLS_COLORS[cls.id]||'var(--bdr)'}">${label}</div>`;
+    Object.entries(items).forEach(([grp,assets])=>{
+      if(Object.keys(items).length>1) h+=`<div class="isec">${grp}</div>`;
+      assets.forEach(a=>{const v=pre&&pre[a.id]?pre[a.id]:'';h+=`<div class="irow"><span class="ilbl">${a.label}</span><input class="iinp ${cCls(a.cur)}" id="f-${a.id}" placeholder="0" inputmode="decimal" value="${v}" oninput="updPrev()"></div>`;});
+    });
+  });
   const curs=[...new Set(active.map(a=>a.cur))];
   h+=`<div class="isec" style="color:var(--amb)">+ Apports du mois</div>`;
   [{c:'CLP',id:'ap_clp',l:'Apport CLP'},{c:'USD',id:'ap_usd',l:'Apport USD'},{c:'EUR',id:'ap_eur',l:'Apport EUR'},{c:'CRYPTO',id:'ap_crypto',l:'Apport Crypto'}]
@@ -852,7 +983,7 @@ function clearAll(){['ft_exp','ft_inv','ft_ast','ft_cats','ft_ok'].forEach(k=>lo
 // BACKUP / RESTORE
 // ─────────────────────────────────────────────────────────
 function backupJSON(){
-  const data={version:2,exported:new Date().toISOString(),expenses:DB.exp,investments:DB.inv,assets:DB.assets,categories:DB.cats,settings:DB.set};
+  const data={version:2,exported:new Date().toISOString(),expenses:DB.exp,investments:DB.inv,assets:DB.assets,categories:DB.cats,settings:DB.set,classes:DB.classes};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob),a=document.createElement('a');
   a.href=url;a.download=`FinTrack_backup_${today()}.json`;a.click();URL.revokeObjectURL(url);
@@ -867,7 +998,7 @@ function restoreJSON(input){
       if(!data.expenses||!data.investments){toast('❌ Fichier invalide');return;}
       if(!confirm(`Importer ${data.investments.length} mois + ${data.expenses.length} dépenses ?\n\nCela remplacera toutes les données actuelles.`))return;
       DB.exp=data.expenses||[];DB.inv=data.investments||[];
-      if(data.assets)DB.assets=data.assets;if(data.categories)DB.cats=data.categories;if(data.settings)DB.set=data.settings;
+      if(data.assets)DB.assets=data.assets;if(data.categories)DB.cats=data.categories;if(data.settings)DB.set=data.settings;if(data.classes)DB.classes=data.classes;
       localStorage.setItem('ft_ok','1');
       closeMo('set');buildCatSel();buildAsel();buildMomPickers();renderInvForm();renderDash();
       toast(`✅ ${data.investments.length} mois + ${data.expenses.length} dépenses importés !`);
@@ -923,17 +1054,45 @@ function saveCats(){document.querySelectorAll('.mni').forEach((inp,i)=>{if(eCats
 let eAssets=[];
 function openAssets(){eAssets=DB.assets.map(a=>({...a}));renderAstList();openMo('assets');}
 function renderAstList(){
-  const GL={CLP:'🏦 CLP',USD:'📈 USD',EUR:'🇫🇷 EUR',CRYPTO:'₿ Crypto'};
-  const groups={};eAssets.forEach((a,i)=>{if(!groups[a.cur])groups[a.cur]=[];groups[a.cur].push({...a,_i:i});});
+  // Group by class
+  const clsOrder = DB.classes.map(c=>c.id);
+  const grpsByClass = {};
+  eAssets.forEach((a,i)=>{
+    const cid=a.cls||'actions';
+    if(!grpsByClass[cid]) grpsByClass[cid]=[];
+    grpsByClass[cid].push({...a,_i:i});
+  });
+  // Also handle unknown classes
+  eAssets.forEach((a,i)=>{if(!clsOrder.includes(a.cls||'actions')){if(!grpsByClass['actions'])grpsByClass['actions']=[];if(!grpsByClass['actions'].find(x=>x._i===i))grpsByClass['actions'].push({...a,_i:i});}});
+
+  const clsOpts = DB.classes.map(c=>`<option value="${c.id}">${c.icon} ${c.label}</option>`).join('');
   let h='';
-  for(const cur of ['CLP','USD','EUR','CRYPTO']){if(!groups[cur])continue;h+=`<div class="mgh">${GL[cur]||cur}</div>`;
-    groups[cur].forEach(a=>{h+=`<div class="mi ${a.arch?'arch':''}" id="ar-${a._i}"><button class="mtog" onclick="togArch(${a._i})" style="${a.arch?'':'border-color:var(--grn);color:var(--grn);font-size:14px'}" >${a.arch?'👁':'✓'}</button><input class="mni" value="${a.label}" oninput="eAssets[${a._i}].label=this.value" placeholder="Nom"><select class="mcs" onchange="eAssets[${a._i}].cur=this.value;eAssets[${a._i}].grp=grpOf(this.value)">${['CLP','USD','EUR','CRYPTO'].map(c=>`<option value="${c}" ${a.cur===c?'selected':''}>${c}</option>`).join('')}</select></div>`;});
-  }
+  DB.classes.forEach(cls=>{
+    const items=grpsByClass[cls.id]||[];
+    if(!items.length) return;
+    h+=`<div class="mgh" style="border-bottom-color:${CLS_COLORS[cls.id]||'var(--bdr)'}">${cls.icon} ${cls.label}</div>`;
+    items.forEach(a=>{
+      h+=`<div class="mi ${a.arch?'arch':''}" id="ar-${a._i}">
+        <button class="mtog" onclick="togArch(${a._i})" style="${a.arch?'':'border-color:var(--grn);color:var(--grn);font-size:14px'}">${a.arch?'👁':'✓'}</button>
+        <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+          <input class="mni" value="${a.label}" oninput="eAssets[${a._i}].label=this.value" placeholder="Nom de l'actif">
+          <div style="display:flex;gap:6px">
+            <input class="mni" value="${a.grp}" oninput="eAssets[${a._i}].grp=this.value" placeholder="Groupe (ex: Cash EUR)" style="font-size:11px;padding:4px 8px;color:var(--mut)">
+            <select class="mcs" style="width:60px;font-size:11px;padding:4px 6px" onchange="eAssets[${a._i}].cur=this.value">${['CLP','USD','EUR','CRYPTO'].map(c=>`<option value="${c}" ${a.cur===c?'selected':''}>${c}</option>`).join('')}</select>
+            <select class="mcs" style="width:90px;font-size:11px;padding:4px 6px" onchange="eAssets[${a._i}].cls=this.value;renderAstList()">${clsOpts.replace(`value="${a.cls||'actions'}"`,`value="${a.cls||'actions'}" selected`)}</select>
+          </div>
+        </div>
+      </div>`;
+    });
+  });
+  // Assets with no class assigned
+  const unclassified=eAssets.filter((a,i)=>!DB.classes.find(c=>c.id===(a.cls||'actions')));
+  if(unclassified.length){h+=`<div class="mgh">⚠️ Non classifiés</div>`;unclassified.forEach(a=>{h+=`<div class="mi" id="ar-${eAssets.indexOf(a)}">...</div>`;});}
   document.getElementById('astlist').innerHTML=h;
 }
 function grpOf(c){return{CLP:'CLP',USD:'USD',EUR:'EUR',CRYPTO:'Crypto'}[c]||c;}
 function togArch(i){eAssets[i].arch=!eAssets[i].arch;renderAstList();}
-function addAsset(){eAssets.push({id:'a_'+Date.now(),label:'Nouvel actif',cur:'USD',grp:'USD',arch:false});renderAstList();setTimeout(()=>{const ins=document.querySelectorAll('#astlist .mni');if(ins.length){const l=ins[ins.length-1];l.focus();l.select();l.scrollIntoView({behavior:'smooth',block:'nearest'});}},50);}
+function addAsset(){eAssets.push({id:'a_'+Date.now(),label:'Nouvel actif',cur:'USD',grp:'Nouveau groupe',cls:'actions',arch:false});renderAstList();setTimeout(()=>{const ins=document.querySelectorAll('#astlist .mni');if(ins.length){const l=ins[ins.length-1];l.focus();l.select();l.scrollIntoView({behavior:'smooth',block:'nearest'});}},50);}
 function saveAssets(){
   document.querySelectorAll('#astlist .mni').forEach((inp,i)=>{const id=document.querySelectorAll('#astlist .mi')[i]?.id.replace('ar-','');if(id!==undefined&&eAssets[id])eAssets[id].label=inp.value.trim()||eAssets[id].label;});
   if(eAssets.some(a=>!a.label.trim())){toast('❌ Nom vide');return;}
