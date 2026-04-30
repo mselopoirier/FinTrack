@@ -206,6 +206,34 @@ body{display:flex;flex-direction:column}
 .cls2-total-bar{height:28px;border-radius:10px;overflow:hidden;display:flex;gap:2px;margin-bottom:14px}
 .cls2-total-seg{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:white;font-family:'DM Mono',monospace;overflow:hidden;white-space:nowrap;padding:0 6px;flex-shrink:0}
 
+
+/* apport sub-row */
+.ap-row{display:flex;align-items:center;gap:10px;padding:3px 0 6px 0;border-bottom:1px solid #0d1525}
+.ap-row:last-child{border-bottom:none}
+.ap-lbl{flex:1;font-size:11px;color:var(--mut);padding-left:14px}
+.ap-inp{width:120px;padding:5px 10px;background:var(--bg);border:1px solid var(--bdr);
+  border-radius:6px;color:var(--mut);font-family:'DM Mono',monospace;font-size:12px;
+  text-align:right;outline:none;transition:border .2s}
+.ap-inp:focus{border-color:var(--acc);color:var(--text)}
+.ap-inp.eur{border-color:#1a3a5a}.ap-inp.cry{border-color:#2a1a5a}
+/* history expandable */
+.hist-mo-row{cursor:pointer;transition:background .15s}
+.hist-mo-row:hover td{background:#0d1525 !important}
+.hist-mo-row.open td:first-child::before{content:'▼ ';font-size:8px;color:var(--mut)}
+.hist-mo-row:not(.open) td:first-child::before{content:'▶ ';font-size:8px;color:var(--mut)}
+.hist-detail-row td{background:#0a0e18 !important;padding:0 !important}
+.hist-detail-wrap{padding:6px 8px 10px}
+.had-grid{display:grid;grid-template-columns:1fr 64px 64px 52px;gap:0;font-size:11px}
+.had-hdr{font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;
+  padding:4px 0 6px;border-bottom:1px solid var(--bdr);text-transform:uppercase;letter-spacing:.5px}
+.had-hdr:nth-child(n+2){text-align:right}
+.had-r{display:contents}
+.had-r .hc{padding:6px 0;border-bottom:1px solid #0d1525;font-family:'DM Mono',monospace;font-size:11px}
+.had-r:last-of-type .hc{border-bottom:none}
+.hc-name{display:flex;align-items:center;gap:5px;color:var(--mut)}
+.hc-name b{color:var(--text);font-family:'DM Mono',monospace}
+.hc-num{text-align:right}.hc-ret{text-align:right;font-weight:700}
+
 .grn{color:var(--grn)}.red{color:var(--red)}.blu{color:var(--acc)}.amb{color:var(--amb)}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px}
 </style>
@@ -514,6 +542,24 @@ function goTo(s) {
 // ─────────────────────────────────────────────────────────
 // DASHBOARD
 // ─────────────────────────────────────────────────────────
+
+// Per-asset return calc
+// Uses per-asset apport if available, else 0
+function assetApport(a, inv) {
+  // New per-asset apport field
+  const perAst = inv['ap_'+a.id];
+  if (perAst !== undefined && perAst !== null) return toUSD(a.id, perAst);
+  return 0;
+}
+
+function calcAssetRet(a, inv, prevInv) {
+  const cur  = toUSD(a.id, inv[a.id]||0);
+  const prev = toUSD(a.id, prevInv[a.id]||0);
+  if (!prev) return null;
+  const ap = assetApport(a, inv);
+  return (cur - prev - ap) / prev;
+}
+
 function renderDash() {
   document.getElementById('tdate').textContent = new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
   const invs = [...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));
@@ -980,8 +1026,15 @@ function saveInv() {
   const mo=document.getElementById('imon').value; if(!mo){toast('❌ Mois manquant');return;}
   const g=id=>parseFloat(document.getElementById('f-'+id)?.value)||0;
   const entry={id:mo,month:mo};
-  DB.assets.forEach(a=>{entry[a.id]=g(a.id);});
-  ['ap_clp','ap_usd','ap_eur','ap_crypto'].forEach(f=>{entry[f]=g(f);});
+  DB.assets.forEach(a=>{
+    entry[a.id] = g(a.id);
+    entry['ap_'+a.id] = g('ap_'+a.id);
+  });
+  // Also compute legacy aggregate apports for backward compat
+  entry.ap_clp    = DB.assets.filter(a=>a.cur==='CLP').reduce((s,a)=>s+g('ap_'+a.id),0);
+  entry.ap_usd    = DB.assets.filter(a=>a.cur==='USD').reduce((s,a)=>s+g('ap_'+a.id),0);
+  entry.ap_eur    = DB.assets.filter(a=>a.cur==='EUR').reduce((s,a)=>s+g('ap_'+a.id),0);
+  entry.ap_crypto = DB.assets.filter(a=>a.cur==='CRYPTO').reduce((s,a)=>s+g('ap_'+a.id),0);
   DB.inv=[...DB.inv.filter(i=>i.month!==mo),entry];
   toast('✅ Mois enregistré !'); renderInvHist(); if(curSc==='dash')renderDash();
 }
@@ -994,13 +1047,62 @@ function renderInvHist(){
   const tb=document.getElementById('ihtb');
   if(!invs.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--mut)">Aucun mois saisi</td></tr>';return;}
   const t0=calcTotal(sorted[0]); let cumAp=0;
-  tb.innerHTML=invs.map(inv=>{
-    const total=calcTotal(inv),idx=sorted.indexOf(inv),prev=idx>0?sorted[idx-1]:null;
-    if(idx>0)cumAp+=calcAp(inv);
-    const pT=prev?calcTotal(prev):null,rm=pT?(total-pT-calcAp(inv))/pT:null,rt=(t0+cumAp)>0?(total-t0-cumAp)/(t0+cumAp):null;
-    const mc=v=>v>0?'var(--grn)':v<0?'var(--red)':'';
-    return `<tr><td>${moLbl(inv.month)}</td><td>${FU(total)}</td><td style="color:${mc(rm)}">${FP(rm)}</td><td style="color:${mc(rt)}">${FP(rt)}</td></tr>`;
-  }).join('');
+  const mc=v=>v===null?'var(--mut)':v>0?'var(--grn)':v<0?'var(--red)':'var(--mut)';
+  const activeAssets=DB.assets.filter(a=>!a.arch);
+  const AC=['#3b82f6','#22c55e','#10b981','#f97316','#06b6d4','#84cc16','#f59e0b','#ec4899','#ef4444','#8b5cf6'];
+
+  let rows='';
+  invs.forEach((inv,rowIdx)=>{
+    const total=calcTotal(inv);
+    const idx=sorted.findIndex(s=>s.month===inv.month);
+    const prev=idx>0?sorted[idx-1]:null;
+    if(idx>0) cumAp+=calcAp(inv);
+    const pT=prev?calcTotal(prev):null;
+    const rm=pT?(total-pT-calcAp(inv))/pT:null;
+    const rt=(t0+cumAp)>0?(total-t0-cumAp)/(t0+cumAp):null;
+    const rid='hr-'+rowIdx;
+
+    // Build asset detail rows
+    const astRows = activeAssets.map((a,ai)=>{
+      const cur  = toUSD(a.id, inv[a.id]||0);
+      const prv  = prev ? toUSD(a.id, prev[a.id]||0) : 0;
+      if(!cur && !prv) return '';
+      const ap   = assetApport(a, inv);
+      const ret  = prev ? calcAssetRet(a, inv, prev) : null;
+      const col  = AC[ai%AC.length];
+      return '<div class="had-r">'
+        +'<div class="hc hc-name"><span style="width:6px;height:6px;border-radius:50%;background:'+col+';display:inline-block;flex-shrink:0;margin-right:4px"></span><b>'+a.label+'</b></div>'
+        +'<div class="hc hc-num" style="color:var(--text)">'+(cur?FU(cur):'—')+'</div>'
+        +'<div class="hc hc-num" style="color:var(--mut)">'+(ap?FU(ap):'—')+'</div>'
+        +'<div class="hc hc-ret" style="color:'+mc(ret)+'">'+FP(ret)+'</div>'
+        +'</div>';
+    }).join('');
+
+    rows += '<tr class="hist-mo-row" onclick="togHistRow(\''+rid+'\')">'
+      +'<td>'+moLbl(inv.month)+'</td>'
+      +'<td>'+FU(total)+'</td>'
+      +'<td style="color:'+mc(rm)+'">'+FP(rm)+'</td>'
+      +'<td style="color:'+mc(rt)+'">'+FP(rt)+'</td>'
+      +'</tr>'
+      +'<tr class="hist-detail-row" id="'+rid+'" style="display:none">'
+      +'<td colspan="4"><div class="hist-detail-wrap"><div class="had-grid">'
+      +'<div class="had-hdr">Actif</div>'
+      +'<div class="had-hdr">Valeur $</div>'
+      +'<div class="had-hdr">Apport</div>'
+      +'<div class="had-hdr">Ret.M</div>'
+      +astRows
+      +'</div></div></td></tr>';
+  });
+  tb.innerHTML=rows;
+}
+
+function togHistRow(id){
+  const row=document.getElementById(id);
+  if(!row) return;
+  const isOpen=row.style.display!=='none';
+  row.style.display=isOpen?'none':'table-row';
+  const mo=row.previousElementSibling;
+  if(mo) mo.classList.toggle('open',!isOpen);
 }
 
 // ─────────────────────────────────────────────────────────
@@ -1085,49 +1187,85 @@ function saveCats(){document.querySelectorAll('.mni').forEach((inp,i)=>{if(eCats
 let eAssets=[];
 function openAssets(){eAssets=DB.assets.map(a=>({...a}));renderAstList();openMo('assets');}
 function renderAstList(){
-  // Group by class
-  const clsOrder = DB.classes.map(c=>c.id);
-  const grpsByClass = {};
+  syncAstFromDOM();
+  const grpsByClass={};
   eAssets.forEach((a,i)=>{
     const cid=a.cls||'actions';
-    if(!grpsByClass[cid]) grpsByClass[cid]=[];
+    if(!grpsByClass[cid])grpsByClass[cid]=[];
     grpsByClass[cid].push({...a,_i:i});
   });
-  // Also handle unknown classes
-  eAssets.forEach((a,i)=>{if(!clsOrder.includes(a.cls||'actions')){if(!grpsByClass['actions'])grpsByClass['actions']=[];if(!grpsByClass['actions'].find(x=>x._i===i))grpsByClass['actions'].push({...a,_i:i});}});
-
-  const clsOpts = DB.classes.map(c=>`<option value="${c.id}">${c.icon} ${c.label}</option>`).join('');
   let h='';
   DB.classes.forEach(cls=>{
     const items=grpsByClass[cls.id]||[];
-    if(!items.length) return;
+    if(!items.length)return;
     h+=`<div class="mgh" style="border-bottom-color:${CLS_COLORS[cls.id]||'var(--bdr)'}">${cls.icon} ${cls.label}</div>`;
     items.forEach(a=>{
-      h+=`<div class="mi ${a.arch?'arch':''}" id="ar-${a._i}">
-        <button class="mtog" onclick="togArch(${a._i})" style="${a.arch?'':'border-color:var(--grn);color:var(--grn);font-size:14px'}">${a.arch?'👁':'✓'}</button>
+      const idx=a._i;
+      const curOpts=['CLP','USD','EUR','CRYPTO'].map(c=>`<option value="${c}"${a.cur===c?' selected':''}>${c}</option>`).join('');
+      const clsOptsHtml=DB.classes.map(c=>`<option value="${c.id}"${a.cls===c.id?' selected':''}>${c.icon} ${c.label}</option>`).join('');
+      h+=`<div class="mi ${a.arch?'arch':''}" id="ar-${idx}">
+        <button class="mtog" onclick="togArch(${idx})" style="${a.arch?'color:var(--mut)':'border-color:var(--grn);color:var(--grn);font-size:14px'}" title="${a.arch?'R\u00e9activer':'Masquer'}">${a.arch?'\uD83D\uDC41':'\u2713'}</button>
         <div style="flex:1;display:flex;flex-direction:column;gap:4px">
-          <input class="mni" value="${a.label}" oninput="eAssets[${a._i}].label=this.value" placeholder="Nom de l'actif">
+          <input class="mni ast-name" data-idx="${idx}" value="${a.label}" placeholder="Nom" oninput="eAssets[${idx}].label=this.value">
           <div style="display:flex;gap:6px">
-            <input class="mni" value="${a.grp}" oninput="eAssets[${a._i}].grp=this.value" placeholder="Groupe (ex: Cash EUR)" style="font-size:11px;padding:4px 8px;color:var(--mut)">
-            <select class="mcs" style="width:60px;font-size:11px;padding:4px 6px" onchange="eAssets[${a._i}].cur=this.value">${['CLP','USD','EUR','CRYPTO'].map(c=>`<option value="${c}" ${a.cur===c?'selected':''}>${c}</option>`).join('')}</select>
-            <select class="mcs" style="width:90px;font-size:11px;padding:4px 6px" onchange="eAssets[${a._i}].cls=this.value;renderAstList()">${clsOpts.replace(`value="${a.cls||'actions'}"`,`value="${a.cls||'actions'}" selected`)}</select>
+            <input class="mni ast-grp" data-idx="${idx}" value="${a.grp}" placeholder="Groupe" style="font-size:11px;padding:4px 8px;color:var(--mut)" oninput="eAssets[${idx}].grp=this.value">
+            <select class="mcs" style="width:60px;font-size:11px;padding:4px 6px" data-idx="${idx}" onchange="eAssets[${idx}].cur=this.value">${curOpts}</select>
+            <select class="mcs" style="width:90px;font-size:11px;padding:4px 6px" data-idx="${idx}" onchange="eAssets[${idx}].cls=this.value;renderAstList()">${clsOptsHtml}</select>
           </div>
         </div>
       </div>`;
     });
   });
-  // Assets with no class assigned
-  const unclassified=eAssets.filter((a,i)=>!DB.classes.find(c=>c.id===(a.cls||'actions')));
-  if(unclassified.length){h+=`<div class="mgh">⚠️ Non classifiés</div>`;unclassified.forEach(a=>{h+=`<div class="mi" id="ar-${eAssets.indexOf(a)}">...</div>`;});}
+  // Orphans (unknown class)
+  const knownIds=new Set(DB.classes.map(c=>c.id));
+  eAssets.forEach((a,idx)=>{
+    if(!knownIds.has(a.cls||'x')&&!grpsByClass[a.cls||'x']){
+      h+=`<div class="mgh">⚠️ Sans classe</div>
+        <div class="mi" id="ar-${idx}">
+          <span style="flex:1;font-size:12px;color:var(--mut)">${a.label}</span>
+          <select class="mcs" onchange="eAssets[${idx}].cls=this.value;renderAstList()">
+            ${DB.classes.map(c=>`<option value="${c.id}">${c.icon} ${c.label}</option>`).join('')}
+          </select>
+        </div>`;
+    }
+  });
   document.getElementById('astlist').innerHTML=h;
 }
+
+function syncAstFromDOM(){
+  document.querySelectorAll('#astlist .ast-name').forEach(inp=>{
+    const idx=parseInt(inp.dataset.idx);
+    if(!isNaN(idx)&&eAssets[idx])eAssets[idx].label=inp.value;
+  });
+  document.querySelectorAll('#astlist .ast-grp').forEach(inp=>{
+    const idx=parseInt(inp.dataset.idx);
+    if(!isNaN(idx)&&eAssets[idx])eAssets[idx].grp=inp.value;
+  });
+}
+
 function grpOf(c){return{CLP:'CLP',USD:'USD',EUR:'EUR',CRYPTO:'Crypto'}[c]||c;}
-function togArch(i){eAssets[i].arch=!eAssets[i].arch;renderAstList();}
-function addAsset(){eAssets.push({id:'a_'+Date.now(),label:'Nouvel actif',cur:'USD',grp:'Nouveau groupe',cls:'actions',arch:false});renderAstList();setTimeout(()=>{const ins=document.querySelectorAll('#astlist .mni');if(ins.length){const l=ins[ins.length-1];l.focus();l.select();l.scrollIntoView({behavior:'smooth',block:'nearest'});}},50);}
+
+function togArch(i){syncAstFromDOM();eAssets[i].arch=!eAssets[i].arch;renderAstList();}
+
+function addAsset(){
+  syncAstFromDOM();
+  eAssets.push({id:'a_'+Date.now(),label:'Nouvel actif',cur:'USD',grp:'Nouveau groupe',cls:'actions',arch:false});
+  renderAstList();
+  setTimeout(()=>{
+    const ins=document.querySelectorAll('#astlist .ast-name');
+    if(ins.length){const l=ins[ins.length-1];l.focus();l.select();l.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  },50);
+}
+
 function saveAssets(){
-  document.querySelectorAll('#astlist .mni').forEach((inp,i)=>{const id=document.querySelectorAll('#astlist .mi')[i]?.id.replace('ar-','');if(id!==undefined&&eAssets[id])eAssets[id].label=inp.value.trim()||eAssets[id].label;});
-  if(eAssets.some(a=>!a.label.trim())){toast('❌ Nom vide');return;}
-  DB.assets=eAssets;closeMo('assets');renderInvForm();buildAsel();renderDash();toast('✅ Actifs sauvegardés !');
+  syncAstFromDOM();
+  if(eAssets.some(a=>!a.label||!a.label.trim())){toast('\u274c Nom vide');return;}
+  DB.assets=[...eAssets];
+  closeMo('assets');
+  renderInvForm();
+  buildAsel();
+  renderDash();
+  toast('\u2705 Actifs sauvegard\u00e9s !');
 }
 
 // ─────────────────────────────────────────────────────────
