@@ -23,10 +23,10 @@ body{display:flex;flex-direction:column}
 .nb.on{color:var(--acc)}.nb svg{width:22px;height:22px}
 .card{background:var(--bg2);border:1px solid var(--bdr);border-radius:16px;padding:16px;margin-bottom:12px}
 .kg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.kp{background:var(--bg2);border:1px solid var(--bdr);border-radius:14px;padding:14px}
+.kp{background:var(--bg2);border:1px solid var(--bdr);border-radius:14px;padding:14px;min-width:0}
 .kp.w{grid-column:1/-1}
 .kl{font-size:10px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px}
-.kv{font-size:20px;font-weight:800;letter-spacing:-1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.kv{font-size:20px;font-weight:800;letter-spacing:-1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ks{font-size:10px;color:var(--mut);margin-top:3px;font-family:'DM Mono',monospace}
 .sh{display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px}
 .sh h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--mut)}
@@ -43,6 +43,7 @@ body{display:flex;flex-direction:column}
 .bp{background:var(--acc);color:white}.bp:active{background:#2563eb}
 .bg2b{background:var(--bg3);color:var(--text);border:1px solid var(--bdr)}
 .bd{background:transparent;color:var(--red);border:1px solid var(--red)}
+/* expense */
 .ei{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--bdr)}
 .ei:last-child{border-bottom:none}
 .eic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
@@ -51,7 +52,6 @@ body{display:flex;flex-direction:column}
 .eamt{font-family:'DM Mono',monospace;font-size:14px;font-weight:500;text-align:right}
 .eamt.sal{color:var(--grn)}
 .delbtn{background:none;border:none;color:var(--mut);padding:4px;cursor:pointer;font-size:16px;flex-shrink:0}
-.delbtn:active{color:var(--red)}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;background:var(--bg3);border:1px solid var(--bdr);color:var(--mut);font-family:'DM Mono',monospace;transition:all .2s}
@@ -70,8 +70,11 @@ body{display:flex;flex-direction:column}
 .b5 .disr td{color:var(--amb);font-weight:700}.b5 .disr td:first-child{background:#1a1500}
 /* inv form */
 .isec{font-size:10px;color:var(--a2);text-transform:uppercase;letter-spacing:1.5px;font-family:'DM Mono',monospace;margin:14px 0 6px;padding-bottom:6px;border-bottom:1px solid var(--bdr)}
-.irow{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #0d1525}
-.irow:last-child{border-bottom:none}
+.irow{border-bottom:1px solid #0d1525;padding-bottom:4px;margin-bottom:4px}
+.irow:last-child{border-bottom:none;margin-bottom:0}
+.irow-main{display:flex;align-items:center;gap:10px;padding:6px 0 2px}
+.irow-ap{display:flex;align-items:center;gap:10px;padding:2px 0 4px}
+.ilbl{flex:1;font-size:13px}
 .iinp{width:120px;padding:7px 10px;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;text-align:right;outline:none}
 .iinp:focus{border-color:var(--acc)}
 .iinp.eur{border-color:#2d4a6e}.iinp.eur:focus{border-color:var(--a2)}
@@ -79,7 +82,7 @@ body{display:flex;flex-direction:column}
 .ap-inp{width:120px;padding:5px 10px;background:var(--bg);border:1px dashed var(--bdr);border-radius:6px;color:var(--mut);font-family:'DM Mono',monospace;font-size:12px;text-align:right;outline:none}
 .ap-inp:focus{border-color:var(--acc);color:var(--text)}
 .ap-inp.eur{border-color:#1e3040}.ap-inp.cry{border-color:#2a1a40}
-/* hist table */
+/* history */
 .ht{overflow-x:auto}
 .ht table{width:100%;border-collapse:collapse;font-size:12px;font-family:'DM Mono',monospace}
 .ht th{padding:8px 6px;text-align:right;color:var(--mut);font-size:10px;white-space:nowrap;border-bottom:1px solid var(--bdr)}
@@ -90,9 +93,9 @@ body{display:flex;flex-direction:column}
 .hmo{cursor:pointer;transition:background .15s}.hmo:hover td{background:#0d1525}
 .hmo td:first-child::before{font-size:8px;color:var(--mut);margin-right:3px}
 .hmo.cl td:first-child::before{content:'▼ '}.hmo:not(.cl) td:first-child::before{content:'▶ '}
-.hdet td{background:#070c16 !important;padding:0 !important}
+.hdet td{background:#070c16!important;padding:0!important}
 .hdet-wrap{padding:8px 8px 10px}
-.hdet-grid{display:grid;grid-template-columns:1fr 60px 60px 50px;gap:0;font-size:11px}
+.hdet-grid{display:grid;grid-template-columns:1fr 60px 60px 52px;gap:0;font-size:11px}
 .hdet-h{font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;padding:4px 0 6px;border-bottom:1px solid var(--bdr);text-transform:uppercase;letter-spacing:.5px}
 .hdet-h:nth-child(n+2){text-align:right}
 .hdet-r{display:contents}
@@ -100,29 +103,24 @@ body{display:flex;flex-direction:column}
 .hdet-r:last-of-type .hc{border-bottom:none}
 .hcn{display:flex;align-items:center;gap:5px;color:var(--mut)}.hcn b{color:var(--text)}
 .hcv{text-align:right}.hcr{text-align:right;font-weight:700}
-/* alloc Design 2 */
+/* alloc design 2 */
 .cls2-card{border-radius:14px;overflow:hidden;margin-bottom:10px}
 .cls2-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 14px 10px}
 .cls2-title{display:flex;align-items:center;gap:8px;font-weight:700;font-size:14px}
 .cls2-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.cls2-body{padding:0 14px 12px;display:flex;flex-direction:column;gap:0}
+.cls2-body{padding:0 14px 12px}
 .cls2-grp{font-size:9px;color:rgba(255,255,255,.35);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px;padding:8px 0 3px}
-.cls2-grp:first-child{padding-top:6px}
 .cls2-ast{display:flex;align-items:center;gap:8px;padding:5px 0}
 .cls2-abar{flex:1;height:5px;border-radius:3px;overflow:hidden;background:rgba(255,255,255,.1)}
 .cls2-afil{height:100%;border-radius:3px}
-.cls2-aname{font-size:12px;width:110px;flex-shrink:0;color:rgba(255,255,255,.8)}
+.cls2-aname{font-size:12px;width:100px;flex-shrink:0;color:rgba(255,255,255,.8)}
 .cls2-apct{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;width:34px;text-align:right;flex-shrink:0}
 .cls2-aval{font-family:'DM Mono',monospace;font-size:11px;color:rgba(255,255,255,.45);width:46px;text-align:right;flex-shrink:0}
 .cls2-tbar{height:28px;border-radius:10px;overflow:hidden;display:flex;gap:2px;margin-bottom:12px}
 .cls2-tseg{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:white;font-family:'DM Mono',monospace;overflow:hidden;white-space:nowrap;padding:0 6px;flex-shrink:0}
-/* savings rate */
-.srmos{display:flex;gap:5px;overflow-x:auto;padding-bottom:4px;margin-top:10px}
-.srmos::-webkit-scrollbar{display:none}
-.srmo{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:3px}
-.srmo-i{width:26px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative}
-.srmo-f{position:absolute;bottom:0;left:0;right:0;border-radius:4px}
-.srmo-l{font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;white-space:nowrap}
+.aleg{display:flex;flex-wrap:wrap;gap:6px 12px;margin-bottom:14px}
+.ai{display:flex;align-items:center;font-size:11px;font-family:'DM Mono',monospace;color:var(--mut)}
+.adot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0}
 /* chart */
 .cctrl{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
 .ctabs{display:flex;background:var(--bg3);border-radius:10px;padding:3px}
@@ -144,13 +142,19 @@ body{display:flex;flex-direction:column}
 .momr .mc{padding:8px 0;border-bottom:1px solid var(--bdr);font-size:12px}
 .momr:last-of-type .mc{border-bottom:none}
 .mclbl{display:flex;align-items:center;gap:5px;color:var(--mut)}.mclbl b{color:var(--text)}
-.mcnum{font-family:'DM Mono',monospace;text-align:right;font-weight:500}
-.mcd{text-align:center}
+.mcnum{font-family:'DM Mono',monospace;text-align:right;font-weight:500}.mcd{text-align:center}
 .mdlt{font-family:'DM Mono',monospace;font-size:10px;padding:2px 5px;border-radius:8px;font-weight:700;white-space:nowrap}
 .mdlt.pos{background:#0a2518;color:var(--grn)}.mdlt.neg{background:#2a0a0a;color:var(--red)}.mdlt.neu{background:var(--bg3);color:var(--mut)}
 .mbarw{width:100%;height:3px;background:var(--bdr);border-radius:2px;overflow:hidden;margin-bottom:3px}
 .mbar{height:100%;border-radius:2px}
 .momsep{grid-column:1/-1;border:none;border-top:2px solid var(--bdr);margin:4px 0}
+/* savings rate */
+.srmos{display:flex;gap:5px;overflow-x:auto;padding-bottom:4px;margin-top:10px}
+.srmos::-webkit-scrollbar{display:none}
+.srmo{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:3px}
+.srmo-i{width:26px;background:var(--bg3);border-radius:4px;overflow:hidden;position:relative}
+.srmo-f{position:absolute;bottom:0;left:0;right:0;border-radius:4px}
+.srmo-l{font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;white-space:nowrap}
 /* modals */
 .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:flex-end;backdrop-filter:blur(4px)}
 .mo.on{display:flex}
@@ -164,8 +168,7 @@ body{display:flex;flex-direction:column}
 .si:focus{border-color:var(--acc)}
 /* asset manager */
 .ami{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--bdr)}
-.ami:last-child{border-bottom:none}
-.ami.arch{opacity:.45}
+.ami:last-child{border-bottom:none}.ami.arch{opacity:.45}
 .amname{flex:1;padding:8px 10px;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;color:var(--text);font-family:'DM Mono',monospace;font-size:13px;outline:none}
 .amname:focus{border-color:var(--acc)}
 .amgrp{padding:5px 8px;background:var(--bg3);border:1px solid var(--bdr);border-radius:8px;color:var(--mut);font-family:'DM Mono',monospace;font-size:11px;outline:none;width:100%}
@@ -187,9 +190,6 @@ body{display:flex;flex-direction:column}
 .toast{position:fixed;bottom:calc(80px + var(--saf));left:50%;transform:translateX(-50%) translateY(20px);background:var(--grn);color:white;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;z-index:200;white-space:nowrap}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .empty{text-align:center;padding:40px 20px;color:var(--mut)}
-.aleg{display:flex;flex-wrap:wrap;gap:6px 12px;margin-bottom:14px}
-.ai{display:flex;align-items:center;font-size:11px;font-family:'DM Mono',monospace;color:var(--mut)}
-.adot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;flex-shrink:0}
 .grn{color:var(--grn)}.red{color:var(--red)}.blu{color:var(--acc)}.amb{color:var(--amb)}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px}
 </style>
@@ -202,12 +202,13 @@ body{display:flex;flex-direction:column}
     <div class="ib" onclick="openSettings()">⚙️</div>
   </div>
 </div>
+
 <!-- DASHBOARD -->
 <div class="sc on" id="sc-dash">
   <div class="kg">
     <div class="kp w"><div class="kl">Portefeuille Total</div><div class="kv blu" id="kpi-total">—</div><div class="ks" id="kpi-sub">USD</div></div>
     <div class="kp"><div class="kl">Ret. Mensuel</div><div class="kv" id="kpi-retm">—</div><div class="ks">vs mois précédent</div></div>
-    <div class="kp"><div class="kl">Ret. Total</div><div class="kv" id="kpi-rett">—</div><div class="ks">depuis le début</div></div>
+    <div class="kp"><div class="kl">Ret. Total</div><div class="kv" id="kpi-rett">—</div><div class="ks">depuis avr. 2026</div></div>
   </div>
   <div class="sh"><h2>Budget — 5 derniers mois</h2></div>
   <div class="card" style="padding:12px"><div class="b5w"><table class="b5" id="b5t"></table></div></div>
@@ -223,7 +224,6 @@ body{display:flex;flex-direction:column}
       <div class="ctabs">
         <button class="ctab on" onclick="setCR(6,this)">6M</button>
         <button class="ctab" onclick="setCR(12,this)">1A</button>
-        <button class="ctab" onclick="setCR(24,this)">2A</button>
         <button class="ctab" onclick="setCR(999,this)">Tout</button>
       </div>
       <select class="csel" id="asel" onchange="setCA(this.value)"></select>
@@ -242,6 +242,7 @@ body{display:flex;flex-direction:column}
   <div class="sh"><h2>Dernières dépenses</h2></div>
   <div class="card" id="rexp"></div>
 </div>
+
 <!-- DÉPENSES -->
 <div class="sc" id="sc-dep">
   <div class="seg"><button class="sb on" onclick="swDep('s',this)">+ Saisir</button><button class="sb" onclick="swDep('l',this)">Liste</button></div>
@@ -264,6 +265,7 @@ body{display:flex;flex-direction:column}
     <div class="card" id="ditems"></div>
   </div>
 </div>
+
 <!-- INVESTISSEMENTS -->
 <div class="sc" id="sc-inv">
   <div class="seg"><button class="sb on" onclick="swInv('s',this)">+ Saisir</button><button class="sb" onclick="swInv('h',this)">Historique</button></div>
@@ -282,15 +284,19 @@ body{display:flex;flex-direction:column}
     <button class="btn bg2b" onclick="loadLastInv()">Recopier mois précédent</button>
   </div>
   <div id="invh" style="display:none">
-    <div class="ht card"><table><thead><tr><th style="text-align:left">Mois</th><th>Total $</th><th>Ret.M</th><th>Ret.T</th></tr></thead><tbody id="ihtb"></tbody></table></div>
+    <div class="ht card"><table><thead><tr>
+      <th style="text-align:left">Mois</th><th>Total $</th><th>Ret.M</th><th>Ret.T</th>
+    </tr></thead><tbody id="ihtb"></tbody></table></div>
   </div>
 </div>
+
 <nav class="nav">
   <button class="nb on" id="nb-dash" onclick="goTo('dash')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>Dashboard</button>
   <button class="nb" id="nb-dep" onclick="goTo('dep')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>Dépenses</button>
   <button class="nb" id="nb-inv" onclick="goTo('inv')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>Invest.</button>
 </nav>
-<!-- MODALS -->
+
+<!-- SETTINGS -->
 <div class="mo" id="mo-set"><div class="mod">
   <div class="mh"></div><div class="mt">⚙️ Paramètres</div>
   <div class="srow"><div><div class="slbl">1 USD = ? QAR</div><div class="ssub">Taux QAR</div></div><input class="si" id="sqar" type="number" step="0.01"></div>
@@ -305,22 +311,23 @@ body{display:flex;flex-direction:column}
   <div style="height:14px"></div>
   <div style="font-size:10px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px;padding-bottom:8px;border-bottom:1px solid var(--bdr)">Sauvegarde</div>
   <div style="height:10px"></div>
-  <button class="btn bg2b" onclick="backupJSON()">💾 Exporter toutes les données (JSON)</button>
+  <button class="btn bg2b" onclick="backupJSON()">💾 Exporter données (JSON)</button>
   <div style="height:8px"></div>
-  <label class="btn bg2b" style="display:flex;align-items:center;justify-content:center;cursor:pointer">📂 Importer une sauvegarde (JSON)<input type="file" id="rfile" accept=".json" style="display:none" onchange="restoreJSON(this)"></label>
+  <label class="btn bg2b" style="display:flex;align-items:center;justify-content:center;cursor:pointer">📂 Importer sauvegarde (JSON)<input type="file" id="rfile" accept=".json" style="display:none" onchange="restoreJSON(this)"></label>
   <div style="height:14px"></div>
   <button class="btn bd" onclick="if(confirm('Effacer toutes les données ?'))clearAll()">Effacer toutes les données</button>
   <div style="height:8px"></div>
   <button class="btn bg2b" onclick="closeMo('set')">Fermer</button>
 </div></div>
 
+<!-- CATS -->
 <div class="mo" id="mo-cats"><div class="mod">
   <div class="mh"></div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
     <div class="mt" style="margin-bottom:0">🏷️ Catégories</div>
     <button class="btn bp" style="width:auto;padding:8px 16px;font-size:13px" onclick="addCat()">+ Ajouter</button>
   </div>
-  <div style="font-size:11px;color:var(--mut);margin-bottom:14px;font-family:'DM Mono',monospace">Le renommage préserve l'historique</div>
+  <div style="font-size:11px;color:var(--mut);margin-bottom:14px;font-family:'DM Mono',monospace">Renommage préserve l'historique</div>
   <div id="catlist"></div>
   <div id="epwrap" style="display:none"><div class="epw" id="epick"></div></div>
   <div style="height:12px"></div>
@@ -329,13 +336,14 @@ body{display:flex;flex-direction:column}
   <button class="btn bg2b" onclick="closeMo('cats')">Fermer</button>
 </div></div>
 
+<!-- ASSETS -->
 <div class="mo" id="mo-assets"><div class="mod">
   <div class="mh"></div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
     <div class="mt" style="margin-bottom:0">📊 Actifs</div>
     <button class="btn bp" style="width:auto;padding:8px 16px;font-size:13px" onclick="addAsset()">+ Ajouter</button>
   </div>
-  <div style="font-size:11px;color:var(--mut);margin-bottom:14px;font-family:'DM Mono',monospace">Nom · Groupe · Devise · Classe — ✓ actif · 👁 archivé</div>
+  <div style="font-size:11px;color:var(--mut);margin-bottom:14px;font-family:'DM Mono',monospace">✓ actif · 👁 archivé (masqué, données conservées)</div>
   <div id="astlist"></div>
   <div style="height:12px"></div>
   <button class="btn bp" onclick="saveAssets()">✅ Sauvegarder</button>
@@ -345,51 +353,42 @@ body{display:flex;flex-direction:column}
 
 <div class="toast" id="toast"></div>
 <script>
-// ── HISTORICAL DATA ───────────────────────────────────────
-const HIST_INV = [{"id":"2021-11","month":"2021-11","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1000000.0,"ap_monetario":1000000.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1000000.0,"ap_renta_cp":1000000.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":16855.9,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2021-12","month":"2021-12","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1002961.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1003444.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":19485.9,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2022-01","month":"2022-01","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1005458.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1005964.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":19045.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2022-02","month":"2022-02","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1008711.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1009265.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":22060.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2022-03","month":"2022-03","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1012534.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1013056.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":22075.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2022-04","month":"2022-04","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1017159.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1017672.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":22090.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2022-05","month":"2022-05","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1022726.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1023251.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":21605.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2022-06","month":"2022-06","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1028682.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1029285.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":21620.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2022-07","month":"2022-07","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1035324.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1036029.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":21635.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2022-08","month":"2022-08","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1042583.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1043293.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":21650.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2022-09","month":"2022-09","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1050210.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1050933.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":21665.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2022-10","month":"2022-10","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1058619.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1059381.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":18180.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2022-11","month":"2022-11","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1067001.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1067783.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":18195.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2022-12","month":"2022-12","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1075721.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1076495.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":18210.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2023-01","month":"2023-01","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1084501.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1085271.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":20998.56,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2023-02","month":"2023-02","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1092503.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1093291.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":21013.56,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2023-03","month":"2023-03","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1101443.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1102234.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":21028.56,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2023-04","month":"2023-04","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1110224.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1111009.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":21043.56,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2023-05","month":"2023-05","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1119400.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1120199.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":21058.56,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2023-06","month":"2023-06","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1128333.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1129133.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":21073.56,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2023-07","month":"2023-07","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":1137539.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":1138358.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":21088.56,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2023-08","month":"2023-08","incomplete":false,"santander_mp":1000000.0,"ap_santander_mp":1000000.0,"gestion_ag":1000000.0,"ap_gestion_ag":1000000.0,"monetario":1146167.0,"ap_monetario":0.0,"money_mkt_clp":1000000.0,"ap_money_mkt_clp":1000000.0,"renta_cp":1146986.0,"ap_renta_cp":0.0,"renta_mp":1000000.0,"ap_renta_mp":1000000.0,"santander_d":1000000.0,"ap_santander_d":1000000.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":19103.55,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2023-09","month":"2023-09","incomplete":false,"santander_mp":1002831.0,"ap_santander_mp":0.0,"gestion_ag":978740.0,"ap_gestion_ag":0.0,"monetario":1153924.0,"ap_monetario":0.0,"money_mkt_clp":1004474.0,"ap_money_mkt_clp":0.0,"renta_cp":1154729.0,"ap_renta_cp":0.0,"renta_mp":1000549.0,"ap_renta_mp":0.0,"santander_d":973813.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":19118.56,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2023-10","month":"2023-10","incomplete":false,"santander_mp":1009016.0,"ap_santander_mp":0.0,"gestion_ag":950351.0,"ap_gestion_ag":0.0,"monetario":1161637.0,"ap_monetario":0.0,"money_mkt_clp":1011180.0,"ap_money_mkt_clp":0.0,"renta_cp":1162410.0,"ap_renta_cp":0.0,"renta_mp":1004870.0,"ap_renta_mp":0.0,"santander_d":939670.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":250.0,"ap_deuda_dolar":250.0,"mm_dolar":500.0,"ap_mm_dolar":500.0,"prudente_dol":250.0,"ap_prudente_dol":250.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":19133.0,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2023-11","month":"2023-11","incomplete":false,"santander_mp":1014367.0,"ap_santander_mp":0.0,"gestion_ag":999536.0,"ap_gestion_ag":0.0,"monetario":1168753.0,"ap_monetario":0.0,"money_mkt_clp":1017418.0,"ap_money_mkt_clp":0.0,"renta_cp":1169573.0,"ap_renta_cp":0.0,"renta_mp":1013462.0,"ap_renta_mp":0.0,"santander_d":1005198.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":253.25,"ap_deuda_dolar":0.0,"mm_dolar":500.62,"ap_mm_dolar":0.0,"prudente_dol":253.32,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":18148.56,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2023-12","month":"2023-12","incomplete":false,"santander_mp":1027058.0,"ap_santander_mp":0.0,"gestion_ag":1052122.0,"ap_gestion_ag":0.0,"monetario":1175954.0,"ap_monetario":0.0,"money_mkt_clp":1023626.0,"ap_money_mkt_clp":0.0,"renta_cp":1176629.0,"ap_renta_cp":0.0,"renta_mp":1024641.0,"ap_renta_mp":0.0,"santander_d":1039409.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":263.01,"ap_deuda_dolar":0.0,"mm_dolar":502.61,"ap_mm_dolar":0.0,"prudente_dol":262.38,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":18163.56,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2024-01","month":"2024-01","incomplete":false,"santander_mp":1040430.0,"ap_santander_mp":0.0,"gestion_ag":1138216.0,"ap_gestion_ag":0.0,"monetario":1185765.0,"ap_monetario":0.0,"money_mkt_clp":2038363.0,"ap_money_mkt_clp":1000000.0,"renta_cp":1187013.0,"ap_renta_cp":0.0,"renta_mp":1035803.0,"ap_renta_mp":0.0,"santander_d":1046672.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":512.86,"ap_deuda_dolar":250.0,"mm_dolar":755.09,"ap_mm_dolar":250.0,"prudente_dol":261.54,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":18756.38,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2024-02","month":"2024-02","incomplete":false,"santander_mp":1293137.0,"ap_santander_mp":250000.0,"gestion_ag":1426480.0,"ap_gestion_ag":250000.0,"monetario":1188672.0,"ap_monetario":0.0,"money_mkt_clp":2043377.0,"ap_money_mkt_clp":0.0,"renta_cp":1189839.0,"ap_renta_cp":0.0,"renta_mp":1037232.0,"ap_renta_mp":0.0,"santander_d":1287581.0,"ap_santander_d":255000.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":505.49,"ap_deuda_dolar":0.0,"mm_dolar":757.76,"ap_mm_dolar":0.0,"prudente_dol":260.5,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":18756.38,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2024-03","month":"2024-03","incomplete":false,"santander_mp":1305692.0,"ap_santander_mp":0.0,"gestion_ag":1459707.0,"ap_gestion_ag":0.0,"monetario":1193948.0,"ap_monetario":0.0,"money_mkt_clp":2052492.0,"ap_money_mkt_clp":0.0,"renta_cp":1193750.0,"ap_renta_cp":0.0,"renta_mp":1244640.0,"ap_renta_mp":200000.0,"santander_d":1306257.0,"ap_santander_d":0.0,"acciones_clp":207328.0,"ap_acciones_clp":200000.0,"deuda_dolar":511.62,"ap_deuda_dolar":0.0,"mm_dolar":1056.36,"ap_mm_dolar":295.0,"prudente_dol":265.33,"ap_prudente_dol":0.0,"agresivo_dol":256.69,"ap_agresivo_dol":250.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":18756.38,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2024-04","month":"2024-04","incomplete":false,"santander_mp":1415321.0,"ap_santander_mp":100000.0,"gestion_ag":1502532.0,"ap_gestion_ag":100000.0,"monetario":1453508.0,"ap_monetario":0.0,"money_mkt_clp":2162501.0,"ap_money_mkt_clp":100000.0,"renta_cp":1299032.0,"ap_renta_cp":100000.0,"renta_mp":1528451.0,"ap_renta_mp":0.0,"santander_d":1379596.0,"ap_santander_d":100000.0,"acciones_clp":289451.0,"ap_acciones_clp":100000.0,"deuda_dolar":696.38,"ap_deuda_dolar":0.0,"mm_dolar":2264.37,"ap_mm_dolar":0.0,"prudente_dol":497.63,"ap_prudente_dol":0.0,"agresivo_dol":452.38,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":18456.4,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2024-05","month":"2024-05","incomplete":false,"santander_mp":1654312.0,"ap_santander_mp":229000.0,"gestion_ag":1504107.0,"ap_gestion_ag":0.0,"monetario":1459615.0,"ap_monetario":0.0,"money_mkt_clp":2171537.0,"ap_money_mkt_clp":0.0,"renta_cp":1305383.0,"ap_renta_cp":0.0,"renta_mp":1537922.0,"ap_renta_mp":0.0,"santander_d":1381549.0,"ap_santander_d":0.0,"acciones_clp":290248.0,"ap_acciones_clp":0.0,"deuda_dolar":703.3,"ap_deuda_dolar":0.0,"mm_dolar":2793.56,"ap_mm_dolar":519.0,"prudente_dol":501.91,"ap_prudente_dol":0.0,"agresivo_dol":459.44,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":18456.4,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2024-06","month":"2024-06","incomplete":false,"santander_mp":1668020.0,"ap_santander_mp":0.0,"gestion_ag":1557193.0,"ap_gestion_ag":0.0,"monetario":1956163.0,"ap_monetario":490000.0,"money_mkt_clp":2178981.0,"ap_money_mkt_clp":0.0,"renta_cp":1310025.0,"ap_renta_cp":0.0,"renta_mp":1546326.0,"ap_renta_mp":0.0,"santander_d":1367725.0,"ap_santander_d":0.0,"acciones_clp":312225.0,"ap_acciones_clp":0.0,"deuda_dolar":714.1,"ap_deuda_dolar":0.0,"mm_dolar":4029.81,"ap_mm_dolar":1223.0,"prudente_dol":506.73,"ap_prudente_dol":0.0,"agresivo_dol":465.53,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":17956.4,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2024-07","month":"2024-07","incomplete":false,"santander_mp":1679040.0,"ap_santander_mp":0.0,"gestion_ag":1564690.0,"ap_gestion_ag":0.0,"monetario":1963545.0,"ap_monetario":0.0,"money_mkt_clp":2187411.0,"ap_money_mkt_clp":0.0,"renta_cp":1771235.0,"ap_renta_cp":454000.0,"renta_mp":1556752.0,"ap_renta_mp":0.0,"santander_d":1409489.0,"ap_santander_d":0.0,"acciones_clp":312513.0,"ap_acciones_clp":0.0,"deuda_dolar":912.91,"ap_deuda_dolar":188.0,"mm_dolar":5370.75,"ap_mm_dolar":1320.0,"prudente_dol":704.23,"ap_prudente_dol":189.0,"agresivo_dol":654.14,"ap_agresivo_dol":188.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":16556.38,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2024-08","month":"2024-08","incomplete":false,"santander_mp":1690296.0,"ap_santander_mp":0.0,"gestion_ag":1558792.0,"ap_gestion_ag":0.0,"monetario":1970391.0,"ap_monetario":0.0,"money_mkt_clp":2195099.0,"ap_money_mkt_clp":0.0,"renta_cp":1777658.0,"ap_renta_cp":0.0,"renta_mp":1566599.0,"ap_renta_mp":0.0,"santander_d":1463896.0,"ap_santander_d":0.0,"acciones_clp":307609.0,"ap_acciones_clp":0.0,"deuda_dolar":1137.52,"ap_deuda_dolar":200.0,"mm_dolar":6761.53,"ap_mm_dolar":1367.0,"prudente_dol":1028.52,"ap_prudente_dol":300.0,"agresivo_dol":762.67,"ap_agresivo_dol":86.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":16556.38,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2024-09","month":"2024-09","incomplete":false,"santander_mp":1701027.0,"ap_santander_mp":0.0,"gestion_ag":1571133.0,"ap_gestion_ag":0.0,"monetario":1977143.0,"ap_monetario":0.0,"money_mkt_clp":2202768.0,"ap_money_mkt_clp":0.0,"renta_cp":1786074.0,"ap_renta_cp":0.0,"renta_mp":1576460.0,"ap_renta_mp":0.0,"santander_d":1550455.0,"ap_santander_d":0.0,"acciones_clp":306584.0,"ap_acciones_clp":0.0,"deuda_dolar":1243.24,"ap_deuda_dolar":89.0,"mm_dolar":7483.9,"ap_mm_dolar":694.0,"prudente_dol":1137.52,"ap_prudente_dol":89.0,"agresivo_dol":910.15,"ap_agresivo_dol":120.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":16556.38,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2024-10","month":"2024-10","incomplete":false,"santander_mp":1701036.0,"ap_santander_mp":0.0,"gestion_ag":1617491.0,"ap_gestion_ag":0.0,"monetario":1983429.0,"ap_monetario":0.0,"money_mkt_clp":2210060.0,"ap_money_mkt_clp":0.0,"renta_cp":1792378.0,"ap_renta_cp":0.0,"renta_mp":1577295.0,"ap_renta_mp":0.0,"santander_d":1504504.0,"ap_santander_d":0.0,"acciones_clp":328889.0,"ap_acciones_clp":0.0,"deuda_dolar":1423.49,"ap_deuda_dolar":216.0,"mm_dolar":9528.2,"ap_mm_dolar":2013.0,"prudente_dol":1339.32,"ap_prudente_dol":216.0,"agresivo_dol":1329.1,"ap_agresivo_dol":431.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":16056.38,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":0.0,"ap_btc":0.0,"eth":0.0,"ap_eth":0.0},{"id":"2024-11","month":"2024-11","incomplete":false,"santander_mp":9311089.0,"ap_santander_mp":7583456.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":1611.56,"ap_deuda_dolar":177.0,"mm_dolar":11216.0,"ap_mm_dolar":1654.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":5072.39,"ap_etf_sp500":0.0,"apple":158.65,"ap_apple":0.0,"msft":158.34,"ap_msft":0.0,"nvidia":125.67,"ap_nvidia":0.0,"amazon":96.8,"ap_amazon":0.0,"alphabet":63.7,"ap_alphabet":0.0,"tesla":30.79,"ap_tesla":0.0,"livret_a":16056.38,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":561.96,"ap_btc":0.0,"eth":144.18,"ap_eth":0.0},{"id":"2024-12","month":"2024-12","incomplete":false,"santander_mp":9352093.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":11249.92,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":7176.01,"ap_etf_sp500":0.0,"apple":245.06,"ap_apple":0.0,"msft":229.78,"ap_msft":0.0,"nvidia":177.23,"ap_nvidia":0.0,"amazon":147.28,"ap_amazon":0.0,"alphabet":102.87,"ap_alphabet":0.0,"tesla":55.78,"ap_tesla":0.0,"livret_a":15556.38,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":742.97,"ap_btc":0.0,"eth":183.01,"ap_eth":0.0},{"id":"2025-01","month":"2025-01","incomplete":false,"santander_mp":9415500.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":11283.17,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":8508.93,"ap_etf_sp500":1137.16,"apple":271.5,"ap_apple":35.54,"msft":259.51,"ap_msft":35.54,"nvidia":184.62,"ap_nvidia":28.43,"amazon":178.41,"ap_amazon":21.32,"alphabet":122.72,"ap_alphabet":14.21,"tesla":59.17,"ap_tesla":7.1,"livret_a":15780.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":931.2,"ap_btc":108.14,"eth":201.04,"ap_eth":27.8},{"id":"2025-02","month":"2025-02","incomplete":false,"santander_mp":9455186.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":11312.29,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":10666.64,"ap_etf_sp500":2538.35,"apple":341.5,"ap_apple":79.32,"msft":317.47,"ap_msft":79.32,"nvidia":243.64,"ap_nvidia":63.46,"amazon":199.38,"ap_amazon":47.59,"alphabet":129.02,"ap_alphabet":31.73,"tesla":52.46,"ap_tesla":15.86,"livret_a":14880.3,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":896.8399999999999,"ap_btc":239.12,"eth":166.55,"ap_eth":59.78},{"id":"2025-03","month":"2025-03","incomplete":false,"santander_mp":9504590.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":11344.32,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":11039.08,"ap_etf_sp500":1083.38,"apple":341.91,"ap_apple":33.86,"msft":334.93,"ap_msft":33.86,"nvidia":234.96,"ap_nvidia":27.08,"amazon":198.25,"ap_amazon":20.31,"alphabet":129.0,"ap_alphabet":13.54,"tesla":52.33,"ap_tesla":6.77,"livret_a":10280.3,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":1019.1500000000001,"ap_btc":102.22,"eth":162.54,"ap_eth":25.56},{"id":"2025-04","month":"2025-04","incomplete":false,"santander_mp":9560511.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":11374.92,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":12504.27,"ap_etf_sp500":1469.768888888889,"apple":374.83,"ap_apple":45.93027777777778,"msft":400.33,"ap_msft":45.93027777777778,"nvidia":273.94,"ap_nvidia":36.74422222222223,"amazon":220.15,"ap_amazon":27.558166666666665,"alphabet":152.82,"ap_alphabet":18.372111111111114,"tesla":70.11,"ap_tesla":9.186055555555557,"livret_a":9280.3,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":1337.64,"ap_btc":138.752,"eth":196.4,"ap_eth":34.688},{"id":"2025-05","month":"2025-05","incomplete":false,"santander_mp":9577179.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":11404.69,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":13473.6,"ap_etf_sp500":0.0,"apple":366.83,"ap_apple":0.0,"msft":470.11,"ap_msft":0.0,"nvidia":366.5,"ap_nvidia":0.0,"amazon":249.3,"ap_amazon":0.0,"alphabet":167.77,"ap_alphabet":0.0,"tesla":89.54,"ap_tesla":0.0,"livret_a":10368.31,"ap_livret_a":1088.0100000000002,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":1528.9,"ap_btc":0.0,"eth":295.61,"ap_eth":0.0},{"id":"2025-06","month":"2025-06","incomplete":false,"santander_mp":9606852.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":11437.56,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":14067.22,"ap_etf_sp500":263.1,"apple":362.11,"ap_apple":0.0,"msft":509.09,"ap_msft":0.0,"nvidia":409.33,"ap_nvidia":0.0,"amazon":268.17,"ap_amazon":0.0,"alphabet":174.42,"ap_alphabet":0.0,"tesla":78.95,"ap_tesla":0.0,"livret_a":6868.31,"ap_livret_a":-3500.999999999999,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":1516.53,"ap_btc":0.0,"eth":268.64,"ap_eth":0.0},{"id":"2025-07","month":"2025-07","incomplete":false,"santander_mp":9612680.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":11466.51,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":14816.27,"ap_etf_sp500":264.1,"apple":384.01,"ap_apple":0.0,"msft":525.94,"ap_msft":0.0,"nvidia":451.17,"ap_nvidia":0.0,"amazon":279.41,"ap_amazon":0.0,"alphabet":186.95,"ap_alphabet":0.0,"tesla":79.08,"ap_tesla":0.0,"livret_a":6868.31,"ap_livret_a":-2.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":1674.22,"ap_btc":0.0,"eth":423.97,"ap_eth":0.0},{"id":"2025-08","month":"2025-08","incomplete":false,"santander_mp":9676320.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":11499.71,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":18885.88,"ap_etf_sp500":0.0,"apple":544.96,"ap_apple":0.0,"msft":635.06,"ap_msft":0.0,"nvidia":556.24,"ap_nvidia":0.0,"amazon":348.97,"ap_amazon":0.0,"alphabet":253.61,"ap_alphabet":0.0,"tesla":112.57,"ap_tesla":0.0,"livret_a":6868.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":1872.9899999999998,"ap_btc":0.0,"eth":595.64,"ap_eth":0.0},{"id":"2025-09","month":"2025-09","incomplete":false,"santander_mp":9709458.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":11531.86,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":21423.93,"ap_etf_sp500":1907.93,"apple":663.29,"ap_apple":59.62,"msft":701.97,"ap_msft":59.62,"nvidia":611.05,"ap_nvidia":47.7,"amazon":370.44,"ap_amazon":35.77,"alphabet":329.52,"ap_alphabet":23.85,"tesla":160.51,"ap_tesla":11.92,"livret_a":6868.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":2090.2200000000003,"ap_btc":180.43,"eth":603.4,"ap_eth":45.51},{"id":"2025-10","month":"2025-10","incomplete":false,"santander_mp":9737678.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":11563.68,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":28570.24,"ap_etf_sp500":6247.49,"apple":916.96,"ap_apple":195.23,"msft":922.87,"ap_msft":195.23,"nvidia":875.78,"ap_nvidia":156.19,"amazon":505.05,"ap_amazon":117.14,"alphabet":485.59,"ap_alphabet":78.09,"tesla":207.1,"ap_tesla":39.05,"livret_a":6868.31,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":2629.17,"ap_btc":623.72,"eth":672.3,"ap_eth":114.96},{"id":"2025-11","month":"2025-11","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":11571.8,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":30233.86,"ap_etf_sp500":2374.38,"apple":985.52,"ap_apple":74.2,"msft":938.5,"ap_msft":74.2,"nvidia":848.68,"ap_nvidia":59.36,"amazon":577.58,"ap_amazon":44.52,"alphabet":496.26,"ap_alphabet":29.68,"tesla":217.84,"ap_tesla":14.84,"livret_a":6868.0,"ap_livret_a":0.0,"cash_eur":0.0,"ap_cash_eur":0.0,"etf_sp500_eur":0.0,"ap_etf_sp500_eur":0.0,"btc":2615.3,"ap_btc":223.7,"eth":617.8,"ap_eth":56.37},{"id":"2026-03","month":"2026-03","incomplete":false,"santander_mp":0.0,"ap_santander_mp":0.0,"gestion_ag":0.0,"ap_gestion_ag":0.0,"monetario":0.0,"ap_monetario":0.0,"money_mkt_clp":0.0,"ap_money_mkt_clp":0.0,"renta_cp":0.0,"ap_renta_cp":0.0,"renta_mp":0.0,"ap_renta_mp":0.0,"santander_d":0.0,"ap_santander_d":0.0,"acciones_clp":0.0,"ap_acciones_clp":0.0,"deuda_dolar":0.0,"ap_deuda_dolar":0.0,"mm_dolar":0.0,"ap_mm_dolar":0.0,"prudente_dol":0.0,"ap_prudente_dol":0.0,"agresivo_dol":0.0,"ap_agresivo_dol":0.0,"etf_sp500":0.0,"ap_etf_sp500":0.0,"apple":0.0,"ap_apple":0.0,"msft":0.0,"ap_msft":0.0,"nvidia":0.0,"ap_nvidia":0.0,"amazon":0.0,"ap_amazon":0.0,"alphabet":0.0,"ap_alphabet":0.0,"tesla":0.0,"ap_tesla":0.0,"livret_a":21826.0,"ap_livret_a":0.0,"cash_eur":9638.0,"ap_cash_eur":0.0,"etf_sp500_eur":16186.0,"ap_etf_sp500_eur":0.0,"btc":2706.0,"ap_btc":0.0,"eth":367.0,"ap_eth":0.0}];
-const HIST_EXP = [{"id":"hist_5","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":59.950549450549445,"montant_usd":16.469931167733364},{"id":"hist_6","date":"2026-02-01","type":"Depense","categorie":"Autre","montant_qar":100.0,"montant_usd":27.47252747252747},{"id":"hist_7","date":"2026-02-01","type":"Salaire","categorie":"Salaire","montant_qar":11945.0,"montant_usd":3281.5934065934066},{"id":"hist_8","date":"2026-02-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":441.5302197802198,"montant_usd":121.2995109286318},{"id":"hist_9","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":38.0,"montant_usd":10.43956043956044},{"id":"hist_10","date":"2026-02-01","type":"Depense","categorie":"Voiture","montant_qar":1680.0,"montant_usd":461.53846153846155},{"id":"hist_11","date":"2026-02-01","type":"Depense","categorie":"Livraison","montant_qar":75.79945054945055,"montant_usd":20.82402487622268},{"id":"hist_12","date":"2026-02-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":109.4010989010989,"montant_usd":30.05524695085135},{"id":"hist_13","date":"2026-02-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":103.0,"montant_usd":28.296703296703296},{"id":"hist_14","date":"2026-02-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":2883.25,"montant_usd":792.1016483516484},{"id":"hist_15","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":19.0,"montant_usd":5.21978021978022},{"id":"hist_16","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":34.0,"montant_usd":9.340659340659341},{"id":"hist_17","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":36.0,"montant_usd":9.89010989010989},{"id":"hist_18","date":"2026-02-01","type":"Depense","categorie":"Livraison","montant_qar":88.0,"montant_usd":24.175824175824175},{"id":"hist_19","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":36.0,"montant_usd":9.89010989010989},{"id":"hist_20","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":34.0,"montant_usd":9.340659340659341},{"id":"hist_21","date":"2026-02-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":247.49999999999997,"montant_usd":67.99450549450549},{"id":"hist_22","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":25.499999999999996,"montant_usd":7.005494505494505},{"id":"hist_23","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":49.5,"montant_usd":13.598901098901099},{"id":"hist_24","date":"2026-02-01","type":"Depense","categorie":"Autre","montant_qar":350.0,"montant_usd":96.15384615384615},{"id":"hist_25","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":50.730769230769226,"montant_usd":13.93702451394759},{"id":"hist_26","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":25.499999999999996,"montant_usd":7.005494505494505},{"id":"hist_27","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":54.74999999999999,"montant_usd":15.041208791208788},{"id":"hist_28","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":65.51923076923077,"montant_usd":17.999788672865595},{"id":"hist_29","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":1.0,"montant_usd":0.2747252747252747},{"id":"hist_30","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":1.0,"montant_usd":0.2747252747252747},{"id":"hist_31","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":130.54945054945054,"montant_usd":35.86523366743147},{"id":"hist_32","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":88.99999999999999,"montant_usd":24.450549450549445},{"id":"hist_33","date":"2026-03-01","type":"Depense","categorie":"Sortie","montant_qar":15.0,"montant_usd":4.1208791208791204},{"id":"hist_34","date":"2026-03-01","type":"Depense","categorie":"Cadeaux","montant_qar":1000.0,"montant_usd":274.72527472527474},{"id":"hist_35","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":494.59065934065933,"montant_usd":135.8765547639174},{"id":"hist_36","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":174.49999999999997,"montant_usd":47.93956043956043},{"id":"hist_37","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":84.9010989010989,"montant_usd":23.324477720082115},{"id":"hist_38","date":"2026-03-01","type":"Depense","categorie":"Cadeaux","montant_qar":200.0,"montant_usd":54.94505494505494},{"id":"hist_39","date":"2026-03-01","type":"Depense","categorie":"Shopping","montant_qar":175.5,"montant_usd":48.214285714285715},{"id":"hist_40","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":119.0,"montant_usd":32.69230769230769},{"id":"hist_41","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":59.480769230769226,"montant_usd":16.340870667793745},{"id":"hist_42","date":"2026-03-01","type":"Depense","categorie":"Sortie","montant_qar":199.0,"montant_usd":54.67032967032967},{"id":"hist_43","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":191.0,"montant_usd":52.47252747252747},{"id":"hist_44","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":2957.0,"montant_usd":812.3626373626373},{"id":"hist_45","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":182.0,"montant_usd":50.0},{"id":"hist_46","date":"2026-03-01","type":"Depense","categorie":"Sortie","montant_qar":84.0,"montant_usd":23.076923076923077},{"id":"hist_47","date":"2026-03-01","type":"Depense","categorie":"Sortie","montant_qar":68.0,"montant_usd":18.681318681318682},{"id":"hist_48","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":626.0,"montant_usd":171.97802197802199},{"id":"hist_49","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":503.0,"montant_usd":138.18681318681317},{"id":"hist_50","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":506.68131868131866,"montant_usd":139.19816447288974},{"id":"hist_51","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":626.0,"montant_usd":171.97802197802199},{"id":"hist_52","date":"2026-03-01","type":"Depense","categorie":"Coiffeur","montant_qar":64.0,"montant_usd":17.58241758241758},{"id":"hist_53","date":"2026-03-01","type":"Depense","categorie":"Autre","montant_qar":235.99999999999997,"montant_usd":64.83516483516483},{"id":"hist_54","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":226.8708791208791,"montant_usd":62.3271645936481},{"id":"hist_55","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":109.4010989010989,"montant_usd":30.05524695085135},{"id":"hist_56","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":136.0,"montant_usd":37.362637362637365},{"id":"hist_57","date":"2026-03-01","type":"Depense","categorie":"Shopping","montant_qar":386.70054945054943,"montant_usd":106.23641468421687},{"id":"hist_58","date":"2026-03-01","type":"Depense","categorie":"Carburant","montant_qar":70.0,"montant_usd":19.23076923076923},{"id":"hist_59","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":111.0,"montant_usd":30.494505494505493},{"id":"hist_60","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":783.1510989010989,"montant_usd":215.15140079700518},{"id":"hist_61","date":"2026-03-01","type":"Depense","categorie":"T\u00e9l\u00e9phone","montant_qar":50.0,"montant_usd":13.736263736263735},{"id":"hist_62","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":35.0,"montant_usd":9.615384615384615},{"id":"hist_63","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":109.4010989010989,"montant_usd":30.05524695085135},{"id":"hist_64","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":175.0,"montant_usd":48.07692307692307},{"id":"hist_65","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":71.0,"montant_usd":19.505494505494504},{"id":"hist_66","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":1312.1510989010987,"montant_usd":360.4810711266755},{"id":"hist_67","date":"2026-03-01","type":"Depense","categorie":"Loyer","montant_qar":9500.0,"montant_usd":2609.8901098901097},{"id":"hist_68","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":182.0,"montant_usd":50.0},{"id":"hist_69","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":109.4,"montant_usd":30.054945054945055},{"id":"hist_70","date":"2026-03-01","type":"Depense","categorie":"Voiture","montant_qar":3360.0,"montant_usd":923.0769230769231},{"id":"hist_71","date":"2026-03-01","type":"Depense","categorie":"Alimentation","montant_qar":10.0,"montant_usd":2.7472527472527473},{"id":"hist_72","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":764.32,"montant_usd":209.97802197802199},{"id":"hist_73","date":"2026-03-01","type":"Depense","categorie":"Shopping","montant_qar":111.85,"montant_usd":30.728021978021975},{"id":"hist_74","date":"2026-03-01","type":"Salaire","categorie":"Salaire","montant_qar":28009.0,"montant_usd":7694.780219780219},{"id":"hist_75","date":"2026-04-01","type":"Salaire","categorie":"Salaire","montant_qar":29410.0,"montant_usd":8079.670329670329}];
+// ── EMBEDDED DATA (loaded on first launch) ───────────────
+const INIT_EXP    = [{"id":"hist_5","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":59.950549450549445,"montant_usd":16.469931167733364},{"id":"hist_6","date":"2026-02-01","type":"Depense","categorie":"Autre","montant_qar":100,"montant_usd":27.47252747252747},{"id":"hist_7","date":"2026-02-01","type":"Salaire","categorie":"Salaire","montant_qar":11945,"montant_usd":3281.5934065934066},{"id":"hist_8","date":"2026-02-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":441.5302197802198,"montant_usd":121.2995109286318},{"id":"hist_9","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":38,"montant_usd":10.43956043956044},{"id":"hist_10","date":"2026-02-01","type":"Depense","categorie":"Voiture","montant_qar":1680,"montant_usd":461.53846153846155},{"id":"hist_11","date":"2026-02-01","type":"Depense","categorie":"Livraison","montant_qar":75.79945054945055,"montant_usd":20.82402487622268},{"id":"hist_12","date":"2026-02-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":109.4010989010989,"montant_usd":30.05524695085135},{"id":"hist_13","date":"2026-02-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":103,"montant_usd":28.296703296703296},{"id":"hist_14","date":"2026-02-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":2883.25,"montant_usd":792.1016483516484},{"id":"hist_15","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":19,"montant_usd":5.21978021978022},{"id":"hist_16","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":34,"montant_usd":9.340659340659341},{"id":"hist_17","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":36,"montant_usd":9.89010989010989},{"id":"hist_18","date":"2026-02-01","type":"Depense","categorie":"Livraison","montant_qar":88,"montant_usd":24.175824175824175},{"id":"hist_19","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":36,"montant_usd":9.89010989010989},{"id":"hist_20","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":34,"montant_usd":9.340659340659341},{"id":"hist_21","date":"2026-02-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":247.49999999999997,"montant_usd":67.99450549450549},{"id":"hist_22","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":25.499999999999996,"montant_usd":7.005494505494505},{"id":"hist_23","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":49.5,"montant_usd":13.598901098901099},{"id":"hist_24","date":"2026-02-01","type":"Depense","categorie":"Autre","montant_qar":350,"montant_usd":96.15384615384615},{"id":"hist_25","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":50.730769230769226,"montant_usd":13.93702451394759},{"id":"hist_26","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":25.499999999999996,"montant_usd":7.005494505494505},{"id":"hist_27","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":54.74999999999999,"montant_usd":15.041208791208788},{"id":"hist_28","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":65.51923076923077,"montant_usd":17.999788672865595},{"id":"hist_29","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":1,"montant_usd":0.2747252747252747},{"id":"hist_30","date":"2026-02-01","type":"Depense","categorie":"Transport","montant_qar":1,"montant_usd":0.2747252747252747},{"id":"hist_31","date":"2026-02-01","type":"Depense","categorie":"Alimentation","montant_qar":130.54945054945054,"montant_usd":35.86523366743147},{"id":"hist_32","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":88.99999999999999,"montant_usd":24.450549450549445},{"id":"hist_33","date":"2026-03-01","type":"Depense","categorie":"Sortie","montant_qar":15,"montant_usd":4.1208791208791204},{"id":"hist_34","date":"2026-03-01","type":"Depense","categorie":"Cadeaux","montant_qar":1000,"montant_usd":274.72527472527474},{"id":"hist_35","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":494.59065934065933,"montant_usd":135.8765547639174},{"id":"hist_36","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":174.49999999999997,"montant_usd":47.93956043956043},{"id":"hist_37","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":84.9010989010989,"montant_usd":23.324477720082115},{"id":"hist_38","date":"2026-03-01","type":"Depense","categorie":"Cadeaux","montant_qar":200,"montant_usd":54.94505494505494},{"id":"hist_39","date":"2026-03-01","type":"Depense","categorie":"Shopping","montant_qar":175.5,"montant_usd":48.214285714285715},{"id":"hist_40","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":119,"montant_usd":32.69230769230769},{"id":"hist_41","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":59.480769230769226,"montant_usd":16.340870667793745},{"id":"hist_42","date":"2026-03-01","type":"Depense","categorie":"Sortie","montant_qar":199,"montant_usd":54.67032967032967},{"id":"hist_43","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":191,"montant_usd":52.47252747252747},{"id":"hist_44","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":2957,"montant_usd":812.3626373626373},{"id":"hist_45","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":182,"montant_usd":50},{"id":"hist_46","date":"2026-03-01","type":"Depense","categorie":"Sortie","montant_qar":84,"montant_usd":23.076923076923077},{"id":"hist_47","date":"2026-03-01","type":"Depense","categorie":"Sortie","montant_qar":68,"montant_usd":18.681318681318682},{"id":"hist_48","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":626,"montant_usd":171.97802197802199},{"id":"hist_49","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":503,"montant_usd":138.18681318681317},{"id":"hist_50","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":506.68131868131866,"montant_usd":139.19816447288974},{"id":"hist_51","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":626,"montant_usd":171.97802197802199},{"id":"hist_52","date":"2026-03-01","type":"Depense","categorie":"Coiffeur","montant_qar":64,"montant_usd":17.58241758241758},{"id":"hist_53","date":"2026-03-01","type":"Depense","categorie":"Autre","montant_qar":235.99999999999997,"montant_usd":64.83516483516483},{"id":"hist_54","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":226.8708791208791,"montant_usd":62.3271645936481},{"id":"hist_55","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":109.4010989010989,"montant_usd":30.05524695085135},{"id":"hist_56","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":136,"montant_usd":37.362637362637365},{"id":"hist_57","date":"2026-03-01","type":"Depense","categorie":"Shopping","montant_qar":386.70054945054943,"montant_usd":106.23641468421687},{"id":"hist_58","date":"2026-03-01","type":"Depense","categorie":"Carburant","montant_qar":70,"montant_usd":19.23076923076923},{"id":"hist_59","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":111,"montant_usd":30.494505494505493},{"id":"hist_60","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":783.1510989010989,"montant_usd":215.15140079700518},{"id":"hist_61","date":"2026-03-01","type":"Depense","categorie":"T\u00e9l\u00e9phone","montant_qar":50,"montant_usd":13.736263736263735},{"id":"hist_62","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":35,"montant_usd":9.615384615384615},{"id":"hist_63","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":109.4010989010989,"montant_usd":30.05524695085135},{"id":"hist_64","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":175,"montant_usd":48.07692307692307},{"id":"hist_65","date":"2026-03-01","type":"Depense","categorie":"Livraison","montant_qar":71,"montant_usd":19.505494505494504},{"id":"hist_66","date":"2026-03-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":1312.1510989010987,"montant_usd":360.4810711266755},{"id":"hist_67","date":"2026-03-01","type":"Depense","categorie":"Loyer","montant_qar":9500,"montant_usd":2609.8901098901097},{"id":"hist_68","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":182,"montant_usd":50},{"id":"hist_69","date":"2026-03-01","type":"Depense","categorie":"Sant\u00e9","montant_qar":109.4,"montant_usd":30.054945054945055},{"id":"hist_70","date":"2026-03-01","type":"Depense","categorie":"Voiture","montant_qar":3360,"montant_usd":923.0769230769231},{"id":"hist_71","date":"2026-03-01","type":"Depense","categorie":"Alimentation","montant_qar":10,"montant_usd":2.7472527472527473},{"id":"hist_72","date":"2026-03-01","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":764.32,"montant_usd":209.97802197802199},{"id":"hist_73","date":"2026-03-01","type":"Depense","categorie":"Shopping","montant_qar":111.85,"montant_usd":30.728021978021975},{"id":"hist_74","date":"2026-03-01","type":"Salaire","categorie":"Salaire","montant_qar":28009,"montant_usd":7694.780219780219},{"id":"hist_75","date":"2026-04-01","type":"Salaire","categorie":"Salaire","montant_qar":29410,"montant_usd":8079.670329670329},{"id":"1775022235223","date":"2026-03-28","type":"Depense","categorie":"Carburant","montant_qar":86.01,"montant_usd":23.62912087912088},{"id":"1775022250859","date":"2026-03-29","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":386,"montant_usd":106.04395604395604},{"id":"1775022268765","date":"2026-03-31","type":"Depense","categorie":"Autre","montant_qar":199,"montant_usd":54.67032967032967},{"id":"1775128786228","date":"2026-04-02","type":"Depense","categorie":"Alimentation","montant_qar":22,"montant_usd":6.043956043956044},{"id":"1775138093280","date":"2026-04-02","type":"Depense","categorie":"Cadeaux","montant_qar":310.75,"montant_usd":85.37087912087912},{"id":"1775138944508","date":"2026-04-02","type":"Depense","categorie":"Cadeaux","montant_qar":169.5,"montant_usd":46.565934065934066},{"id":"1775217543195","date":"2026-04-03","type":"Depense","categorie":"Sortie","montant_qar":705,"montant_usd":193.6813186813187},{"id":"1775229263763","date":"2026-04-03","type":"Depense","categorie":"Livraison","montant_qar":88,"montant_usd":24.175824175824175},{"id":"1775290925775","date":"2026-04-04","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":1005,"montant_usd":276.0989010989011},{"id":"1775301589977","date":"2026-04-04","type":"Depense","categorie":"Autre","montant_qar":220,"montant_usd":60.43956043956044},{"id":"1775305719733","date":"2026-04-04","type":"Depense","categorie":"Cadeaux","montant_qar":655,"montant_usd":179.94505494505495},{"id":"1775487149059","date":"2026-04-06","type":"Depense","categorie":"Sant\u00e9","montant_qar":136,"montant_usd":37.362637362637365},{"id":"1775556418128","date":"2026-04-07","type":"Depense","categorie":"Loyer","montant_qar":9500,"montant_usd":2609.8901098901097},{"id":"1775572835043","date":"2026-03-27","type":"Depense","categorie":"Alimentation","montant_qar":49,"montant_usd":13.461538461538462},{"id":"1775572854373","date":"2026-03-30","type":"Depense","categorie":"T\u00e9l\u00e9phone","montant_qar":130,"montant_usd":35.714285714285715},{"id":"1775750118761","date":"2026-04-09","type":"Depense","categorie":"Sortie","montant_qar":28,"montant_usd":7.692307692307692},{"id":"1775832877790","date":"2026-04-10","type":"Depense","categorie":"Carburant","montant_qar":80,"montant_usd":21.978021978021978},{"id":"1775832893435","date":"2026-04-10","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":197,"montant_usd":54.12087912087912},{"id":"1775832904134","date":"2026-04-10","type":"Depense","categorie":"Sant\u00e9","montant_qar":149,"montant_usd":40.934065934065934},{"id":"1775833883374","date":"2026-04-10","type":"Depense","categorie":"Sant\u00e9","montant_qar":72,"montant_usd":19.78021978021978},{"id":"1775899018132","date":"2026-04-11","type":"Depense","categorie":"Sant\u00e9","montant_qar":47,"montant_usd":12.912087912087912},{"id":"1775923630763","date":"2026-04-11","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":189.15,"montant_usd":51.964285714285715},{"id":"1775934092505","date":"2026-04-11","type":"Depense","categorie":"T\u00e9l\u00e9phone","montant_qar":50,"montant_usd":13.736263736263735},{"id":"1775996733697","date":"2026-04-12","type":"Depense","categorie":"Alimentation","montant_qar":6,"montant_usd":1.6483516483516483},{"id":"1776004720034","date":"2026-04-12","type":"Depense","categorie":"Sant\u00e9","montant_qar":54,"montant_usd":14.835164835164834},{"id":"1776089256236","date":"2026-04-13","type":"Depense","categorie":"Sant\u00e9","montant_qar":109.4,"montant_usd":30.054945054945055},{"id":"1776092892678","date":"2026-04-13","type":"Depense","categorie":"Sant\u00e9","montant_qar":400,"montant_usd":109.89010989010988},{"id":"1776092901028","date":"2026-04-13","type":"Depense","categorie":"Sant\u00e9","montant_qar":70,"montant_usd":19.23076923076923},{"id":"1776099500382","date":"2026-04-13","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":351.51,"montant_usd":96.56868131868131},{"id":"1776255629363","date":"2026-04-15","type":"Depense","categorie":"Autre","montant_qar":50.5,"montant_usd":13.873626373626372},{"id":"1776321613565","date":"2026-04-16","type":"Depense","categorie":"T\u00e9l\u00e9phone","montant_qar":82.1,"montant_usd":22.55494505494505},{"id":"1776350080761","date":"2026-04-16","type":"Depense","categorie":"Alimentation","montant_qar":201,"montant_usd":55.21978021978022},{"id":"1776418659470","date":"2026-04-17","type":"Depense","categorie":"Voiture","montant_qar":35,"montant_usd":9.615384615384615},{"id":"1776427930011","date":"2026-04-17","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":573.667,"montant_usd":157.6008241758242},{"id":"1776454014368","date":"2026-04-17","type":"Depense","categorie":"Autre","montant_qar":10,"montant_usd":2.7472527472527473},{"id":"1776696864156","date":"2026-04-20","type":"Depense","categorie":"Sortie","montant_qar":48,"montant_usd":13.186813186813186},{"id":"1776929426819","date":"2026-04-23","type":"Depense","categorie":"Alimentation","montant_qar":10,"montant_usd":2.7472527472527473},{"id":"1776971628559","date":"2026-04-23","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":172,"montant_usd":47.25274725274725},{"id":"1777027502660","date":"2026-04-24","type":"Depense","categorie":"Sortie","montant_qar":69,"montant_usd":18.956043956043956},{"id":"1777027794322","date":"2026-04-24","type":"Depense","categorie":"Livraison","montant_qar":68.6,"montant_usd":18.846153846153843},{"id":"1777094143276","date":"2026-04-25","type":"Depense","categorie":"Sant\u00e9","montant_qar":340.5,"montant_usd":93.54395604395604},{"id":"1777119263213","date":"2026-04-25","type":"Depense","categorie":"Alimentation","montant_qar":79,"montant_usd":21.7032967032967},{"id":"1777136124956","date":"2026-04-25","type":"Depense","categorie":"Alimentation","montant_qar":76,"montant_usd":20.87912087912088},{"id":"1777187643506","date":"2026-05-01","type":"Salaire","categorie":"Salaire","montant_qar":29274,"montant_usd":8042.307692307692},{"id":"1777211165155","date":"2026-04-26","type":"Depense","categorie":"Alimentation","montant_qar":97,"montant_usd":26.648351648351646},{"id":"1777288515770","date":"2026-04-27","type":"Depense","categorie":"Alimentation","montant_qar":100,"montant_usd":27.47252747252747},{"id":"1777306584258","date":"2026-04-27","type":"Depense","categorie":"Alimentation","montant_qar":59,"montant_usd":16.208791208791208},{"id":"1777359853630","date":"2026-04-28","type":"Depense","categorie":"Autre","montant_qar":160,"montant_usd":43.956043956043956},{"id":"1777359929051","date":"2026-04-28","type":"Depense","categorie":"T\u00e9l\u00e9phone","montant_qar":130,"montant_usd":35.714285714285715},{"id":"1777366320114","date":"2026-04-28","type":"Depense","categorie":"Alimentation","montant_qar":79,"montant_usd":21.7032967032967},{"id":"1777387288828","date":"2026-04-28","type":"Depense","categorie":"Alimentation","montant_qar":85,"montant_usd":23.35164835164835},{"id":"1777455432559","date":"2026-04-29","type":"Depense","categorie":"Sant\u00e9","montant_qar":10152.45,"montant_usd":2789.1346153846157},{"id":"1777456533243","date":"2026-04-29","type":"Depense","categorie":"Sant\u00e9","montant_qar":373,"montant_usd":102.47252747252747},{"id":"1777471250261","date":"2026-04-29","type":"Depense","categorie":"Sant\u00e9","montant_qar":180,"montant_usd":49.450549450549445},{"id":"1777471254167","date":"2026-04-29","type":"Depense","categorie":"Sant\u00e9","montant_qar":49.5,"montant_usd":13.598901098901099},{"id":"1777478901894","date":"2026-04-29","type":"Depense","categorie":"Livraison","montant_qar":119,"montant_usd":32.69230769230769},{"id":"1777533074180","date":"2026-04-30","type":"Depense","categorie":"Autre","montant_qar":20,"montant_usd":5.4945054945054945},{"id":"1777533084735","date":"2026-04-30","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":504.75,"montant_usd":138.66758241758242},{"id":"1777551640160","date":"2026-04-30","type":"Depense","categorie":"Cadeaux","montant_qar":210,"montant_usd":57.69230769230769},{"id":"1777551652986","date":"2026-04-30","type":"Depense","categorie":"Supermarch\u00e9","montant_qar":85.25,"montant_usd":23.420329670329668},{"id":"1777551667034","date":"2026-04-30","type":"Depense","categorie":"Livraison","montant_qar":35,"montant_usd":9.615384615384615},{"id":"1777646360456","date":"2026-05-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":283.4,"montant_usd":77.85714285714285},{"id":"1777646573013","date":"2026-05-01","type":"Depense","categorie":"H\u00e9l\u00e8ne","montant_qar":194.65,"montant_usd":53.47527472527472}];
+const INIT_ASSETS = [{"id":"fonds_clp","label":"Fonds CLP","cur":"CLP","grp":"Fonds CLP","cls":"liquidites","arch":false},{"id":"cash_ca","label":"Cash CA","cur":"EUR","grp":"Cash EUR","cls":"liquidites","arch":false},{"id":"cash_revolut","label":"Cash Revolut","cur":"EUR","grp":"Cash EUR","cls":"liquidites","arch":false},{"id":"etf_sp500","label":"ETF S&P500","cur":"EUR","grp":"Actions","cls":"actions","arch":false},{"id":"btc","label":"Bitcoin","cur":"CRYPTO","grp":"Crypto","cls":"crypto","arch":false},{"id":"eth","label":"Ethereum","cur":"CRYPTO","grp":"Crypto","cls":"crypto","arch":false}];
+const INIT_CATS   = [{"name":"Alimentation","icon":"\ud83c\udf7d\ufe0f","color":"#3b82f6"},{"name":"Supermarch\u00e9","icon":"\ud83d\uded2","color":"#06b6d4"},{"name":"Livraison","icon":"\ud83d\udce6","color":"#8b5cf6"},{"name":"Transport","icon":"\ud83d\ude96","color":"#f59e0b"},{"name":"H\u00e9l\u00e8ne","icon":"\ud83d\udc69","color":"#ec4899"},{"name":"Sant\u00e9","icon":"\ud83c\udfe5","color":"#ef4444"},{"name":"Voiture","icon":"\ud83d\ude97","color":"#6b7280"},{"name":"Loyer","icon":"\ud83c\udfe0","color":"#10b981"},{"name":"Sortie","icon":"\ud83c\udf89","color":"#f97316"},{"name":"Shopping","icon":"\ud83d\udecd\ufe0f","color":"#a855f7"},{"name":"Coiffeur","icon":"\u2702\ufe0f","color":"#14b8a6"},{"name":"Carburant","icon":"\u26fd","color":"#84cc16"},{"name":"T\u00e9l\u00e9phone","icon":"\ud83d\udcf1","color":"#3b82f6"},{"name":"Cadeaux","icon":"\ud83c\udf81","color":"#f59e0b"},{"name":"Autre","icon":"\ud83d\udcab","color":"#6b7280"}];
+const INIT_CFG    = {"qar":3.64,"clp":901,"eur":1.17};
 
 // ── DEFAULTS ─────────────────────────────────────────────
 const DEF_CLASSES = [
-  {id:'liquidites',label:'Liquidités',    icon:'🏦'},
+  {id:'liquidites',label:'Liquidités',     icon:'🏦'},
   {id:'actions',   label:'Actions & Fonds',icon:'📈'},
   {id:'crypto',    label:'Crypto',         icon:'₿'},
-];
-const DEF_ASSETS = [{"id":"santander_mp","label":"Santander MP","cur":"CLP","grp":"Fonds CLP","cls":"liquidites","arch":false},{"id":"gestion_ag","label":"Gestion Activa","cur":"CLP","grp":"Fonds CLP","cls":"liquidites","arch":false},{"id":"monetario","label":"Monetario","cur":"CLP","grp":"Fonds CLP","cls":"liquidites","arch":false},{"id":"money_mkt_clp","label":"Money Market CLP","cur":"CLP","grp":"Fonds CLP","cls":"liquidites","arch":false},{"id":"renta_cp","label":"Renta CP","cur":"CLP","grp":"Fonds CLP","cls":"liquidites","arch":false},{"id":"renta_mp","label":"Renta MP","cur":"CLP","grp":"Fonds CLP","cls":"liquidites","arch":false},{"id":"santander_d","label":"Santander D","cur":"CLP","grp":"Fonds CLP","cls":"liquidites","arch":false},{"id":"acciones_clp","label":"Acciones US CLP","cur":"CLP","grp":"Fonds CLP","cls":"liquidites","arch":false},{"id":"deuda_dolar","label":"Deuda D\u00f3lar","cur":"USD","grp":"Fonds USD","cls":"actions","arch":false},{"id":"mm_dolar","label":"Money Market USD","cur":"USD","grp":"Fonds USD","cls":"actions","arch":false},{"id":"prudente_dol","label":"Prudente D\u00f3lar","cur":"USD","grp":"Fonds USD","cls":"actions","arch":false},{"id":"agresivo_dol","label":"Agresivo D\u00f3lar","cur":"USD","grp":"Fonds USD","cls":"actions","arch":false},{"id":"etf_sp500","label":"ETF S&P500 USD","cur":"USD","grp":"ETF","cls":"actions","arch":false},{"id":"apple","label":"Apple","cur":"USD","grp":"Actions US","cls":"actions","arch":false},{"id":"msft","label":"Microsoft","cur":"USD","grp":"Actions US","cls":"actions","arch":false},{"id":"nvidia","label":"Nvidia","cur":"USD","grp":"Actions US","cls":"actions","arch":false},{"id":"amazon","label":"Amazon","cur":"USD","grp":"Actions US","cls":"actions","arch":false},{"id":"alphabet","label":"Alphabet","cur":"USD","grp":"Actions US","cls":"actions","arch":false},{"id":"tesla","label":"Tesla","cur":"USD","grp":"Actions US","cls":"actions","arch":false},{"id":"livret_a","label":"Livret A","cur":"EUR","grp":"\u00c9pargne EUR","cls":"liquidites","arch":false},{"id":"cash_eur","label":"Cash EUR","cur":"EUR","grp":"Cash EUR","cls":"liquidites","arch":false},{"id":"etf_sp500_eur","label":"ETF S&P500 EUR","cur":"EUR","grp":"ETF","cls":"actions","arch":false},{"id":"btc","label":"Bitcoin","cur":"CRYPTO","grp":"Crypto","cls":"crypto","arch":false},{"id":"eth","label":"Ethereum","cur":"CRYPTO","grp":"Crypto","cls":"crypto","arch":false}];
-const DEF_CATS = [
-  {name:'Alimentation',icon:'🍽️',color:'#3b82f6'},{name:'Supermarché',icon:'🛒',color:'#06b6d4'},
-  {name:'Livraison',icon:'📦',color:'#8b5cf6'},{name:'Transport',icon:'🚖',color:'#f59e0b'},
-  {name:'Hélène',icon:'👩',color:'#ec4899'},{name:'Santé',icon:'🏥',color:'#ef4444'},
-  {name:'Voiture',icon:'🚗',color:'#6b7280'},{name:'Loyer',icon:'🏠',color:'#10b981'},
-  {name:'Sortie',icon:'🎉',color:'#f97316'},{name:'Shopping',icon:'🛍️',color:'#a855f7'},
-  {name:'Coiffeur',icon:'✂️',color:'#14b8a6'},{name:'Carburant',icon:'⛽',color:'#84cc16'},
-  {name:'Téléphone',icon:'📱',color:'#3b82f6'},{name:'Cadeaux',icon:'🎁',color:'#f59e0b'},
-  {name:'Autre',icon:'💫',color:'#6b7280'},
 ];
 const CLS_COLORS={liquidites:'#06b6d4',actions:'#3b82f6',crypto:'#8b5cf6'};
 const CLS_BG={liquidites:'linear-gradient(135deg,#0c2a35,#0a1f2e)',actions:'linear-gradient(135deg,#0c1a35,#091525)',crypto:'linear-gradient(135deg,#160d2e,#0f0921)'};
 const CLS_BDR={liquidites:'#1a4a5a',actions:'#1a2d5a',crypto:'#2d1a5a'};
-const CLS_SHADES={liquidites:['#06b6d4','#0891b2','#22d3ee','#67e8f9'],actions:['#3b82f6','#22c55e','#2563eb','#16a34a','#f97316','#06b6d4','#84cc16','#f59e0b','#ec4899'],crypto:['#f59e0b','#8b5cf6','#fbbf24']};
+const CLS_SHADES={liquidites:['#06b6d4','#0891b2','#22d3ee','#67e8f9'],actions:['#3b82f6','#22c55e','#2563eb','#f97316','#06b6d4','#84cc16','#f59e0b','#ec4899'],crypto:['#f59e0b','#8b5cf6','#fbbf24']};
 
 // ── DB ───────────────────────────────────────────────────
 const DB={
   g:k=>{try{return JSON.parse(localStorage.getItem(k))}catch{return null}},
   s:(k,v)=>localStorage.setItem(k,JSON.stringify(v)),
-  get exp(){return this.g('ft_exp')||[]},set exp(v){this.s('ft_exp',v)},
-  get inv(){return this.g('ft_inv')||[]},set inv(v){this.s('ft_inv',v)},
-  get cfg(){return this.g('ft_set')||{qar:3.64,clp:920,eur:1.08}},set cfg(v){this.s('ft_set',v)},
-  get assets(){return this.g('ft_ast')||DEF_ASSETS},set assets(v){this.s('ft_ast',v)},
-  get cats(){return this.g('ft_cats')||DEF_CATS},set cats(v){this.s('ft_cats',v)},
+  get exp(){return this.g('ft_exp')||[]},       set exp(v){this.s('ft_exp',v)},
+  get inv(){return this.g('ft_inv')||[]},       set inv(v){this.s('ft_inv',v)},
+  get cfg(){return this.g('ft_set')||INIT_CFG}, set cfg(v){this.s('ft_set',v)},
+  get assets(){return this.g('ft_ast')||INIT_ASSETS}, set assets(v){this.s('ft_ast',v)},
+  get cats(){return this.g('ft_cats')||INIT_CATS},    set cats(v){this.s('ft_cats',v)},
   get classes(){return this.g('ft_cls')||DEF_CLASSES},set classes(v){this.s('ft_cls',v)},
-  get loaded(){return localStorage.getItem('ft_ok')==='1'},set loaded(v){localStorage.setItem('ft_ok',v?'1':'0')},
+  get loaded(){return localStorage.getItem('ft_ok')==='1'},
+  set loaded(v){localStorage.setItem('ft_ok',v?'1':'0')},
 };
 
-function loadHist(){
-  if(DB.loaded)return;
-  const ei=new Set(DB.inv.map(i=>i.month));
-  DB.inv=[...DB.inv,...HIST_INV.filter(i=>!ei.has(i.month))];
+function initData(){
+  if(DB.loaded) return;
+  // Load initial expenses from embedded data
   const ee=new Set(DB.exp.map(e=>e.id));
-  DB.exp=[...DB.exp,...HIST_EXP.filter(e=>!ee.has(e.id))];
+  DB.exp=[...DB.exp,...INIT_EXP.filter(e=>!ee.has(e.id))];
   DB.loaded=true;
 }
 
@@ -411,31 +410,33 @@ function toUSD(id,v){
   if(!a)return v;
   return a.cur==='CLP'?v/s.clp:a.cur==='EUR'?v*s.eur:v;
 }
-function calcTotal(inv){return DB.assets.reduce((s,a)=>s+toUSD(a.id,inv[a.id]||0),0);}
-
-// Per-asset apport (in USD) — uses ap_<id> field, falls back to 0
-function assetAp(a,inv){
-  const v=inv['ap_'+a.id];
-  return v?toUSD(a.id,v):0;
+function calcTotal(inv){
+  return DB.assets.reduce((s,a)=>s+toUSD(a.id,inv[a.id]||0),0);
 }
-// Total portfolio apport for a month (in USD)
-function calcAp(inv){return DB.assets.reduce((s,a)=>s+assetAp(a,inv),0);}
+function calcAp(inv){
+  return DB.assets.reduce((s,a)=>s+toUSD(a.id,inv['ap_'+a.id]||0),0);
+}
+function sortedInv(){
+  return [...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));
+}
 
-// Sort investments for return calc — exclude incomplete months from Ret.T
-function sortedInv(){return [...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));}
-
+// ── RETURN CALC ──────────────────────────────────────────
+// Base = first month in DB (Apr 2026)
+// Ret.M = (N - N-1 - apport_N) / N-1   [apport déduit]
+// Ret.T = (N - base - Σapports) / base  [dénominateur = base uniquement]
 function calcRets(sorted){
+  if(sorted.length<1)return{rm:null,rt:null};
+  const base=sorted[0]; // Apr 2026 = reference
+  const t0=calcTotal(base);
   if(sorted.length<2)return{rm:null,rt:null};
-  const last=sorted[sorted.length-1],prev=sorted[sorted.length-2];
-  const tN=calcTotal(last),tP=calcTotal(prev);
-  const rm=tP>0?(tN-tP)/tP:null;
-  // Ret.T: skip incomplete months in denominator
-  const t0=calcTotal(sorted[0]);
+  const last=sorted[sorted.length-1];
+  const prev=sorted[sorted.length-2];
+  const tN=calcTotal(last),tP=calcTotal(prev),apN=calcAp(last);
+  const rm=tP>0?(tN-tP-apN)/tP:null;
+  // cumulative apports from month 1 onwards (not base)
   let cumAp=0;
-  for(let i=1;i<sorted.length;i++){
-    if(!sorted[i].incomplete)cumAp+=calcAp(sorted[i]);
-  }
-  const rt=(t0+cumAp)>0&&!last.incomplete?(tN-t0-cumAp)/(t0+cumAp):null;
+  for(let i=1;i<sorted.length;i++) cumAp+=calcAp(sorted[i]);
+  const rt=t0>0?(tN-t0-cumAp)/t0:null;
   return{rm,rt};
 }
 
@@ -459,21 +460,21 @@ function renderDash(){
   if(invs.length>0){
     const last=invs[invs.length-1],total=calcTotal(last);
     document.getElementById('kpi-total').textContent=FU(total);
-    document.getElementById('kpi-sub').textContent='USD · '+moLbl(last.month)+(last.incomplete?' ⚠️':'');
+    document.getElementById('kpi-sub').textContent='USD · '+moLbl(last.month);
     document.getElementById('imlbl').textContent=moLbl(last.month);
     const{rm,rt}=calcRets(invs);
     const re=document.getElementById('kpi-retm');re.textContent=FP(rm);re.className='kv '+(rm>0?'grn':rm<0?'red':'');
     const te=document.getElementById('kpi-rett');te.textContent=FP(rt);te.className='kv '+(rt>0?'grn':rt<0?'red':'');
     const byG={};
-    DB.assets.forEach(a=>{if(!byG[a.grp])byG[a.grp]=0;byG[a.grp]+=toUSD(a.id,last[a.id]||0);});
-    const GI={CLP:'🏦',USD:'📈',EUR:'🇫🇷',Crypto:'₿'};
+    DB.assets.filter(a=>!a.arch).forEach(a=>{if(!byG[a.grp])byG[a.grp]=0;byG[a.grp]+=toUSD(a.id,last[a.id]||0);});
+    const GI={};DB.classes.forEach(c=>{GI[c.id]=c.icon;});
     document.getElementById('idet').innerHTML=Object.entries(byG).filter(([,v])=>v>0)
-      .map(([g,v])=>`<div class="tr2"><span class="tl">${GI[g]||'•'} ${g}</span><span class="tv">${FU(v)}</span></div>`).join('')
-      ||'<div class="empty">Aucun investissement</div>';
+      .map(([g,v])=>`<div class="tr2"><span class="tl">${g}</span><span class="tv">${FU(v)}</span></div>`).join('')
+      ||'<div class="empty">Saisissez vos investissements</div>';
     renderAlloc(total,last);
   }else{
     ['kpi-total','kpi-retm','kpi-rett'].forEach(id=>document.getElementById(id).textContent='—');
-    document.getElementById('idet').innerHTML='<div class="empty">Aucun investissement saisi</div>';
+    document.getElementById('idet').innerHTML='<div class="empty">Saisissez votre premier mois</div>';
     document.getElementById('ialc').innerHTML='';
   }
   renderB5();renderSR();
@@ -483,7 +484,6 @@ function renderDash(){
   document.getElementById('rexp').innerHTML=recent.length?recent.map(e=>expItem(e,false)).join(''):'<div class="empty"><div style="font-size:32px">🧾</div>Aucune dépense ce mois</div>';
 }
 
-// ── BUDGET 5M ────────────────────────────────────────────
 function renderB5(){
   const exps=DB.exp,tbl=document.getElementById('b5t');
   const months=[];
@@ -498,7 +498,6 @@ function renderB5(){
   tbl.innerHTML=hdr+'<tbody>'+salR+catRs+depR+disR+'</tbody>';
 }
 
-// ── SAVINGS RATE ─────────────────────────────────────────
 function rateCol(r){return r===null?'var(--mut)':r>=0.3?'var(--grn)':r>=0.15?'var(--amb)':'var(--red)';}
 function renderSR(){
   const el=document.getElementById('src');if(!el)return;
@@ -510,30 +509,25 @@ function renderSR(){
     return{ym,sal,dep,rate:sal>0?Math.max(0,(sal-dep)/sal):null};
   });
   const withD=data.filter(d=>d.sal>0);
-  if(!withD.length){el.innerHTML='<div class="empty">Ajoutez votre salaire dans Dépenses pour voir le taux d\'épargne</div>';return;}
+  if(!withD.length){el.innerHTML='<div class="empty">Ajoutez votre salaire dans Dépenses</div>';return;}
   const avg=withD.reduce((s,d)=>s+d.rate,0)/withD.length;
   const best=withD.reduce((a,b)=>b.rate>a.rate?b:a,withD[0]);
   const nowYM=today().slice(0,7);
-  const cur=data.find(d=>d.ym===nowYM);
-  const curR=cur?.rate??null;
+  const cur=data.find(d=>d.ym===nowYM);const curR=cur?.rate??null;
   const pct=Math.min(1,Math.max(0,curR??avg??0));
-  const r=38,circ=2*Math.PI*r,dash=(pct*circ).toFixed(1),gap=((1-pct)*circ).toFixed(1);
-  const col=rateCol(curR??avg);
+  const r=38,circ=2*Math.PI*r,dash=(pct*circ).toFixed(1),gap=((1-pct)*circ).toFixed(1),col=rateCol(curR??avg);
   const ring=`<svg width="88" height="88" viewBox="0 0 100 100" style="transform:rotate(-90deg);flex-shrink:0"><circle cx="50" cy="50" r="${r}" fill="none" stroke="var(--bg3)" stroke-width="10"/><circle cx="50" cy="50" r="${r}" fill="none" stroke="${col}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${dash} ${gap}"/></svg>`;
   const maxH=50;
   const bars=data.map(d=>{const h=d.rate!==null?Math.max(3,Math.round(d.rate*maxH)):0;const lbl=new Date(d.ym+'-01').toLocaleDateString('fr-FR',{month:'short'}).slice(0,3);const isNow=d.ym===nowYM;return`<div class="srmo" title="${moLbl(d.ym)}: ${d.rate!==null?(d.rate*100).toFixed(0)+'%':'—'}"><div class="srmo-i" style="height:${maxH}px">${d.rate!==null?`<div class="srmo-f" style="height:${h}px;background:${rateCol(d.rate)}"></div>`:''}</div><div class="srmo-l" style="${isNow?'color:var(--text);font-weight:700':''}">${lbl}</div></div>`;}).join('');
   el.innerHTML=`<div style="display:flex;align-items:center;gap:14px">${ring}<div style="flex:1"><div style="font-size:10px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Mois en cours</div><div style="font-size:26px;font-weight:800;letter-spacing:-1px;color:${rateCol(curR)}">${curR!==null?(curR*100).toFixed(0)+'%':'—'}</div><div style="font-size:11px;color:var(--mut);margin-top:2px">${cur&&cur.sal>0?`${F(cur.sal)} − ${F(cur.dep)} QAR`:'Pas de données ce mois'}</div></div></div><div style="display:flex;gap:16px;margin-top:12px;flex-wrap:wrap"><div style="text-align:center"><div style="font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px">Moy. 12M</div><div style="font-size:15px;font-weight:800;color:${rateCol(avg)}">${(avg*100).toFixed(0)}%</div></div><div style="text-align:center"><div style="font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px">Meilleur mois</div><div style="font-size:15px;font-weight:800;color:var(--grn)">${(best.rate*100).toFixed(0)}%</div><div style="font-size:9px;color:var(--mut);font-family:'DM Mono',monospace">${moLbl(best.ym)}</div></div><div style="text-align:center"><div style="font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px">Épargné ce mois</div><div style="font-size:15px;font-weight:800;color:${rateCol(curR)}">${cur&&cur.sal>0?F(cur.sal-cur.dep)+' QAR':'—'}</div></div></div><div style="margin-top:12px;border-top:1px solid var(--bdr);padding-top:10px"><div style="font-size:9px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">12 derniers mois</div><div class="srmos">${bars}</div></div>`;
 }
 
-// ── ALLOC (Design 2) ─────────────────────────────────────
 function renderAlloc(total,last){
   const el=document.getElementById('ialc');if(!el||!total)return;
-  const clsColorIdx={};
-  const clsData={};
+  const clsColorIdx={};const clsData={};
   DB.classes.forEach(cls=>{clsData[cls.id]={cls,total:0,groups:{}};});
-  DB.assets.forEach(a=>{
-    const v=toUSD(a.id,last[a.id]||0);
-    if(!v||a.arch)return;
+  DB.assets.filter(a=>!a.arch).forEach(a=>{
+    const v=toUSD(a.id,last[a.id]||0);if(!v)return;
     const cid=a.cls||'actions';
     if(!clsData[cid])clsData[cid]={cls:{id:cid,label:cid,icon:'•'},total:0,groups:{}};
     clsData[cid].total+=v;
@@ -560,7 +554,7 @@ function renderAlloc(total,last){
 }
 
 // ── CHART ────────────────────────────────────────────────
-let cRange=6,cAsset='__total__';
+let cRange=999,cAsset='__total__';
 function setCR(n,btn){cRange=n;document.querySelectorAll('.ctab').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderChart();}
 function setCA(id){cAsset=id;renderChart();}
 function buildAsel(){
@@ -575,9 +569,9 @@ function renderChart(){
   if(allInvs.length<2){ctx.clearRect(0,0,cvs.width,cvs.height);return;}
   const data=cRange>=999?allInvs:allInvs.slice(-cRange);
   const asset=DB.assets.find(a=>a.id===cAsset);
-  const totals=data.map(inv=>({month:inv.month,v:cAsset==='__total__'?calcTotal(inv):toUSD(cAsset,inv[cAsset]||0),incomplete:inv.incomplete}));
+  const totals=data.map(inv=>({month:inv.month,v:cAsset==='__total__'?calcTotal(inv):toUSD(cAsset,inv[cAsset]||0)}));
   const ac=cAsset==='__total__'?'#3b82f6':asset?.cur==='EUR'?'#06b6d4':asset?.cur==='CLP'?'#10b981':asset?.cur==='CRYPTO'?'#8b5cf6':'#3b82f6';
-  const fY=v=>cAsset!=='__total__'&&asset?.cur==='CLP'?(v/1000).toFixed(0)+'k':cAsset!=='__total__'&&asset?.cur==='EUR'?'€'+F(v):v>=1000?'$'+(v/1000).toFixed(0)+'k':'$'+Math.round(v);
+  const fY=v=>cAsset!=='__total__'&&asset?.cur==='EUR'?'€'+F(v):cAsset!=='__total__'&&asset?.cur==='CLP'?(v/1000).toFixed(0)+'k':v>=1000?'$'+(v/1000).toFixed(0)+'k':'$'+Math.round(v);
   const dpr=window.devicePixelRatio||1,W=wrap.clientWidth||340,H=180;
   cvs.width=W*dpr;cvs.height=H*dpr;cvs.style.width=W+'px';cvs.style.height=H+'px';ctx.scale(dpr,dpr);
   const P={t:20,r:16,b:36,l:52},cW=W-P.l-P.r,cH=H-P.t-P.b,n=totals.length;
@@ -592,7 +586,7 @@ function renderChart(){
   ctx.lineTo(xP(n-1),P.t+cH);ctx.lineTo(xP(0),P.t+cH);ctx.closePath();ctx.fillStyle=gr;ctx.fill();
   ctx.beginPath();totals.forEach((d,i)=>i===0?ctx.moveTo(xP(i),yP(d.v)):ctx.lineTo(xP(i),yP(d.v)));
   ctx.strokeStyle=ac;ctx.lineWidth=2.5;ctx.lineJoin='round';ctx.stroke();
-  [0,n-1].forEach(i=>{ctx.beginPath();ctx.arc(xP(i),yP(totals[i].v),4,0,Math.PI*2);ctx.fillStyle=totals[i].incomplete?'#6b7280':ac;ctx.fill();ctx.strokeStyle='#0A0E1A';ctx.lineWidth=2;ctx.stroke();});
+  [0,n-1].forEach(i=>{ctx.beginPath();ctx.arc(xP(i),yP(totals[i].v),4,0,Math.PI*2);ctx.fillStyle=ac;ctx.fill();ctx.strokeStyle='#0A0E1A';ctx.lineWidth=2;ctx.stroke();});
   ctx.fillStyle='#5a6a82';ctx.textAlign='center';ctx.font=`9px 'DM Mono',monospace`;
   const step=Math.max(1,Math.floor(n/5));
   for(let i=0;i<n;i+=step){const[y2,m2]=totals[i].month.split('-');ctx.fillText(new Date(y2,m2-1).toLocaleDateString('fr-FR',{month:'short',year:'2-digit'}),xP(i),H-6);}
@@ -602,20 +596,12 @@ function renderChart(){
 function onChartTouch(e){
   const cvs=document.getElementById('ccvs');if(!cvs||!cvs._d)return;
   const{totals,xP,yP,ac,fY,W,n,P}=cvs._d;
-  const rect=cvs.getBoundingClientRect();
-  const cx=e.touches?e.touches[0].clientX:e.clientX;
-  const relX=cx-rect.left;
-  let best=0,bd=9999;
-  totals.forEach((d,i)=>{const dist=Math.abs(relX-xP(i));if(dist<bd){bd=dist;best=i;}});
-  const d=totals[best];
-  const tip=document.getElementById('ctip');
-  tip.innerHTML=`<b style="color:${d.incomplete?'#6b7280':ac}">${moLbl(d.month)}${d.incomplete?' ⚠️':''}</b><br>${fY(d.v)}`;
-  tip.style.display='block';
-  const tW=120,lft=Math.max(4,Math.min(xP(best)-tW/2,W-tW-4));
-  tip.style.left=lft+'px';tip.style.top=Math.max(4,yP(d.v)-60)+'px';
-  renderChart();
-  const ctx=cvs.getContext('2d');
-  ctx.save();ctx.beginPath();ctx.arc(xP(best),yP(d.v),6,0,Math.PI*2);ctx.fillStyle=d.incomplete?'#6b7280':ac;ctx.fill();ctx.strokeStyle='#0A0E1A';ctx.lineWidth=2;ctx.stroke();ctx.restore();
+  const rect=cvs.getBoundingClientRect(),cx=e.touches?e.touches[0].clientX:e.clientX,relX=cx-rect.left;
+  let best=0,bd=9999;totals.forEach((d,i)=>{const dist=Math.abs(relX-xP(i));if(dist<bd){bd=dist;best=i;}});
+  const d=totals[best],tip=document.getElementById('ctip');
+  tip.innerHTML=`<b style="color:${ac}">${moLbl(d.month)}</b><br>${fY(d.v)}`;tip.style.display='block';
+  const tW=120,lft=Math.max(4,Math.min(xP(best)-tW/2,W-tW-4));tip.style.left=lft+'px';tip.style.top=Math.max(4,yP(d.v)-60)+'px';
+  renderChart();const ctx=cvs.getContext('2d');ctx.save();ctx.beginPath();ctx.arc(xP(best),yP(d.v),6,0,Math.PI*2);ctx.fillStyle=ac;ctx.fill();ctx.strokeStyle='#0A0E1A';ctx.lineWidth=2;ctx.stroke();ctx.restore();
 }
 function hideCtip(){const t=document.getElementById('ctip');if(t)t.style.display='none';renderChart();}
 
@@ -634,20 +620,16 @@ function buildMomPickers(){
 }
 function renderMoM(){
   const el=document.getElementById('momc');if(!el)return;
-  const ma=document.getElementById('moma'),mb=document.getElementById('momb');
-  if(!ma||!mb)return;
-  const aYM=ma.value,bYM=mb.value;
-  const exps=DB.exp;
+  const ma=document.getElementById('moma'),mb=document.getElementById('momb');if(!ma||!mb)return;
+  const aYM=ma.value,bYM=mb.value,exps=DB.exp;
   const sum=(ym,type,cat)=>exps.filter(e=>moOf(e.date)===ym&&e.type===type&&(!cat||e.categorie===cat)).reduce((s,e)=>s+e.montant_qar,0);
   const CATS=DB.cats.map(c=>c.name).filter(c=>sum(aYM,'Depense',c)>0||sum(bYM,'Depense',c)>0);
-  const depA=sum(aYM,'Depense'),depB=sum(bYM,'Depense');
-  const salA=sum(aYM,'Salaire'),salB=sum(bYM,'Salaire');
+  const depA=sum(aYM,'Depense'),depB=sum(bYM,'Depense'),salA=sum(aYM,'Salaire'),salB=sum(bYM,'Salaire');
   const maxV=Math.max(depA,depB,...CATS.flatMap(c=>[sum(aYM,'Depense',c),sum(bYM,'Depense',c)]),1);
   const chip=(a,b,inv=false)=>{if(!a&&!b)return'<span class="mdlt neu">—</span>';if(!b)return'<span class="mdlt pos">+</span>';const p=(a-b)/b*100,good=inv?p<0:p>0,cls=p===0?'neu':good?'pos':'neg';return`<span class="mdlt ${cls}">${p>=0?'+':''}${p.toFixed(0)}%</span>`;};
   const fQ=v=>v?F(v):'—';
   const bar=(a,b)=>{const p=(a/maxV*100).toFixed(1),c=!b?'var(--acc)':a<=b?'var(--grn)':'var(--red)';return`<div class="mbarw"><div class="mbar" style="width:${p}%;background:${c}"></div></div>`;};
-  let g=`<div class="momg"><div class="momh">Catégorie</div><div class="momh">${moLbl(aYM)}</div><div class="momh">${moLbl(bYM)}</div><div class="momh">Δ</div>
-    <div class="momr"><div class="mc mclbl">💰 <b>Salaire</b></div><div class="mc mcnum" style="color:var(--mut)">${fQ(salA)}</div><div class="mc mcnum" style="color:var(--grn)">${fQ(salB)}</div><div class="mc mcd">${chip(salB,salA,false)}</div></div>`;
+  let g=`<div class="momg"><div class="momh">Catégorie</div><div class="momh">${moLbl(aYM)}</div><div class="momh">${moLbl(bYM)}</div><div class="momh">Δ</div><div class="momr"><div class="mc mclbl">💰 <b>Salaire</b></div><div class="mc mcnum" style="color:var(--mut)">${fQ(salA)}</div><div class="mc mcnum" style="color:var(--grn)">${fQ(salB)}</div><div class="mc mcd">${chip(salB,salA,false)}</div></div>`;
   CATS.forEach(cat=>{const a=sum(aYM,'Depense',cat),b=sum(bYM,'Depense',cat);g+=`<div class="momr"><div class="mc mclbl"><div>${bar(b,a)}</div><span>${cIcon(cat)} ${cat}</span></div><div class="mc mcnum" style="color:var(--mut)">${fQ(a)}</div><div class="mc mcnum">${fQ(b)}</div><div class="mc mcd">${chip(b,a,true)}</div></div>`;});
   g+=`<hr class="momsep"><div class="momr"><div class="mc mclbl" style="font-weight:700;color:var(--text)">💸 Total</div><div class="mc mcnum" style="color:var(--mut);font-weight:700">${fQ(depA)}</div><div class="mc mcnum" style="color:var(--red);font-weight:700">${fQ(depB)}</div><div class="mc mcd">${chip(depB,depA,true)}</div></div><div class="momr"><div class="mc mclbl" style="font-weight:700;color:var(--text)">✨ Disponible</div><div class="mc mcnum" style="color:var(--mut);font-weight:700">${salA||depA?fQ(salA-depA):'—'}</div><div class="mc mcnum" style="color:var(--amb);font-weight:700">${salB||depB?fQ(salB-depB):'—'}</div><div class="mc mcd">${salA||depA?chip(salB-depB,salA-depA,false):'—'}</div></div></div><div style="font-size:10px;color:var(--mut);font-family:'DM Mono',monospace;margin-top:8px;text-align:right">Valeurs en QAR</div>`;
   el.innerHTML=g;
@@ -710,16 +692,16 @@ function renderInvForm(pre){
     Object.entries(items).forEach(([grp,assets])=>{
       if(Object.keys(items).length>1)h+=`<div class="isec">${grp}</div>`;
       assets.forEach(a=>{
-        const v=pre&&pre[a.id]?pre[a.id]:'';
-        const vap=pre&&pre['ap_'+a.id]?pre['ap_'+a.id]:'';
-        h+=`<div style="border-bottom:1px solid #0d1525;padding-bottom:4px;margin-bottom:4px">
-          <div class="irow" style="border-bottom:none;padding-bottom:2px">
-            <span style="flex:1;font-size:13px">${a.label}</span>
+        const v=pre?.(a.id)||'';
+        const vap=pre?.['ap_'+a.id]||'';
+        h+=`<div class="irow">
+          <div class="irow-main">
+            <span class="ilbl">${a.label}</span>
             <input class="iinp ${cCls(a.cur)}" id="f-${a.id}" placeholder="0" inputmode="decimal" value="${v}" oninput="updPrev()">
           </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:2px 0 4px">
+          <div class="irow-ap">
             <span style="flex:1;font-size:11px;color:var(--mut);padding-left:10px">↳ Apport</span>
-            <input class="ap-inp ${cCls(a.cur)}" id="f-ap_${a.id}" placeholder="0" inputmode="decimal" value="${vap}" oninput="updPrev()" title="Apport sur ${a.label}">
+            <input class="ap-inp ${cCls(a.cur)}" id="f-ap_${a.id}" placeholder="0" inputmode="decimal" value="${vap}" title="Apport sur ${a.label}">
           </div>
         </div>`;
       });
@@ -735,25 +717,33 @@ function saveInv(){
   const g=id=>parseFloat(document.getElementById('f-'+id)?.value)||0;
   const entry={id:mo,month:mo};
   DB.assets.forEach(a=>{entry[a.id]=g(a.id);entry['ap_'+a.id]=g('ap_'+a.id);});
-  // Detect if incomplete (>3 previously non-zero assets now 0)
-  const prev=sortedInv().filter(i=>i.month<mo).pop();
-  if(prev){
-    const prevNZ=DB.assets.filter(a=>toUSD(a.id,prev[a.id]||0)>100);
-    const nowZ=prevNZ.filter(a=>g(a.id)===0);
-    entry.incomplete=nowZ.length>=3;
-  }
   DB.inv=[...DB.inv.filter(i=>i.month!==mo),entry];
-  toast('✅ Mois enregistré !'+(entry.incomplete?' ⚠️ Mois marqué incomplet':'')); 
+  toast('✅ Mois enregistré !');
   renderInvHist();if(curSc==='dash')renderDash();
 }
-function loadLastInv(){const s=sortedInv();if(!s.length){toast('Aucun mois précédent');return;}renderInvForm(s[s.length-1]);toast('✅ Données recopiées');}
+
+function loadLastInv(){
+  const s=sortedInv();if(!s.length){toast('Aucun mois précédent');return;}
+  renderInvForm(s[s.length-1]);toast('✅ Données recopiées');
+}
+
+function editInvMonth(month){
+  // Load a past month into the form for editing
+  const inv=DB.inv.find(i=>i.month===month);if(!inv)return;
+  document.getElementById('imon').value=month;
+  renderInvForm(inv);
+  swInv('s',document.querySelector('#sc-inv .sb'));
+  document.getElementById('invs').scrollIntoView({behavior:'smooth'});
+  toast('✏️ Mois '+moLbl(month)+' chargé pour modification');
+}
 
 function renderInvHist(){
   const invs=[...DB.inv].sort((a,b)=>b.month.localeCompare(a.month));
   const sorted=sortedInv();
   const tb=document.getElementById('ihtb');
-  if(!invs.length){tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--mut)">Aucun mois saisi</td></tr>';return;}
-  const t0=calcTotal(sorted[0]);
+  if(!invs.length){tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--mut)">Aucun mois saisi</td></tr>';return;}
+  const base=sorted[0];
+  const t0=calcTotal(base);
   let cumAp=0;
   const AC=['#3b82f6','#22c55e','#10b981','#f97316','#06b6d4','#84cc16','#f59e0b','#ec4899','#ef4444','#8b5cf6'];
   const activeAssets=DB.assets.filter(a=>!a.arch);
@@ -763,19 +753,20 @@ function renderInvHist(){
     const idx=sorted.findIndex(s=>s.month===inv.month);
     const prev=idx>0?sorted[idx-1]:null;
     const ap=calcAp(inv);
-    if(idx>0&&!inv.incomplete)cumAp+=ap;
+    if(idx>0)cumAp+=ap;
     const pT=prev?calcTotal(prev):null;
-    const rm=pT?(total-pT)/pT:null;
-    const rt=(t0+cumAp)>0&&!inv.incomplete?(total-t0-cumAp)/(t0+cumAp):null;
+    // Ret.M = (N - N-1 - apport_N) / N-1
+    const rm=pT>0?(total-pT-ap)/pT:null;
+    // Ret.T = (N - base - Σapports) / base
+    const rt=idx>0&&t0>0?(total-t0-cumAp)/t0:null;
     const rid='hr-'+ri;
-    const incNote=inv.incomplete?'<span style="font-size:9px;color:var(--amb);font-family:\'DM Mono\',monospace;margin-left:4px">⚠️</span>':'';
-    // Asset detail rows
+    const isBase=inv.month===base.month;
     const astRows=activeAssets.map((a,ai)=>{
       const cur=toUSD(a.id,inv[a.id]||0);
       const prv=prev?toUSD(a.id,prev[a.id]||0):0;
       if(!cur&&!prv)return'';
-      const apA=assetAp(a,inv);
-      const ret=prev&&prv>0?(cur-prv-apA)/prv:null;
+      const apA=toUSD(a.id,inv['ap_'+a.id]||0);
+      const ret=prv>0?(cur-prv-apA)/prv:null;
       const col=AC[ai%AC.length];
       return'<div class="hdet-r">'
         +'<div class="hc hcn"><span style="width:6px;height:6px;border-radius:50%;background:'+col+';display:inline-block;flex-shrink:0;margin-right:4px"></span><b>'+a.label+'</b></div>'
@@ -784,24 +775,25 @@ function renderInvHist(){
         +'<div class="hc hcr" style="color:'+mc(ret)+'">'+FP(ret)+'</div>'
         +'</div>';
     }).join('');
-    rows+='<tr class="hmo" onclick="togHist(\''+rid+'\')"><td>'+moLbl(inv.month)+incNote+'</td><td>'+FU(total)+'</td><td style="color:'+mc(rm)+'">'+FP(rm)+'</td><td style="color:'+mc(rt)+'">'+FP(rt)+'</td></tr>'
-      +'<tr class="hdet" id="'+rid+'" style="display:none"><td colspan="4"><div class="hdet-wrap"><div class="hdet-grid">'
-      +'<div class="hdet-h">Actif</div><div class="hdet-h">Valeur $</div><div class="hdet-h">Apport</div><div class="hdet-h">Ret.M</div>'
+    rows+='<tr class="hmo" onclick="togHist(\''+rid+'\')"><td>'+(isBase?'🏁 ':'')+moLbl(inv.month)+'</td><td>'+FU(total)+'</td><td style="color:'+mc(rm)+'">'+(isBase?'BASE':FP(rm))+'</td><td style="color:'+mc(rt)+'">'+(isBase?'—':FP(rt))+'</td></tr>'
+      // Edit button row
+      +'<tr id="'+rid+'" class="hdet" style="display:none"><td colspan="4"><div class="hdet-wrap">'
+      +'<div style="text-align:right;margin-bottom:8px"><button onclick="editInvMonth(\''+inv.month+'\')" style="padding:5px 12px;background:var(--acc);color:white;border:none;border-radius:8px;font-size:12px;font-family:\'DM Mono\',monospace;cursor:pointer">✏️ Modifier ce mois</button></div>'
+      +'<div class="hdet-grid"><div class="hdet-h">Actif</div><div class="hdet-h">Valeur $</div><div class="hdet-h">Apport</div><div class="hdet-h">Ret.M</div>'
       +astRows+'</div></div></td></tr>';
   });
   tb.innerHTML=rows;
 }
 function togHist(id){const r=document.getElementById(id);if(!r)return;const open=r.style.display!=='none';r.style.display=open?'none':'table-row';r.previousElementSibling?.classList.toggle('cl',!open);}
-function assetAp(a,inv){const v=inv['ap_'+a.id];return v?toUSD(a.id,v):0;}
 
 // ── SETTINGS ─────────────────────────────────────────────
 function openSettings(){const s=DB.cfg;document.getElementById('sqar').value=s.qar;document.getElementById('sclp').value=s.clp;document.getElementById('seur').value=s.eur;openMo('set');}
-function saveSettings(){DB.cfg={qar:parseFloat(document.getElementById('sqar').value)||3.64,clp:parseFloat(document.getElementById('sclp').value)||920,eur:parseFloat(document.getElementById('seur').value)||1.08};closeMo('set');toast('✅ Taux mis à jour');renderDash();}
-function clearAll(){['ft_exp','ft_inv','ft_ast','ft_cats','ft_ok'].forEach(k=>localStorage.removeItem(k));closeMo('set');loadHist();buildCatSel();renderInvForm();renderDash();toast('🗑️ Données effacées');}
+function saveSettings(){DB.cfg={qar:parseFloat(document.getElementById('sqar').value)||3.64,clp:parseFloat(document.getElementById('sclp').value)||901,eur:parseFloat(document.getElementById('seur').value)||1.17};closeMo('set');toast('✅ Taux mis à jour');renderDash();}
+function clearAll(){['ft_exp','ft_inv','ft_ast','ft_cats','ft_cls','ft_ok'].forEach(k=>localStorage.removeItem(k));closeMo('set');initData();buildCatSel();renderInvForm();renderDash();toast('🗑️ Données effacées');}
 function backupJSON(){const data={version:3,exported:new Date().toISOString(),expenses:DB.exp,investments:DB.inv,assets:DB.assets,categories:DB.cats,settings:DB.cfg,classes:DB.classes};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`FinTrack_backup_${today()}.json`;a.click();URL.revokeObjectURL(url);toast('✅ Sauvegarde téléchargée !');}
-function restoreJSON(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);if(!data.expenses||!data.investments){toast('❌ Fichier invalide');return;}if(!confirm(`Importer ${data.investments.length} mois + ${data.expenses.length} dépenses ?\nCela remplacera toutes les données actuelles.`))return;DB.exp=data.expenses||[];DB.inv=data.investments||[];if(data.assets)DB.assets=data.assets;if(data.categories)DB.cats=data.categories;if(data.settings)DB.cfg=data.settings;if(data.classes)DB.classes=data.classes;localStorage.setItem('ft_ok','1');closeMo('set');buildCatSel();buildAsel();buildMomPickers();renderInvForm();renderDash();toast(`✅ ${data.investments.length} mois + ${data.expenses.length} dépenses importés !`);}catch(err){toast('❌ Fichier JSON corrompu');}input.value='';};reader.readAsText(file);}
+function restoreJSON(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);if(!data.expenses){toast('❌ Fichier invalide');return;}if(!confirm(`Importer les données ?\nCela remplacera toutes les données actuelles.`))return;DB.exp=data.expenses||[];DB.inv=data.investments||[];if(data.assets)DB.assets=data.assets;if(data.categories)DB.cats=data.categories;if(data.settings)DB.cfg=data.settings;if(data.classes)DB.classes=data.classes;localStorage.setItem('ft_ok','1');closeMo('set');buildCatSel();buildAsel();buildMomPickers();renderInvForm();renderDash();toast('✅ Données importées !');}catch(err){toast('❌ Fichier JSON corrompu');}input.value='';};reader.readAsText(file);}
 function exportExcel(){toast('⏳ Génération...');const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';sc.onload=doExport;sc.onerror=()=>toast('❌ Besoin internet');document.head.appendChild(sc);}
-function doExport(){const WB=XLSX.utils.book_new(),s=DB.cfg;const invs=[...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));const exps=[...DB.exp].sort((a,b)=>a.date.localeCompare(b.date));const ws1=XLSX.utils.aoa_to_sheet([['INVESTISSEMENTS'],[],['Date',...DB.assets.map(a=>a.label),...DB.assets.map(a=>'Apport '+a.label),'Total USD','Incomplet'],...invs.map(i=>[i.month+'-01',...DB.assets.map(a=>i[a.id]||0),...DB.assets.map(a=>i['ap_'+a.id]||0),calcTotal(i),i.incomplete?'Oui':''])]);XLSX.utils.book_append_sheet(WB,ws1,'Inv - Saisie');const ws2=XLSX.utils.aoa_to_sheet([['DEPENSES'],[],['Date','Type','Catégorie','QAR','USD'],...exps.map(e=>[e.date,e.type,e.categorie,e.montant_qar,+(e.montant_qar/s.qar).toFixed(2)])]);XLSX.utils.book_append_sheet(WB,ws2,'Dep - Saisie');const ws3=XLSX.utils.aoa_to_sheet([['Paramètre','Valeur'],['TC_QAR_USD',s.qar],['TC_USD_CLP',s.clp],['TC_EUR_USD',s.eur]]);XLSX.utils.book_append_sheet(WB,ws3,'Parametres');XLSX.writeFile(WB,`FinTrack_Export_${today()}.xlsx`);toast('✅ Export téléchargé !');}
+function doExport(){const WB=XLSX.utils.book_new(),s=DB.cfg;const invs=[...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));const exps=[...DB.exp].sort((a,b)=>a.date.localeCompare(b.date));const ws1=XLSX.utils.aoa_to_sheet([['INVESTISSEMENTS'],[],['Date',...DB.assets.map(a=>a.label),...DB.assets.map(a=>'Apport '+a.label),'Total USD'],...invs.map(i=>[i.month+'-01',...DB.assets.map(a=>i[a.id]||0),...DB.assets.map(a=>i['ap_'+a.id]||0),calcTotal(i)])]);XLSX.utils.book_append_sheet(WB,ws1,'Inv - Saisie');const ws2=XLSX.utils.aoa_to_sheet([['DEPENSES'],[],['Date','Type','Catégorie','QAR','USD'],...exps.map(e=>[e.date,e.type,e.categorie,e.montant_qar,+(e.montant_qar/s.qar).toFixed(2)])]);XLSX.utils.book_append_sheet(WB,ws2,'Dep - Saisie');const ws3=XLSX.utils.aoa_to_sheet([['Paramètre','Valeur'],['TC_QAR_USD',s.qar],['TC_USD_CLP',s.clp],['TC_EUR_USD',s.eur]]);XLSX.utils.book_append_sheet(WB,ws3,'Parametres');XLSX.writeFile(WB,`FinTrack_Export_${today()}.xlsx`);toast('✅ Export téléchargé !');}
 
 // ── CATS ─────────────────────────────────────────────────
 const EMOJIS=['🍽️','🛒','📦','🚖','👩','🏥','🚗','🏠','🎉','🛍️','✂️','⛽','📱','🎁','💫','💊','🏋️','🎮','🎵','📚','☕','🍕','🍺','🐾','🧴','👔','🏦','💡','🛠️','✈️','🎓','🏖️','🎭','🍿','💻','🧹','🌿','🎨','🚿','💈'];
@@ -815,17 +807,12 @@ function addCat(){eCats.push({name:'Nouvelle',icon:'💫',color:'#6b7280'});rend
 function saveCats(){document.querySelectorAll('.cmni').forEach((inp,i)=>{if(eCats[i])eCats[i].name=inp.value.trim()||eCats[i].name;});if(eCats.some(c=>!c.name.trim())){toast('❌ Nom vide');return;}DB.cats=eCats;closeMo('cats');buildCatSel();renderDash();toast('✅ Catégories sauvegardées !');}
 
 // ── ASSETS ───────────────────────────────────────────────
-// eAssets is a flat array; order = user's order, grouped visually only
 let eAssets=[];
-function openAssets(){
-  // Deep copy preserving order
-  eAssets=DB.assets.map(a=>({...a}));
-  renderAstList();
-  openMo('assets');
-}
+function openAssets(){eAssets=DB.assets.map(a=>({...a}));renderAstList();openMo('assets');}
+
 function renderAstList(){
+  const knownCls=new Set(DB.classes.map(c=>c.id));
   let h='';
-  // Group visually by class, but preserve original indices
   DB.classes.forEach(cls=>{
     const items=eAssets.map((a,i)=>({...a,_i:i})).filter(a=>(a.cls||'actions')===cls.id);
     if(!items.length)return;
@@ -846,26 +833,22 @@ function renderAstList(){
       </div>`;
     });
   });
-  // Orphans
-  const knownCls=new Set(DB.classes.map(c=>c.id));
-  eAssets.forEach((a,i)=>{if(!knownCls.has(a.cls||'actions')){h+=`<div class="ami" id="asi-${i}"><span style="flex:1;color:var(--mut)">${a.label}</span></div>`;}});
   document.getElementById('astlist').innerHTML=h;
 }
+
 function togArch(i){eAssets[i].arch=!eAssets[i].arch;renderAstList();}
 function addAsset(){
-  eAssets.push({id:'a_'+Date.now(),label:'Nouvel actif',cur:'USD',grp:'Nouveau groupe',cls:'actions',arch:false});
+  eAssets.push({id:'a_'+Date.now(),label:'Nouvel actif',cur:'EUR',grp:'Cash EUR',cls:'liquidites',arch:false});
   renderAstList();
   setTimeout(()=>{const ins=document.querySelectorAll('#astlist .amname');if(ins.length){const l=ins[ins.length-1];l.focus();l.select();l.scrollIntoView({behavior:'smooth',block:'nearest'});}},50);
 }
 function saveAssets(){
-  // Sync all inputs before saving
+  // Sync from DOM using data-i attributes
   document.querySelectorAll('#astlist .amname').forEach(inp=>{const i=parseInt(inp.dataset.i);if(!isNaN(i)&&eAssets[i])eAssets[i].label=inp.value.trim()||eAssets[i].label;});
   document.querySelectorAll('#astlist .amgrp').forEach(inp=>{const i=parseInt(inp.dataset.i);if(!isNaN(i)&&eAssets[i])eAssets[i].grp=inp.value.trim()||eAssets[i].grp;});
   if(eAssets.some(a=>!a.label||!a.label.trim())){toast('❌ Nom vide');return;}
   DB.assets=[...eAssets];
-  closeMo('assets');
-  renderInvForm();buildAsel();renderDash();
-  toast('✅ Actifs sauvegardés !');
+  closeMo('assets');renderInvForm();buildAsel();renderDash();toast('✅ Actifs sauvegardés !');
 }
 
 // ── MODAL / TOAST ────────────────────────────────────────
@@ -874,14 +857,16 @@ function closeMo(id){document.getElementById('mo-'+id).classList.remove('on');}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2500);}
 
 // ── INIT ─────────────────────────────────────────────────
-['mo-set','mo-cats','mo-assets'].forEach(id=>{document.getElementById(id).addEventListener('click',e=>{if(e.target===document.getElementById(id))closeMo(id.replace('mo-',''));});});
+['mo-set','mo-cats','mo-assets'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',e=>{if(e.target===document.getElementById(id))closeMo(id.replace('mo-',''));});
+});
 const ccvs=document.getElementById('ccvs');
 if(ccvs){ccvs.addEventListener('touchstart',onChartTouch,{passive:true});ccvs.addEventListener('touchmove',onChartTouch,{passive:true});ccvs.addEventListener('touchend',hideCtip);ccvs.addEventListener('mousemove',onChartTouch);ccvs.addEventListener('mouseleave',hideCtip);}
 window.addEventListener('resize',()=>{if(curSc==='dash')renderChart();});
 document.getElementById('ddate').value=today();
 document.getElementById('imon').value=today().slice(0,7);
 setDT('Depense');
-loadHist();
+initData();
 buildCatSel();
 renderInvForm();
 renderDash();
