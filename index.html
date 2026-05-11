@@ -190,6 +190,17 @@ body{display:flex;flex-direction:column}
 .toast{position:fixed;bottom:calc(80px + var(--saf));left:50%;transform:translateX(-50%) translateY(20px);background:var(--grn);color:white;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;z-index:200;white-space:nowrap}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 .empty{text-align:center;padding:40px 20px;color:var(--mut)}
+
+/* movements */
+.mv-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bdr)}
+.mv-item:last-child{border-bottom:none}
+.mv-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.mv-info{flex:1;min-width:0}
+.mv-label{font-size:13px;font-weight:600}
+.mv-sub{font-size:11px;color:var(--mut);font-family:'DM Mono',monospace;margin-top:1px}
+.mv-amt{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;text-align:right;white-space:nowrap}
+.mv-amt.ap{color:var(--grn)}.mv-amt.ret{color:var(--red)}.mv-amt.tr{color:var(--amb)}
+
 .grn{color:var(--grn)}.red{color:var(--red)}.blu{color:var(--acc)}.amb{color:var(--amb)}
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:2px}
 </style>
@@ -268,7 +279,7 @@ body{display:flex;flex-direction:column}
 
 <!-- INVESTISSEMENTS -->
 <div class="sc" id="sc-inv">
-  <div class="seg"><button class="sb on" onclick="swInv('s',this)">+ Saisir</button><button class="sb" onclick="swInv('h',this)">Historique</button></div>
+  <div class="seg"><button class="sb on" onclick="swInv('s',this)">+ Saisir</button><button class="sb" onclick="swInv('m',this)">Mouvements</button><button class="sb" onclick="swInv('h',this)">Historique</button></div>
   <div id="invs">
     <div class="fg"><div class="fl">Mois</div><input type="month" class="fi" id="imon"></div>
     <div class="card" style="padding:12px 16px" id="ifields"></div>
@@ -287,6 +298,26 @@ body{display:flex;flex-direction:column}
     <div class="ht card"><table><thead><tr>
       <th style="text-align:left">Mois</th><th>Total $</th><th>Ret.M</th><th>Ret.T</th>
     </tr></thead><tbody id="ihtb"></tbody></table></div>
+  </div>
+  <div id="invm" style="display:none">
+    <!-- Movement form -->
+    <div class="card">
+      <div class="fg"><div class="fl">Date</div><input type="date" class="fi" id="mv-date"></div>
+      <div class="fg"><div class="fl">Actif</div><select class="fs" id="mv-asset"></select></div>
+      <div class="fg"><div class="fl">Type</div>
+        <div class="seg" style="margin-bottom:0">
+          <button class="sb on" id="mv-ap-btn" onclick="setMvType('apport')">+ Apport</button>
+          <button class="sb" id="mv-ret-btn" onclick="setMvType('retrait')">− Retrait</button>
+          <button class="sb" id="mv-tr-btn" onclick="setMvType('transfert')">⇄ Transfert</button>
+        </div>
+      </div>
+      <div class="fg"><div class="fl">Montant</div><input type="number" class="fi" id="mv-amt" placeholder="0.00" step="0.01" inputmode="decimal"></div>
+      <div class="fg"><div class="fl">Note (optionnel)</div><input type="text" class="fi" id="mv-note" placeholder="ex: Virement Revolut"></div>
+      <button class="btn bp" onclick="saveMv()">Enregistrer le mouvement</button>
+    </div>
+    <!-- Movement list -->
+    <div class="chips" id="mv-chips"></div>
+    <div class="card" id="mv-list"></div>
   </div>
 </div>
 
@@ -669,7 +700,7 @@ function renderDepList(){
 function selDepMo(m){depMo=m;renderDepList();}
 
 // ── INVESTISSEMENTS ───────────────────────────────────────
-function swInv(t,btn){document.querySelectorAll('#sc-inv .sb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('invs').style.display=t==='s'?'block':'none';document.getElementById('invh').style.display=t==='h'?'block':'none';if(t==='s')renderInvForm();if(t==='h')renderInvHist();}
+function swInv(t,btn){document.querySelectorAll('#sc-inv .sb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('invs').style.display=t==='s'?'block':'none';document.getElementById('invh').style.display=t==='h'?'block':'none';document.getElementById('invm').style.display=t==='m'?'block':'none';if(t==='s'){const curMo=document.getElementById('imon').value;const mvAp=curMo?getMonthApports(curMo):{};renderInvForm(Object.keys(mvAp).length?mvAp:undefined);}if(t==='h')renderInvHist();if(t==='m')renderMvList();}
 function cCls(c){return c==='EUR'?'eur':c==='CRYPTO'?'cry':'';}
 
 function renderInvForm(pre){
@@ -737,7 +768,9 @@ function editInvMonth(month){
   swInv('s',saisieBtn);
   // 3. Set month and fill form
   document.getElementById('imon').value=month;
-  renderInvForm(inv);
+  // Merge movement apports into inv data
+  const mvAp=getMonthApports(month);
+  renderInvForm({...inv,...mvAp});
   // 4. Scroll to top of form
   setTimeout(()=>{
     document.getElementById('sc-inv').scrollTo({top:0,behavior:'smooth'});
@@ -798,10 +831,84 @@ function togHist(id){const r=document.getElementById(id);if(!r)return;const open
 function openSettings(){const s=DB.cfg;document.getElementById('sqar').value=s.qar;document.getElementById('sclp').value=s.clp;document.getElementById('seur').value=s.eur;openMo('set');}
 function saveSettings(){DB.cfg={qar:parseFloat(document.getElementById('sqar').value)||3.64,clp:parseFloat(document.getElementById('sclp').value)||901,eur:parseFloat(document.getElementById('seur').value)||1.17};closeMo('set');toast('✅ Taux mis à jour');renderDash();}
 function clearAll(){['ft_exp','ft_inv','ft_ast','ft_cats','ft_cls','ft_ok'].forEach(k=>localStorage.removeItem(k));closeMo('set');initData();buildCatSel();renderInvForm();renderDash();toast('🗑️ Données effacées');}
-function backupJSON(){const data={version:3,exported:new Date().toISOString(),expenses:DB.exp,investments:DB.inv,assets:DB.assets,categories:DB.cats,settings:DB.cfg,classes:DB.classes};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`FinTrack_backup_${today()}.json`;a.click();URL.revokeObjectURL(url);toast('✅ Sauvegarde téléchargée !');}
-function restoreJSON(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);if(!data.expenses){toast('❌ Fichier invalide');return;}if(!confirm(`Importer les données ?\nCela remplacera toutes les données actuelles.`))return;DB.exp=data.expenses||[];DB.inv=data.investments||[];if(data.assets)DB.assets=data.assets;if(data.categories)DB.cats=data.categories;if(data.settings)DB.cfg=data.settings;if(data.classes)DB.classes=data.classes;localStorage.setItem('ft_ok','1');closeMo('set');buildCatSel();buildAsel();buildMomPickers();renderInvForm();renderDash();toast('✅ Données importées !');}catch(err){toast('❌ Fichier JSON corrompu');}input.value='';};reader.readAsText(file);}
+function backupJSON(){const data={version:3,exported:new Date().toISOString(),expenses:DB.exp,investments:DB.inv,movements:DB_MV.mv,assets:DB.assets,categories:DB.cats,settings:DB.cfg,classes:DB.classes};const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`FinTrack_backup_${today()}.json`;a.click();URL.revokeObjectURL(url);toast('✅ Sauvegarde téléchargée !');}
+function restoreJSON(input){const file=input.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);if(!data.expenses){toast('❌ Fichier invalide');return;}if(!confirm(`Importer les données ?\nCela remplacera toutes les données actuelles.`))return;DB.exp=data.expenses||[];DB.inv=data.investments||[];if(data.assets)DB.assets=data.assets;if(data.categories)DB.cats=data.categories;if(data.settings)DB.cfg=data.settings;if(data.classes)DB.classes=data.classes;if(data.movements)DB_MV.mv=data.movements;localStorage.setItem('ft_ok','1');closeMo('set');buildCatSel();buildAsel();buildMomPickers();renderInvForm();renderDash();toast('✅ Données importées !');}catch(err){toast('❌ Fichier JSON corrompu');}input.value='';};reader.readAsText(file);}
 function exportExcel(){toast('⏳ Génération...');const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';sc.onload=doExport;sc.onerror=()=>toast('❌ Besoin internet');document.head.appendChild(sc);}
 function doExport(){const WB=XLSX.utils.book_new(),s=DB.cfg;const invs=[...DB.inv].sort((a,b)=>a.month.localeCompare(b.month));const exps=[...DB.exp].sort((a,b)=>a.date.localeCompare(b.date));const ws1=XLSX.utils.aoa_to_sheet([['INVESTISSEMENTS'],[],['Date',...DB.assets.map(a=>a.label),...DB.assets.map(a=>'Apport '+a.label),'Total USD'],...invs.map(i=>[i.month+'-01',...DB.assets.map(a=>i[a.id]||0),...DB.assets.map(a=>i['ap_'+a.id]||0),calcTotal(i)])]);XLSX.utils.book_append_sheet(WB,ws1,'Inv - Saisie');const ws2=XLSX.utils.aoa_to_sheet([['DEPENSES'],[],['Date','Type','Catégorie','QAR','USD'],...exps.map(e=>[e.date,e.type,e.categorie,e.montant_qar,+(e.montant_qar/s.qar).toFixed(2)])]);XLSX.utils.book_append_sheet(WB,ws2,'Dep - Saisie');const ws3=XLSX.utils.aoa_to_sheet([['Paramètre','Valeur'],['TC_QAR_USD',s.qar],['TC_USD_CLP',s.clp],['TC_EUR_USD',s.eur]]);XLSX.utils.book_append_sheet(WB,ws3,'Parametres');XLSX.writeFile(WB,`FinTrack_Export_${today()}.xlsx`);toast('✅ Export téléchargé !');}
+
+// ── MOVEMENTS ────────────────────────────────────────────
+const DB_MV={
+  get mv(){return DB.g('ft_mv')||[]},
+  set mv(v){DB.s('ft_mv',v)},
+};
+let mvType='apport',mvMo=today().slice(0,7);
+
+function setMvType(t){
+  mvType=t;
+  ['ap','ret','tr'].forEach(x=>document.getElementById('mv-'+x+'-btn').classList.remove('on'));
+  document.getElementById('mv-'+{apport:'ap',retrait:'ret',transfert:'tr'}[t]+'-btn').classList.add('on');
+}
+
+function buildMvAssetSel(){
+  const sel=document.getElementById('mv-asset');if(!sel)return;
+  sel.innerHTML=DB.assets.filter(a=>!a.arch).map(a=>`<option value="${a.id}">${a.label} (${a.cur})</option>`).join('');
+}
+
+function saveMv(){
+  const dt=document.getElementById('mv-date').value;
+  const aid=document.getElementById('mv-asset').value;
+  const amt=parseFloat(document.getElementById('mv-amt').value);
+  const note=document.getElementById('mv-note').value.trim();
+  if(!dt){toast('❌ Date manquante');return;}
+  if(!aid){toast('❌ Actif manquant');return;}
+  if(!amt||amt<=0){toast('❌ Montant invalide');return;}
+  DB_MV.mv=[...DB_MV.mv,{id:Date.now().toString(),date:dt,assetId:aid,type:mvType,amount:amt,note}];
+  document.getElementById('mv-amt').value='';
+  document.getElementById('mv-note').value='';
+  renderMvList();
+  toast('✅ Mouvement enregistré !');
+}
+
+function delMv(id){DB_MV.mv=DB_MV.mv.filter(m=>m.id!==id);renderMvList();}
+
+function selMvMo(m){mvMo=m;renderMvList();}
+
+function getMonthApports(month){
+  const net={};
+  DB_MV.mv.filter(m=>moOf(m.date)===month).forEach(m=>{
+    if(!net[m.assetId])net[m.assetId]=0;
+    net[m.assetId]+=(m.type==='retrait'?-1:1)*m.amount;
+  });
+  const result={};
+  Object.entries(net).forEach(([aid,v])=>{result['ap_'+aid]=v;});
+  return result;
+}
+
+function renderMvList(){
+  buildMvAssetSel();
+  const mvs=DB_MV.mv;
+  const months=[...new Set(mvs.map(m=>moOf(m.date)))].sort().reverse();
+  if(!months.includes(mvMo))mvMo=months[0]||today().slice(0,7);
+  document.getElementById('mv-chips').innerHTML=months.slice(0,12).map(m=>`<div class="chip ${m===mvMo?'on':''}" onclick="selMvMo('${m}')">${moLbl(m)}</div>`).join('');
+  const fil=mvs.filter(m=>moOf(m.date)===mvMo).sort((a,b)=>b.date.localeCompare(a.date));
+  const el=document.getElementById('mv-list');
+  if(!fil.length){el.innerHTML='<div class="empty"><div style="font-size:32px">📋</div>Aucun mouvement ce mois</div>';return;}
+  const TYPE_ICON={apport:'💰',retrait:'💸',transfert:'⇄'};
+  const TYPE_CLS={apport:'ap',retrait:'ret',transfert:'tr'};
+  const TYPE_LBL={apport:'Apport',retrait:'Retrait',transfert:'Transfert'};
+  const TYPE_BG={apport:'#0a2518',retrait:'#2a0a0a',transfert:'#1a1500'};
+  let rows=fil.map(m=>{
+    const asset=DB.assets.find(a=>a.id===m.assetId);
+    const sign=m.type==='retrait'?'−':'+';
+    return`<div class="mv-item"><div class="mv-icon" style="background:${TYPE_BG[m.type]}">${TYPE_ICON[m.type]}</div><div class="mv-info"><div class="mv-label">${TYPE_LBL[m.type]} — ${asset?.label||m.assetId}</div><div class="mv-sub">${new Date(m.date+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}${m.note?' · '+m.note:''}</div></div><div style="display:flex;align-items:center;gap:6px"><div class="mv-amt ${TYPE_CLS[m.type]}">${sign}${F(m.amount)} ${asset?.cur||''}</div><button class="delbtn" onclick="delMv('${m.id}')">✕</button></div></div>`;
+  }).join('');
+  // Net per asset
+  const net={};
+  fil.forEach(m=>{if(!net[m.assetId])net[m.assetId]=0;net[m.assetId]+=(m.type==='retrait'?-1:1)*m.amount;});
+  const netRows=Object.entries(net).filter(([,v])=>v!==0).map(([aid,v])=>{const a=DB.assets.find(x=>x.id===aid);return`<div class="tr2"><span class="tl">${a?.label||aid}</span><span class="tv" style="color:${v>=0?'var(--grn)':'var(--red)'}">${v>=0?'+':''}${F(v)} ${a?.cur||''}</span></div>`;}).join('');
+  if(netRows)rows+=`<div style="margin-top:10px;padding-top:10px;border-top:2px solid var(--bdr)"><div style="font-size:10px;color:var(--mut);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px">Net du mois</div>${netRows}</div>`;
+  el.innerHTML=rows;
+}
 
 // ── CATS ─────────────────────────────────────────────────
 const EMOJIS=['🍽️','🛒','📦','🚖','👩','🏥','🚗','🏠','🎉','🛍️','✂️','⛽','📱','🎁','💫','💊','🏋️','🎮','🎵','📚','☕','🍕','🍺','🐾','🧴','👔','🏦','💡','🛠️','✈️','🎓','🏖️','🎭','🍿','💻','🧹','🌿','🎨','🚿','💈'];
@@ -873,9 +980,11 @@ if(ccvs){ccvs.addEventListener('touchstart',onChartTouch,{passive:true});ccvs.ad
 window.addEventListener('resize',()=>{if(curSc==='dash')renderChart();});
 document.getElementById('ddate').value=today();
 document.getElementById('imon').value=today().slice(0,7);
+document.getElementById('mv-date').value=today();
 setDT('Depense');
 initData();
 buildCatSel();
+buildMvAssetSel();
 renderInvForm();
 renderDash();
 
