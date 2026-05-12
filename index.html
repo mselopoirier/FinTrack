@@ -303,7 +303,6 @@ body{display:flex;flex-direction:column}
     <!-- Movement form -->
     <div class="card">
       <div class="fg"><div class="fl">Date</div><input type="date" class="fi" id="mv-date"></div>
-      <div class="fg"><div class="fl">Actif</div><select class="fs" id="mv-asset"></select></div>
       <div class="fg"><div class="fl">Type</div>
         <div class="seg" style="margin-bottom:0">
           <button class="sb on" id="mv-ap-btn" onclick="setMvType('apport')">+ Apport</button>
@@ -311,6 +310,8 @@ body{display:flex;flex-direction:column}
           <button class="sb" id="mv-tr-btn" onclick="setMvType('transfert')">⇄ Transfert</button>
         </div>
       </div>
+      <div class="fg" id="mv-fg-src"><div class="fl" id="mv-src-lbl">Actif</div><select class="fs" id="mv-asset"></select></div>
+      <div class="fg" id="mv-fg-dst" style="display:none"><div class="fl">Actif destination</div><select class="fs" id="mv-asset-dst"></select></div>
       <div class="fg"><div class="fl">Montant</div><input type="number" class="fi" id="mv-amt" placeholder="0.00" step="0.01" inputmode="decimal"></div>
       <div class="fg"><div class="fl">Note (optionnel)</div><input type="text" class="fi" id="mv-note" placeholder="ex: Virement Revolut"></div>
       <button class="btn bp" onclick="saveMv()">Enregistrer le mouvement</button>
@@ -847,11 +848,16 @@ function setMvType(t){
   mvType=t;
   ['ap','ret','tr'].forEach(x=>document.getElementById('mv-'+x+'-btn').classList.remove('on'));
   document.getElementById('mv-'+{apport:'ap',retrait:'ret',transfert:'tr'}[t]+'-btn').classList.add('on');
+  // Show/hide destination selector and relabel source
+  const isTransfer = t==='transfert';
+  document.getElementById('mv-fg-dst').style.display = isTransfer?'block':'none';
+  document.getElementById('mv-src-lbl').textContent  = isTransfer?'Actif source':'Actif';
 }
 
 function buildMvAssetSel(){
-  const sel=document.getElementById('mv-asset');if(!sel)return;
-  sel.innerHTML=DB.assets.filter(a=>!a.arch).map(a=>`<option value="${a.id}">${a.label} (${a.cur})</option>`).join('');
+  const opts=DB.assets.filter(a=>!a.arch).map(a=>`<option value="${a.id}">${a.label} (${a.cur})</option>`).join('');
+  const sel=document.getElementById('mv-asset');if(sel)sel.innerHTML=opts;
+  const dst=document.getElementById('mv-asset-dst');if(dst)dst.innerHTML=opts;
 }
 
 function saveMv(){
@@ -862,14 +868,36 @@ function saveMv(){
   if(!dt){toast('❌ Date manquante');return;}
   if(!aid){toast('❌ Actif manquant');return;}
   if(!amt||amt<=0){toast('❌ Montant invalide');return;}
-  DB_MV.mv=[...DB_MV.mv,{id:Date.now().toString(),date:dt,assetId:aid,type:mvType,amount:amt,note}];
+  const now=Date.now().toString();
+  if(mvType==='transfert'){
+    const dst=document.getElementById('mv-asset-dst').value;
+    if(!dst||dst===aid){toast('❌ Sélectionnez un actif destination différent');return;}
+    // Two linked entries: retrait on source, apport on destination
+    const linkId='tr_'+now;
+    DB_MV.mv=[...DB_MV.mv,
+      {id:now,     date:dt,assetId:aid, type:'retrait', amount:amt, note:note||'Transfert → '+DB.assets.find(a=>a.id===dst)?.label, linkId},
+      {id:now+'_d',date:dt,assetId:dst, type:'apport',  amount:amt, note:note||'Transfert ← '+DB.assets.find(a=>a.id===aid)?.label, linkId},
+    ];
+  }else{
+    DB_MV.mv=[...DB_MV.mv,{id:now,date:dt,assetId:aid,type:mvType,amount:amt,note}];
+  }
   document.getElementById('mv-amt').value='';
   document.getElementById('mv-note').value='';
   renderMvList();
   toast('✅ Mouvement enregistré !');
 }
 
-function delMv(id){DB_MV.mv=DB_MV.mv.filter(m=>m.id!==id);renderMvList();}
+function delMv(id){
+  const mv=DB_MV.mv.find(m=>m.id===id);
+  if(mv?.linkId){
+    // Delete both legs of the transfer
+    if(!confirm('Supprimer les deux entrées du transfert ?'))return;
+    DB_MV.mv=DB_MV.mv.filter(m=>m.linkId!==mv.linkId);
+  }else{
+    DB_MV.mv=DB_MV.mv.filter(m=>m.id!==id);
+  }
+  renderMvList();
+}
 
 function selMvMo(m){mvMo=m;renderMvList();}
 
@@ -897,7 +925,20 @@ function renderMvList(){
   const TYPE_CLS={apport:'ap',retrait:'ret',transfert:'tr'};
   const TYPE_LBL={apport:'Apport',retrait:'Retrait',transfert:'Transfert'};
   const TYPE_BG={apport:'#0a2518',retrait:'#2a0a0a',transfert:'#1a1500'};
+  // Group transfer legs: show only one row per linkId
+  const shownLinks=new Set();
   let rows=fil.map(m=>{
+    // For transfers, only show the retrait leg (source) as a combined row
+    if(m.linkId){
+      if(m.type==='apport')return''; // skip destination leg, shown via source
+      if(shownLinks.has(m.linkId))return'';
+      shownLinks.add(m.linkId);
+      // Find the destination leg
+      const dstLeg=DB_MV.mv.find(x=>x.linkId===m.linkId&&x.type==='apport');
+      const srcAsset=DB.assets.find(a=>a.id===m.assetId);
+      const dstAsset=dstLeg?DB.assets.find(a=>a.id===dstLeg.assetId):null;
+      return`<div class="mv-item"><div class="mv-icon" style="background:${TYPE_BG.transfert}">⇄</div><div class="mv-info"><div class="mv-label">${srcAsset?.label||m.assetId} → ${dstAsset?.label||'?'}</div><div class="mv-sub">${new Date(m.date+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}${m.note?' · '+m.note:''}</div></div><div style="display:flex;align-items:center;gap:6px"><div class="mv-amt tr">${F(m.amount)} ${srcAsset?.cur||''}</div><button class="delbtn" onclick="delMv('${m.id}')">✕</button></div></div>`;
+    }
     const asset=DB.assets.find(a=>a.id===m.assetId);
     const sign=m.type==='retrait'?'−':'+';
     return`<div class="mv-item"><div class="mv-icon" style="background:${TYPE_BG[m.type]}">${TYPE_ICON[m.type]}</div><div class="mv-info"><div class="mv-label">${TYPE_LBL[m.type]} — ${asset?.label||m.assetId}</div><div class="mv-sub">${new Date(m.date+'T12:00').toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}${m.note?' · '+m.note:''}</div></div><div style="display:flex;align-items:center;gap:6px"><div class="mv-amt ${TYPE_CLS[m.type]}">${sign}${F(m.amount)} ${asset?.cur||''}</div><button class="delbtn" onclick="delMv('${m.id}')">✕</button></div></div>`;
